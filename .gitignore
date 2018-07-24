@@ -1,0 +1,7 @@
+/target/
+/bin/
+
+.idea
+!.idea/codeStyleSettings.xml
+*.iml
+*.iws
