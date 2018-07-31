@@ -63,11 +63,11 @@ public class Transaction
             i.UTXO = Start.UTXOs.get(i.transactionOutputId);
         }
 
-//        //check if transaction is valid:
-//        if(getInputsValue() < Start.minimumTransaction) {
-//            System.out.println("#Transaction Inputs to small: " + getInputsValue());
-//            return false;
-//        }
+        //check if transaction is valid:
+        if(getInputsValue() < Start.minimumTransaction) {
+            System.out.println("#Transaction Inputs to small: " + getInputsValue());
+            return false;
+        }
 
         //generate transaction outputs:
         float leftOver = getInputsValue() - value; //get value of inputs then the left over change:
