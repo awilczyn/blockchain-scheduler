@@ -1,6 +1,6 @@
-package core;
+package blockchain.core;
 
-import util.StringUtil;
+import blockchain.util.StringUtil;
 import java.util.Date;
 
 /**

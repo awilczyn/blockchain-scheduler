@@ -1,4 +1,4 @@
-package core;
+package blockchain.core;
 
 import org.junit.Test;
 
@@ -13,6 +13,8 @@ public class BlockTest
 
     public static ArrayList<Block> blockchain = new ArrayList<Block>();
     public static int difficulty = 3;
+    public static Wallet walletA;
+    public static Wallet walletB;
 
     public BlockTest()
     {
