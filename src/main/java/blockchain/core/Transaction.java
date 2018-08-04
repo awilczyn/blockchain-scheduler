@@ -60,11 +60,11 @@ public class Transaction
 
         //gather transaction inputs (Make sure they are unspent):
         for(TransactionInput i : inputs) {
-            i.UTXO = Start.UTXOs.get(i.transactionOutputId);
+            i.UTXO = Node.UTXOs.get(i.transactionOutputId);
         }
 
         //check if transaction is valid:
-        if(getInputsValue() < Start.minimumTransaction) {
+        if(getInputsValue() < Node.minimumTransaction) {
             System.out.println("#Transaction Inputs to small: " + getInputsValue());
             return false;
         }
@@ -77,13 +77,13 @@ public class Transaction
 
         //add outputs to Unspent list
         for(TransactionOutput o : outputs) {
-            Start.UTXOs.put(o.id , o);
+            Node.UTXOs.put(o.id , o);
         }
 
         //remove transaction inputs from UTXO lists as spent:
         for(TransactionInput i : inputs) {
             if(i.UTXO == null) continue; //if Transaction can't be found skip it
-            Start.UTXOs.remove(i.UTXO.id);
+            Node.UTXOs.remove(i.UTXO.id);
         }
 
         return true;
