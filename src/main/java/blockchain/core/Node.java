@@ -1,6 +1,7 @@
 package blockchain.core;
 
 import blockchain.Start;
+import blockchain.core.genesis.GenesisBlock;
 import blockchain.db.Context;
 import blockchain.networking.Peer2Peer;
 import blockchain.util.Log;
@@ -21,14 +22,13 @@ public class Node implements Runnable
 
     private Wallet minerWallet;
 
+    private Block genesisBlock;
+
     public static ArrayList<Block> blockchain = new ArrayList<Block>();
     public static HashMap<String, TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>();
     public static int difficulty = 5;
     public static float minimumTransaction = 0.1f;
-    public static Wallet walletA;
     public static Wallet walletB;
-
-    public static Transaction genesisTransaction;
 
     /** peer to peer data */
 
@@ -38,13 +38,15 @@ public class Node implements Runnable
     private int serverPort = 8889;
     private boolean shouldMine;
 
-    public Node(Context context, Wallet wallet){
+    public Node(Context context, Wallet wallet, Block genesisBlock){
         this.context = context;
         this.minerWallet = wallet;
+        this.genesisBlock = genesisBlock;
     }
 
-    public Node(){
-        this(Start.localContext, Start.localWallet);
+    public Node()
+    {
+        this(Start.localContext, Start.localWallet, GenesisBlock.getInstance().getBlock());
     }
 
     public void start()
@@ -75,47 +77,29 @@ public class Node implements Runnable
     private void mine()
     {
         while(shouldMine) {
-            walletA = new Wallet();
             walletB = new Wallet();
-            Wallet coinbase = new Wallet();
+            addBlock(genesisBlock);
+            UTXOs.put(GenesisBlock.genesisTransaction.outputs.get(0).id, GenesisBlock.genesisTransaction.outputs.get(0));
 
-            genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 100f, null);
-            genesisTransaction.generateSignature(coinbase.privateKey);
-            genesisTransaction.transactionId = "0";
-            genesisTransaction.outputs.add(
-                    new TransactionOutput(
-                            genesisTransaction.recipient,
-                            genesisTransaction.value,
-                            genesisTransaction.transactionId
-                    )
-            );
-
-            UTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0));
-
-            System.out.println("Creating and Mining Genesis block... ");
-            Block genesis = new Block("0");
-            genesis.addTransaction(genesisTransaction);
-            addBlock(genesis);
-
-            Block block1 = new Block(genesis.hash);
-            System.out.println("\nWalletA's balance is: " + walletA.getBalance());
-            System.out.println("\nWalletA is Attempting to send funds (40) to WalletB...");
-            block1.addTransaction(walletA.sendFunds(walletB.publicKey, 40f));
+            Block block1 = new Block(genesisBlock.hash);
+            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
+            System.out.println("\nLocal wallet is Attempting to send funds (40) to WalletB...");
+            block1.addTransaction(minerWallet.sendFunds(walletB.publicKey, 40f));
             addBlock(block1);
-            System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
             System.out.println("WalletB's balance is: " + walletB.getBalance());
 
             Block block2 = new Block(block1.hash);
-            System.out.println("\nWalletA Attempting to send more funds (1000) than it has...");
-            block2.addTransaction(walletA.sendFunds(walletB.publicKey, 1000f));
+            System.out.println("\nMiner wallet attempting to send more funds (1000) than it has...");
+            block2.addTransaction(minerWallet.sendFunds(walletB.publicKey, 1000f));
             addBlock(block2);
-            System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
             System.out.println("WalletB's balance is: " + walletB.getBalance());
 
             Block block3 = new Block(block2.hash);
-            System.out.println("\nWalletB is Attempting to send funds (20) to WalletA...");
-            block3.addTransaction(walletB.sendFunds( walletA.publicKey, 20));
-            System.out.println("\nWalletA's balance is: " + walletA.getBalance());
+            System.out.println("\nWalletB is Attempting to send funds (20) to Miner wallet...");
+            block3.addTransaction(walletB.sendFunds( minerWallet.publicKey, 20));
+            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
             System.out.println("WalletB's balance is: " + walletB.getBalance());
 
             String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);

@@ -1,5 +1,7 @@
 package blockchain.core;
 
+import blockchain.Start;
+import blockchain.core.genesis.GenesisBlock;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Test;
 
@@ -16,46 +18,32 @@ public class BlockTest
 {
 
     public static ArrayList<Block> blockchain = new ArrayList<Block>();
-    public static HashMap<String, TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>();
     public static int difficulty = 3;
-    public static Wallet walletA;
     public static Wallet walletB;
-    public static Transaction genesisTransaction;
+
+    private Block genesisBlock;
 
     public BlockTest()
     {
         Security.addProvider(new BouncyCastleProvider());
 
-        walletA = new Wallet();
+        Start.localWallet = new Wallet();
+        this.genesisBlock = GenesisBlock.getInstance().getBlock();
+
         walletB = new Wallet();
-        Wallet coinbase = new Wallet();
-        genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 100f, null);
-        genesisTransaction.generateSignature(coinbase.privateKey);
-        genesisTransaction.transactionId = "0";
-        genesisTransaction.outputs.add(
-                new TransactionOutput(
-                        genesisTransaction.recipient,
-                        genesisTransaction.value,
-                        genesisTransaction.transactionId
-                )
-        );
+        addBlock(genesisBlock);
+        Node.UTXOs.put(GenesisBlock.genesisTransaction.outputs.get(0).id, GenesisBlock.genesisTransaction.outputs.get(0));
 
-        UTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0));
-
-        Block genesis = new Block("0");
-        genesis.addTransaction(genesisTransaction);
-        addBlock(genesis);
-
-        Block block1 = new Block(genesis.hash);
-        block1.addTransaction(walletA.sendFunds(walletB.publicKey, 40f));
+        Block block1 = new Block(genesisBlock.hash);
+        block1.addTransaction(Start.localWallet.sendFunds(walletB.publicKey, 40f));
         addBlock(block1);
 
         Block block2 = new Block(block1.hash);
-        block2.addTransaction(walletA.sendFunds(walletB.publicKey, 1000f));
+        block2.addTransaction(Start.localWallet.sendFunds(walletB.publicKey, 1000f));
         addBlock(block2);
 
         Block block3 = new Block(block2.hash);
-        block3.addTransaction(walletB.sendFunds( walletA.publicKey, 20));
+        block3.addTransaction(walletB.sendFunds( Start.localWallet.publicKey, 20));
     }
 
     @Test
@@ -66,7 +54,7 @@ public class BlockTest
         Boolean valid = true;
         String hashTarget = new String(new char[difficulty]).replace('\0', '0');
         HashMap<String,TransactionOutput> tempUTXOs = new HashMap<String,TransactionOutput>();
-        tempUTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0));
+        tempUTXOs.put(GenesisBlock.genesisTransaction.outputs.get(0).id, GenesisBlock.genesisTransaction.outputs.get(0));
 
         for(int i=1; i < blockchain.size(); i++) {
             currentBlock = blockchain.get(i);
