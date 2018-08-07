@@ -2,12 +2,9 @@ package blockchain;
 
 import blockchain.core.*;
 import blockchain.db.Context;
-import com.google.gson.GsonBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.Security;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by andrzejwilczynski on 24/07/2018.

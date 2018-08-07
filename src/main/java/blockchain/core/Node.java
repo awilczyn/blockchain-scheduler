@@ -24,6 +24,8 @@ public class Node implements Runnable
 
     private Block genesisBlock;
 
+    private Block currentBlock;
+
     public static ArrayList<Block> blockchain = new ArrayList<Block>();
     public static HashMap<String, TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>();
     public static int difficulty = 5;
