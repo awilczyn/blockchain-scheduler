@@ -51,6 +51,6 @@ public class GenesisBlock
 
     public static byte[] getHash()
     {
-        return HashUtil.applySha256(ByteUtil.stringToBytes("scheduler"));
+        return HashUtil.applySha256(ByteUtil.stringToBytes("0"));
     }
 }

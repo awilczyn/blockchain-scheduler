@@ -8,6 +8,7 @@ import blockchain.util.StringUtil;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 import static java.lang.Thread.sleep;
@@ -81,7 +82,8 @@ public class Block
     public boolean addTransaction(Transaction transaction) {
         //process transaction and check if valid, unless block is genesis block then ignore.
         if(transaction == null) return false;
-        if(previousHash != GenesisBlock.getHash()) {
+
+        if(!Arrays.equals(previousHash, GenesisBlock.getHash())) {
             if((transaction.processTransaction() != true)) {
                 System.out.println("Transaction failed to process. Discarded.");
                 return false;
