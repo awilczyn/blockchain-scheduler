@@ -91,7 +91,7 @@ public class StringUtil
      * @param transactions
      * @return
      */
-    public static String getMerkleRoot(ArrayList<Transaction> transactions)
+    public static byte[] getMerkleRoot(ArrayList<Transaction> transactions)
     {
         int count = transactions.size();
         ArrayList<String> previousTreeLayer = new ArrayList<String>();
@@ -108,7 +108,7 @@ public class StringUtil
             previousTreeLayer = treeLayer;
         }
         String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
-        return merkleRoot;
+        return ByteUtil.stringToBytes(merkleRoot);
     }
 
     /**

@@ -70,10 +70,10 @@ public class BlockTest
                 valid = false;
             }
             //check if hash is solved
-            if(!currentBlock.hash.substring( 0, difficulty).equals(hashTarget)) {
-                System.out.println("#This block hasn't been mined");
-                valid = false;
-            }
+//            if(!currentBlock.hash.substring( 0, difficulty).equals(hashTarget)) {
+//                System.out.println("#This block hasn't been mined");
+//                valid = false;
+//            }
 
             //loop thru blockchains transactions:
             TransactionOutput tempOutput;

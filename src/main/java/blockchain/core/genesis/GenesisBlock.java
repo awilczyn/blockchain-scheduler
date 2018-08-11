@@ -2,6 +2,8 @@ package blockchain.core.genesis;
 
 import blockchain.Start;
 import blockchain.core.*;
+import blockchain.util.ByteUtil;
+import blockchain.util.HashUtil;
 
 /**
  * Created by andrzejwilczynski on 07/08/2018.
@@ -30,7 +32,7 @@ public class GenesisBlock
         );
 
         System.out.println("Creating and Mining Genesis block... ");
-        block = new Block("0");
+        block = new Block(getHash());
         block.addTransaction(genesisTransaction);
     }
 
@@ -45,5 +47,10 @@ public class GenesisBlock
     public Block getBlock()
     {
         return block;
+    }
+
+    public static byte[] getHash()
+    {
+        return HashUtil.applySha256(ByteUtil.stringToBytes("scheduler"));
     }
 }
