@@ -1,8 +1,9 @@
 package blockchain.core;
 
-import blockchain.Start;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.security.*;
+import java.security.interfaces.ECKey;
 import java.security.spec.ECGenParameterSpec;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +18,9 @@ public class Wallet
     public PublicKey publicKey;
 
     public HashMap<String,TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>();
+
+    static final String PRIVATE_KEY = "sdfsdf";
+    static final String PUBLIC_KEY = "sdfsdf";
 
     public Wallet()
     {

@@ -37,7 +37,7 @@ public class Node implements Runnable
     private Thread miningThread;
 
     private Peer2Peer p2p;
-    private int serverPort = 8889;
+    private int serverPort = 8899;
     private boolean shouldMine;
 
     public Node(Context context, Wallet wallet, Block genesisBlock){
@@ -48,7 +48,7 @@ public class Node implements Runnable
 
     public Node()
     {
-        this(Start.localContext, Start.localWallet, GenesisBlock.getInstance().getBlock());
+        this(Start.localContext, Start.localWallet, GenesisBlock.getInstance(Start.localContext).getBlock());
     }
 
     public void start()
@@ -80,14 +80,15 @@ public class Node implements Runnable
     {
         while(shouldMine) {
             walletB = new Wallet();
-            addBlock(genesisBlock);
-            UTXOs.put(GenesisBlock.genesisTransaction.outputs.get(0).id, GenesisBlock.genesisTransaction.outputs.get(0));
+            blockchain.add(genesisBlock);
+            UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
 
             Block block1 = new Block(genesisBlock.hash);
             System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
             System.out.println("\nLocal wallet is Attempting to send funds (40) to WalletB...");
             block1.addTransaction(minerWallet.sendFunds(walletB.publicKey, 40f));
             addBlock(block1);
+            //context.putBlock(block1);
             System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
             System.out.println("WalletB's balance is: " + walletB.getBalance());
 

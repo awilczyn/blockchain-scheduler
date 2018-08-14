@@ -2,12 +2,13 @@ package blockchain.core;
 
 import blockchain.util.StringUtil;
 
+import java.io.Serializable;
 import java.security.PublicKey;
 
 /**
  * Created by andrzejwilczynski on 31/07/2018.
  */
-public class TransactionOutput
+public class TransactionOutput implements Serializable
 {
     public String id;
     public PublicKey recipient;

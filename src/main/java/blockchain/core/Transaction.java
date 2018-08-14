@@ -1,15 +1,15 @@
 package blockchain.core;
 
-import blockchain.Start;
 import blockchain.util.StringUtil;
 
+import java.io.Serializable;
 import java.security.*;
 import java.util.ArrayList;
 
 /**
  * Created by andrzejwilczynski on 31/07/2018.
  */
-public class Transaction
+public class Transaction implements Serializable
 {
     public String transactionId;
     public PublicKey sender;

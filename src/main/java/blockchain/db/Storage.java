@@ -13,7 +13,7 @@ import java.util.HashMap;
 /**
  * Created by andrzejwilczynski on 07/08/2018.
  */
-public class Storage
+public class Storage<T>
 {
     private static Storage instance;
 
@@ -23,14 +23,14 @@ public class Storage
 
     private DB blocksDB;
 
-    private HTreeMap<byte[], byte[]> blocksMap;
+    private HTreeMap blocksMap;
 
     public HashMap<ByteArrayKey, Block> blocks;
 
     private Storage()
     {
-        blocksDB            = getDB(pathBlocksDB,false,true);
-        blocksMap           = blocksDB.hashMap("map").keySerializer(Serializer.BYTE_ARRAY).valueSerializer(Serializer.BYTE_ARRAY).createOrOpen();
+        blocksDB = getDB(pathBlocksDB,false,true);
+        blocksMap = blocksDB.hashMap("map").createOrOpen();
     }
 
     /**
@@ -67,11 +67,19 @@ public class Storage
      * @param value
      * @return
      */
-    public DB put(StorageTypes map, byte[] key, byte[] value)
+    public DB put(StorageTypes map, String key, T object)
     {
         if(map == StorageTypes.BLOCKS) {
-            blocksMap.put(key,value);
+            blocksMap.put(key,object);
             return blocksDB;
+        }
+        return null;
+    }
+
+    public Object get(StorageTypes map, String key)
+    {
+        if(map == StorageTypes.BLOCKS){
+            return blocksMap.get(key);
         }
         return null;
     }

@@ -12,23 +12,32 @@ import java.util.HashMap;
  */
 public class Context
 {
-    public HashMap<ByteArrayKey, Block> blocks;
+    public HashMap<String, Block> blocks;
 
     public Context()
     {
-        this.blocks = new HashMap<ByteArrayKey, Block>();
+        this.blocks = new HashMap<>();
     }
 
+    /**
+     *
+     * @param block
+     */
     public void putBlock(Block block)
     {
-        //byte[] indexBytes = ByteUtil.bigIntegerToBytes( BigInteger.valueOf(block.header.getIndex()));
-        //blocks.put(new ByteArrayKey(indexBytes) , block);
+        blocks.put(block.hash, block);
+        Storage.getInstance().put(StorageTypes.BLOCKS, block.hash, blocks.get(block.hash));
+    }
+
+    public Block getBlock(String index)
+    {
+        return (Block) Storage.getInstance().get(StorageTypes.BLOCKS, index);
     }
 
     public void saveBlocksToDB()
     {
-//        for( ByteArrayKey key : blocks.keySet() ) {
-//            Storage.getInstance().put(StorageTypes.BLOCKS, key.toByteArray(), blocks.get(key).getEncoded());
-//        }
+        for( String key : blocks.keySet() ) {
+            Storage.getInstance().put(StorageTypes.BLOCKS, key, blocks.get(key));
+        }
     }
 }

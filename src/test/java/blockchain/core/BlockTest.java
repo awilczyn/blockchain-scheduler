@@ -2,6 +2,7 @@ package blockchain.core;
 
 import blockchain.Start;
 import blockchain.core.genesis.GenesisBlock;
+import blockchain.db.Context;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.junit.Test;
 
@@ -27,12 +28,13 @@ public class BlockTest
     {
         Security.addProvider(new BouncyCastleProvider());
 
+        Start.localContext = new Context();
         Start.localWallet = new Wallet();
-        this.genesisBlock = GenesisBlock.getInstance().getBlock();
+        this.genesisBlock = GenesisBlock.getInstance(Start.localContext).getBlock();
 
         walletB = new Wallet();
-        addBlock(genesisBlock);
-        Node.UTXOs.put(GenesisBlock.genesisTransaction.outputs.get(0).id, GenesisBlock.genesisTransaction.outputs.get(0));
+        blockchain.add(genesisBlock);
+        Node.UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
 
         Block block1 = new Block(genesisBlock.hash);
         block1.addTransaction(Start.localWallet.sendFunds(walletB.publicKey, 40f));
@@ -54,7 +56,7 @@ public class BlockTest
         Boolean valid = true;
         String hashTarget = new String(new char[difficulty]).replace('\0', '0');
         HashMap<String,TransactionOutput> tempUTXOs = new HashMap<String,TransactionOutput>();
-        tempUTXOs.put(GenesisBlock.genesisTransaction.outputs.get(0).id, GenesisBlock.genesisTransaction.outputs.get(0));
+        tempUTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
 
         for(int i=1; i < blockchain.size(); i++) {
             currentBlock = blockchain.get(i);

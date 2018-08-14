@@ -2,13 +2,14 @@ package blockchain.core;
 
 import blockchain.util.StringUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by andrzejwilczynski on 24/07/2018.
  */
-public class Block
+public class Block implements Serializable
 {
     public String hash;
 
@@ -32,6 +33,15 @@ public class Block
         this.previousHash = previousHash;
         this.timeStamp = new Date().getTime();
         this.hash = calculateHash();
+    }
+
+    /**
+     *
+     * @param genesisHash
+     */
+    public void genesisBlock(String genesisHash)
+    {
+        this.hash = genesisHash;
     }
 
     /**
