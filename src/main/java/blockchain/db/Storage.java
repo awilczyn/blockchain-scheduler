@@ -1,14 +1,9 @@
 package blockchain.db;
 
-import blockchain.core.Block;
-import blockchain.util.ByteArrayKey;
 import blockchain.util.DirectoryUtil;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
-import org.mapdb.Serializer;
-
-import java.util.HashMap;
 
 /**
  * Created by andrzejwilczynski on 07/08/2018.
@@ -24,8 +19,6 @@ public class Storage<T>
     private DB blocksDB;
 
     private HTreeMap blocksMap;
-
-    public HashMap<ByteArrayKey, Block> blocks;
 
     private Storage()
     {

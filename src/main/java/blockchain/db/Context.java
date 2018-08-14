@@ -1,10 +1,7 @@
 package blockchain.db;
 
 import blockchain.core.Block;
-import blockchain.util.ByteArrayKey;
-import blockchain.util.ByteUtil;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 
 /**
