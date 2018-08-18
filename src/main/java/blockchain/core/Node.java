@@ -3,14 +3,18 @@ package blockchain.core;
 import blockchain.Start;
 import blockchain.core.genesis.GenesisBlock;
 import blockchain.db.Context;
+import blockchain.networking.MessageSender;
 import blockchain.networking.Peer2Peer;
+import blockchain.networking.PeriodicHeartBeat;
+import blockchain.networking.ServerInfo;
 import blockchain.util.Log;
 import com.google.gson.GsonBuilder;
+import com.sun.security.ntlm.Server;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.PriorityQueue;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -37,8 +41,11 @@ public class Node implements Runnable
     private Thread miningThread;
 
     private Peer2Peer p2p;
-    private int serverPort = 8899;
+    private ServerInfo serverInfo;
+    private int localPort;
     private boolean shouldMine;
+
+    HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
     public Node(Context context, Wallet wallet, Block genesisBlock){
         this.context = context;
@@ -46,29 +53,58 @@ public class Node implements Runnable
         this.genesisBlock = genesisBlock;
     }
 
-    public Node()
+    public Node(ServerInfo serverInfo, int localPort)
     {
         this(Start.localContext, Start.localWallet, GenesisBlock.getInstance(Start.localContext).getBlock());
+        this.serverInfo = serverInfo;
+        this.localPort = localPort;
     }
 
     public void start()
     {
+        serverStatus.put(serverInfo, new Date());
+
         if(miningThread == null){
             miningThread = new Thread(this);
         }
 
-        if(p2p == null) {
-            p2p = new Peer2Peer(serverPort);
-        }
+        new Thread(new PeriodicHeartBeat(serverStatus, localPort)).start();
+
+//        if(p2p == null) {
+//            p2p = new Peer2Peer(serverStatus, localPort);
+//        }
 
         if(shouldMine){
             Log.log(Level.INFO, "Node already running");
             return;
         }
 
-        p2p.start();
+        //p2p.start();
         shouldMine = true;
         miningThread.start();
+
+
+        ServerSocket serverSocket = null;
+        try {
+            serverSocket = new ServerSocket(localPort);
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                new Thread(new BlockchainServerRunnable(clientSocket, blockchain, serverStatus, localPort)).start();
+                //new Thread(new HeartBeatReceiverRunnable(clientSocket, serverStatus, localPort)).start();
+
+            }
+        } catch (IllegalArgumentException e) {
+        } catch (IOException e) {
+        } finally {
+            try {
+                pcr.setRunning(false);
+                pct.join();
+                if (serverSocket != null)
+                    serverSocket.close();
+            } catch (IOException e) {
+            } catch (InterruptedException e) {
+            }
+        }
     }
 
     public void run()
@@ -79,35 +115,59 @@ public class Node implements Runnable
     private void mine()
     {
         while(shouldMine) {
+            String LBmessage = "lb|" + String.valueOf(localPort) + "|" + String.valueOf(blockchain.size()) + "|";
+
             walletB = new Wallet();
             blockchain.add(genesisBlock);
             UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
 
-            Block block1 = new Block(genesisBlock.hash);
-            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
-            System.out.println("\nLocal wallet is Attempting to send funds (40) to WalletB...");
-            block1.addTransaction(minerWallet.sendFunds(walletB.publicKey, 40f));
-            addBlock(block1);
-            //context.putBlock(block1);
-            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
-            System.out.println("WalletB's balance is: " + walletB.getBalance());
+            LBmessage += genesisBlock.hash;
 
-            Block block2 = new Block(block1.hash);
-            System.out.println("\nMiner wallet attempting to send more funds (1000) than it has...");
-            block2.addTransaction(minerWallet.sendFunds(walletB.publicKey, 1000f));
-            addBlock(block2);
-            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
-            System.out.println("WalletB's balance is: " + walletB.getBalance());
+            if (serverStatus.size() <= 5) {
+                this.broadcast(LBmessage);
+            } else {
+                //select 5 random peers
+                ArrayList<ServerInfo> targetPeers = new ArrayList<ServerInfo>();
+                ArrayList<ServerInfo> allPeers = new ArrayList(serverStatus.keySet());
 
-            Block block3 = new Block(block2.hash);
-            System.out.println("\nWalletB is Attempting to send funds (20) to Miner wallet...");
-            block3.addTransaction(walletB.sendFunds( minerWallet.publicKey, 20));
-            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
-            System.out.println("WalletB's balance is: " + walletB.getBalance());
+                for (int i = 0; i < 5; i++) {
+                    Collections.shuffle(allPeers);
+                    targetPeers.add(allPeers.remove(0));
+                }
+                this.multicast(targetPeers, LBmessage);
+            }
 
-            String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
-            System.out.println("\nThe block chain: ");
-            System.out.println(blockchainJson);
+            //sleep for 2 secs
+            try {
+                Thread.sleep(2000);
+            } catch (Exception e) {
+            }
+
+//            Block block1 = new Block(genesisBlock.hash);
+//            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
+//            System.out.println("\nLocal wallet is Attempting to send funds (40) to WalletB...");
+//            block1.addTransaction(minerWallet.sendFunds(walletB.publicKey, 40f));
+//            addBlock(block1);
+//            //context.putBlock(block1);
+//            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
+//            System.out.println("WalletB's balance is: " + walletB.getBalance());
+//
+//            Block block2 = new Block(block1.hash);
+//            System.out.println("\nMiner wallet attempting to send more funds (1000) than it has...");
+//            block2.addTransaction(minerWallet.sendFunds(walletB.publicKey, 1000f));
+//            addBlock(block2);
+//            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
+//            System.out.println("WalletB's balance is: " + walletB.getBalance());
+//
+//            Block block3 = new Block(block2.hash);
+//            System.out.println("\nWalletB is Attempting to send funds (20) to Miner wallet...");
+//            block3.addTransaction(walletB.sendFunds( minerWallet.publicKey, 20));
+//            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
+//            System.out.println("WalletB's balance is: " + walletB.getBalance());
+//
+//            String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
+//            System.out.println("\nThe block chain: ");
+//            System.out.println(blockchainJson);
         }
     }
 
@@ -115,5 +175,23 @@ public class Node implements Runnable
     {
         newBlock.mineBlock(difficulty);
         blockchain.add(newBlock);
+    }
+
+    public void broadcast(String message) {
+        ArrayList<Thread> threadArrayList = new ArrayList<Thread>();
+        for (ServerInfo info: this.serverStatus.keySet()) {
+            Thread thread = new Thread(new MessageSender(info, message));
+            thread.start();
+            threadArrayList.add(thread);
+        }
+    }
+
+    public void multicast(ArrayList<ServerInfo> toPeers, String message) {
+        ArrayList<Thread> threadArrayList = new ArrayList<Thread>();
+        for (int i = 0; i < toPeers.size(); i++) {
+            Thread thread = new Thread(new MessageSender(toPeers.get(i), message));
+            thread.start();
+            threadArrayList.add(thread);
+        }
     }
 }
