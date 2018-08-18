@@ -53,22 +53,16 @@ public class Node implements Runnable
         this.genesisBlock = genesisBlock;
     }
 
-    public Node(ServerInfo serverInfo, int localPort)
+    public Node(Socket clientSocket, HashMap<ServerInfo, Date> serverStatus, int localPort)
     {
         this(Start.localContext, Start.localWallet, GenesisBlock.getInstance(Start.localContext).getBlock());
-        this.serverInfo = serverInfo;
-        this.localPort = localPort;
     }
 
     public void start()
     {
-        serverStatus.put(serverInfo, new Date());
-
         if(miningThread == null){
             miningThread = new Thread(this);
         }
-
-        new Thread(new PeriodicHeartBeat(serverStatus, localPort)).start();
 
 //        if(p2p == null) {
 //            p2p = new Peer2Peer(serverStatus, localPort);
@@ -82,29 +76,6 @@ public class Node implements Runnable
         //p2p.start();
         shouldMine = true;
         miningThread.start();
-
-
-        ServerSocket serverSocket = null;
-        try {
-            serverSocket = new ServerSocket(localPort);
-            while (true) {
-                Socket clientSocket = serverSocket.accept();
-                new Thread(new BlockchainServerRunnable(clientSocket, blockchain, serverStatus, localPort)).start();
-                //new Thread(new HeartBeatReceiverRunnable(clientSocket, serverStatus, localPort)).start();
-
-            }
-        } catch (IllegalArgumentException e) {
-        } catch (IOException e) {
-        } finally {
-            try {
-                pcr.setRunning(false);
-                pct.join();
-                if (serverSocket != null)
-                    serverSocket.close();
-            } catch (IOException e) {
-            } catch (InterruptedException e) {
-            }
-        }
     }
 
     public void run()
@@ -115,33 +86,9 @@ public class Node implements Runnable
     private void mine()
     {
         while(shouldMine) {
-            String LBmessage = "lb|" + String.valueOf(localPort) + "|" + String.valueOf(blockchain.size()) + "|";
-
             walletB = new Wallet();
             blockchain.add(genesisBlock);
             UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
-
-            LBmessage += genesisBlock.hash;
-
-            if (serverStatus.size() <= 5) {
-                this.broadcast(LBmessage);
-            } else {
-                //select 5 random peers
-                ArrayList<ServerInfo> targetPeers = new ArrayList<ServerInfo>();
-                ArrayList<ServerInfo> allPeers = new ArrayList(serverStatus.keySet());
-
-                for (int i = 0; i < 5; i++) {
-                    Collections.shuffle(allPeers);
-                    targetPeers.add(allPeers.remove(0));
-                }
-                this.multicast(targetPeers, LBmessage);
-            }
-
-            //sleep for 2 secs
-            try {
-                Thread.sleep(2000);
-            } catch (Exception e) {
-            }
 
 //            Block block1 = new Block(genesisBlock.hash);
 //            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
