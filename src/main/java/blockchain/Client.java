@@ -14,17 +14,13 @@ import java.util.HashMap;
 /**
  * Created by andrzejwilczynski on 24/07/2018.
  */
-public class StartClient
+public class Client
 {
-    public static Node localNode;
-    public static Context localContext;
-    public static Wallet localWallet;
-
     public static void main(String[] args)
     {
         Security.addProvider(new BouncyCastleProvider());
 
-        int remotePort = 8000;
+        int remotePort = 7001;
         String remoteHost = "127.0.0.1";
 
         HashMap<ServerInfo, Date> serverStatus = new HashMap<>();

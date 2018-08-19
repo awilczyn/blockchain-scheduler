@@ -1,6 +1,5 @@
 package blockchain.core.genesis;
 
-import blockchain.Start;
 import blockchain.core.*;
 import blockchain.db.Context;
 import blockchain.util.StringUtil;
@@ -19,10 +18,12 @@ public class GenesisBlock
     public static Transaction genesisTransaction;
 
     private Wallet wallet;
+    private Wallet localWallet;
 
-    private GenesisBlock(Context context)
+    private GenesisBlock(Context context, Wallet localWallet)
     {
         this.context = context;
+        this.localWallet = localWallet;
         this.createGenesisBlock();
     }
 
@@ -33,7 +34,7 @@ public class GenesisBlock
 
         if (block == null) {
             wallet = new Wallet();
-            genesisTransaction = new Transaction(wallet.publicKey, Start.localWallet.publicKey, 100f, null);
+            genesisTransaction = new Transaction(wallet.publicKey, localWallet.publicKey, 100f, null);
             genesisTransaction.generateSignature(wallet.privateKey);
             genesisTransaction.transactionId = "0";
             genesisTransaction.outputs.add(
@@ -54,10 +55,10 @@ public class GenesisBlock
         }
     }
 
-    public static GenesisBlock getInstance(Context context)
+    public static GenesisBlock getInstance(Context context, Wallet localWallet)
     {
         if(instance == null) {
-            instance = new GenesisBlock(context);
+            instance = new GenesisBlock(context, localWallet);
         }
         return instance;
     }

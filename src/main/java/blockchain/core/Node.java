@@ -1,18 +1,12 @@
 package blockchain.core;
 
-import blockchain.Start;
 import blockchain.core.genesis.GenesisBlock;
 import blockchain.db.Context;
 import blockchain.networking.MessageSender;
 import blockchain.networking.Peer2Peer;
-import blockchain.networking.PeriodicHeartBeat;
 import blockchain.networking.ServerInfo;
 import blockchain.util.Log;
-import com.google.gson.GsonBuilder;
-import com.sun.security.ntlm.Server;
 
-import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 import java.util.logging.Level;
@@ -53,9 +47,9 @@ public class Node implements Runnable
         this.genesisBlock = genesisBlock;
     }
 
-    public Node(Socket clientSocket, HashMap<ServerInfo, Date> serverStatus, int localPort)
+    public Node(Context localContext, Wallet localWallet, Socket clientSocket, HashMap<ServerInfo, Date> serverStatus, int localPort)
     {
-        this(Start.localContext, Start.localWallet, GenesisBlock.getInstance(Start.localContext).getBlock());
+        this(localContext, localWallet, GenesisBlock.getInstance(localContext, localWallet).getBlock());
     }
 
     public void start()

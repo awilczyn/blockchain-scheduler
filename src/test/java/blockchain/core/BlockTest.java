@@ -1,6 +1,5 @@
 package blockchain.core;
 
-import blockchain.Start;
 import blockchain.core.genesis.GenesisBlock;
 import blockchain.db.Context;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -28,24 +27,24 @@ public class BlockTest
     {
         Security.addProvider(new BouncyCastleProvider());
 
-        Start.localContext = new Context();
-        Start.localWallet = new Wallet();
-        this.genesisBlock = GenesisBlock.getInstance(Start.localContext).getBlock();
+        Context localContext = new Context();
+        Wallet localWallet = new Wallet();
+        this.genesisBlock = GenesisBlock.getInstance(localContext, localWallet).getBlock();
 
         walletB = new Wallet();
         blockchain.add(genesisBlock);
         Node.UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
 
         Block block1 = new Block(genesisBlock.hash);
-        block1.addTransaction(Start.localWallet.sendFunds(walletB.publicKey, 40f));
+        block1.addTransaction(localWallet.sendFunds(walletB.publicKey, 40f));
         addBlock(block1);
 
         Block block2 = new Block(block1.hash);
-        block2.addTransaction(Start.localWallet.sendFunds(walletB.publicKey, 1000f));
+        block2.addTransaction(localWallet.sendFunds(walletB.publicKey, 1000f));
         addBlock(block2);
 
         Block block3 = new Block(block2.hash);
-        block3.addTransaction(walletB.sendFunds( Start.localWallet.publicKey, 20));
+        block3.addTransaction(walletB.sendFunds(localWallet.publicKey, 20));
     }
 
     @Test
