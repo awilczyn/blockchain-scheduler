@@ -35,7 +35,7 @@ public class Storage<T>
      */
     private DB getDB(String path, boolean safeMode, boolean autoCleanup)
     {
-        DBMaker.Maker dbConnection = DBMaker.fileDB(path).fileMmapEnable();
+        DBMaker.Maker dbConnection = DBMaker.fileDB(path).fileMmapEnable().fileLockDisable();
         if(safeMode){
             dbConnection = dbConnection.transactionEnable();
         }
@@ -57,7 +57,6 @@ public class Storage<T>
      *
      * @param map
      * @param key
-     * @param value
      * @return
      */
     public DB put(StorageTypes map, String key, T object)

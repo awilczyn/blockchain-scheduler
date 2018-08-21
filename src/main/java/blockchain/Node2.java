@@ -40,13 +40,14 @@ public class Node2
         Context context = new Context();
         Wallet wallet = new Wallet();
 
+        Node localNode = new Node(context, wallet);
+        new Thread(localNode).start();
+
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(localPort);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                Node localNode = new Node(context, wallet, clientSocket, serverStatus, localPort);
-                new Thread(localNode).start();
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
 
             }

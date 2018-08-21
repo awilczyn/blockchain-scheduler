@@ -47,7 +47,7 @@ public class Node implements Runnable
         this.genesisBlock = genesisBlock;
     }
 
-    public Node(Context localContext, Wallet localWallet, Socket clientSocket, HashMap<ServerInfo, Date> serverStatus, int localPort)
+    public Node(Context localContext, Wallet localWallet)
     {
         this(localContext, localWallet, GenesisBlock.getInstance(localContext, localWallet).getBlock());
     }
@@ -58,16 +58,11 @@ public class Node implements Runnable
             miningThread = new Thread(this);
         }
 
-//        if(p2p == null) {
-//            p2p = new Peer2Peer(serverStatus, localPort);
-//        }
-
         if(shouldMine){
             Log.log(Level.INFO, "Node already running");
             return;
         }
 
-        //p2p.start();
         shouldMine = true;
         miningThread.start();
     }

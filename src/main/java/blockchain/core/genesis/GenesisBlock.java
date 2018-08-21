@@ -30,7 +30,9 @@ public class GenesisBlock
     public void createGenesisBlock()
     {
         // get first block from database
-        //block = context.getBlock(this.getGenesisHash());
+        System.out.println("Searching genesis block in database... ");
+        block = context.getBlock(this.getGenesisHash());
+
 
         if (block == null) {
             wallet = new Wallet();
@@ -51,7 +53,9 @@ public class GenesisBlock
             block.mineBlock(difficulty);
             block.genesisBlock(getGenesisHash());
             // put genesis block to database
-            //context.putBlock(block);
+            context.putBlock(block);
+        } else {
+            System.out.println("Genesis block found in database");
         }
     }
 
