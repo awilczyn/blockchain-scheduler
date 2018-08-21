@@ -23,7 +23,7 @@ public class Client
         int remotePort = 7001;
         String remoteHost = "127.0.0.1";
 
-        HashMap<ServerInfo, Date> serverStatus = new HashMap<>();
+        HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
         serverStatus.put(new ServerInfo(remoteHost, remotePort), new Date());
 
         try {

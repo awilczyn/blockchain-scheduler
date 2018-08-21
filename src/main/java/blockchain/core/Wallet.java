@@ -19,9 +19,6 @@ public class Wallet
 
     public HashMap<String,TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>();
 
-    static final String PRIVATE_KEY = "sdfsdf";
-    static final String PUBLIC_KEY = "sdfsdf";
-
     public Wallet()
     {
         generateKeyPair();
@@ -59,10 +56,10 @@ public class Wallet
 
     public Transaction sendFunds(PublicKey recipient,float value )
     {
-        if(getBalance() < value) { //gather balance and check funds.
-            System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
-            return null;
-        }
+//        if(getBalance() < value) { //gather balance and check funds.
+//            System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
+//            return null;
+//        }
         //create array list of inputs
         ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
 

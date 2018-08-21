@@ -13,7 +13,7 @@ public class Context
 
     public Context()
     {
-        this.blocks = new HashMap<>();
+        this.blocks = new HashMap<String, Block>();
     }
 
     /**

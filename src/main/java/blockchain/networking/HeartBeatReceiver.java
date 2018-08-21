@@ -49,33 +49,33 @@ public class HeartBeatReceiver implements Runnable{
             	switch (tokens[0]) {
                 	case "hb":
                 		serverInQuestion = new ServerInfo(remoteIP, Integer.valueOf(tokens[1]));
-                		
+
                 		if (!serverStatus.containsKey(serverInQuestion)) {
                 			String forwardMessage = "si|" + String.valueOf(localPort) + "|" + remoteIP + "|" + tokens[1];
                     		this.broadcast(forwardMessage, new ArrayList<ServerInfo>());
                 		}
-                		
+
                 		serverStatus.put(serverInQuestion, new Date());
                 		this.removeUnresponsive();
-            			
+
                 	case "si":
                 		serverInQuestion = new ServerInfo(tokens[2], Integer.valueOf(tokens[3]));
                 		ServerInfo originator = new ServerInfo(remoteIP, Integer.valueOf(tokens[1]));
-                		
+
                 		if (!serverStatus.containsKey(serverInQuestion)) {
                     		ArrayList<ServerInfo> exempt = new ArrayList<ServerInfo>();
                     		exempt.add(originator);
                     		exempt.add(serverInQuestion);
                     		String relayMessage = "si|" + String.valueOf(localPort) + "|" + tokens[2] + "|" + tokens[3];
                     		this.broadcast(relayMessage, exempt);
-                    		
+
                 		}
-                		
+
                 		serverStatus.put(serverInQuestion, new Date());
                 		serverStatus.put(originator, new Date());
                 		this.removeUnresponsive();
-                    	
-                	default:     
+
+                	default:
             	}
 			}
         } catch (Exception e) {

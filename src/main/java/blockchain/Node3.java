@@ -22,7 +22,7 @@ import java.util.HashMap;
 public class Node3
 {
 
-    public static HashMap<ServerInfo, Date> serverStatus = new HashMap<>();
+    public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
     public static void main(String[] args)
     {

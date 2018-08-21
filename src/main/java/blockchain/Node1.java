@@ -18,10 +18,9 @@ import java.util.HashMap;
 public class Node1
 {
 
-    public static HashMap<ServerInfo, Date> serverStatus = new HashMap<>();
+    public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws IOException {
         Security.addProvider(new BouncyCastleProvider());
 
         int localPort = 7001;
@@ -38,6 +37,8 @@ public class Node1
 
         Node localNode = new blockchain.core.Node(context, wallet);
         localNode.start();
+
+        localNode.addTransactionToPool(10);
 
         ServerSocket serverSocket = null;
         try {

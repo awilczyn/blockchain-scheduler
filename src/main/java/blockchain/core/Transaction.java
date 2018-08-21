@@ -2,9 +2,13 @@ package blockchain.core;
 
 import blockchain.util.StringUtil;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.security.*;
 import java.util.ArrayList;
+import java.util.Base64;
 
 /**
  * Created by andrzejwilczynski on 31/07/2018.
@@ -106,5 +110,10 @@ public class Transaction implements Serializable
             total += o.value;
         }
         return total;
+    }
+
+    public String getTransactionId()
+    {
+        return transactionId;
     }
 }

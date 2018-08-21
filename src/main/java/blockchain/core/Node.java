@@ -5,7 +5,12 @@ import blockchain.db.Context;
 import blockchain.networking.MessageSender;
 import blockchain.networking.ServerInfo;
 import blockchain.util.Log;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -26,19 +31,23 @@ public class Node implements Runnable
     public static HashMap<String, TransactionOutput> UTXOs = new HashMap<String,TransactionOutput>();
     public static int difficulty = 5;
     public static float minimumTransaction = 0.1f;
-    public static Wallet walletB;
 
     /** peer to peer data */
 
     private Thread miningThread;
     private boolean shouldMine;
 
+    private Wallet testWallet;
+
     HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
+
+    public static HashMap<String, Transaction> pool = new HashMap<String, Transaction>();
 
     public Node(Context context, Wallet wallet, Block genesisBlock){
         this.context = context;
         this.minerWallet = wallet;
         this.genesisBlock = genesisBlock;
+        this.testWallet = new Wallet();
     }
 
     public Node(Context localContext, Wallet localWallet)
@@ -69,14 +78,20 @@ public class Node implements Runnable
     private void mine()
     {
         while(shouldMine) {
-            walletB = new Wallet();
             blockchain.add(genesisBlock);
             UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
 
+            if (!pool.isEmpty()) {
+
+
+            }
 //            Block block1 = new Block(genesisBlock.hash);
 //            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
 //            System.out.println("\nLocal wallet is Attempting to send funds (40) to WalletB...");
-//            block1.addTransaction(minerWallet.sendFunds(walletB.publicKey, 40f));
+
+//            Transaction transaction1 = minerWallet.sendFunds(walletB.publicKey, 40f);
+//
+//              block1.addTransaction(transaction1);
 //            addBlock(block1);
 //            //context.putBlock(block1);
 //            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
@@ -123,5 +138,17 @@ public class Node implements Runnable
             thread.start();
             threadArrayList.add(thread);
         }
+    }
+
+    public void addTransactionToPool(float value) throws IOException {
+        Transaction transaction1 = minerWallet.sendFunds(testWallet.publicKey, value);
+        pool.put(transaction1.getTransactionId(), transaction1);
+
+        String transactionJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        JsonObject object = (JsonObject) parser.parse(transactionJson);
+        Transaction trans = gson.fromJson(object, Transaction.class);
+        broadcast(transaction1.toString());
     }
 }
