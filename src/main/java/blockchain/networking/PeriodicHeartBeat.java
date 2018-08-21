@@ -12,7 +12,6 @@ public class PeriodicHeartBeat implements Runnable {
     public PeriodicHeartBeat(HashMap<ServerInfo, Date> serverStatus, int localPort)
     {
         this.serverStatus = serverStatus;
-        this.sequenceNumber = 0;
         this.localPort = localPort;
     }
 
@@ -21,19 +20,16 @@ public class PeriodicHeartBeat implements Runnable {
     	String message;
         while(true) {
             // broadcast HeartBeat message to all peers
-            message = "hb|" + String.valueOf(localPort) + "|" + String.valueOf(sequenceNumber);
+            message = "heartbeat from another peer working on port: " + String.valueOf(localPort);
 
             for (ServerInfo info : serverStatus.keySet()) {
                 Thread thread = new Thread(new HeartBeatSender(info, message));
                 thread.start();
             }
 
-            // increment the sequenceNumber
-            sequenceNumber += 1;
-            
             // sleep for two seconds
             try {
-                Thread.sleep(2000);
+                Thread.sleep(50000);
             } catch (InterruptedException e) {
             }
         }

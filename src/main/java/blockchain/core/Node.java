@@ -3,11 +3,9 @@ package blockchain.core;
 import blockchain.core.genesis.GenesisBlock;
 import blockchain.db.Context;
 import blockchain.networking.MessageSender;
-import blockchain.networking.Peer2Peer;
 import blockchain.networking.ServerInfo;
 import blockchain.util.Log;
 
-import java.net.Socket;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -33,10 +31,6 @@ public class Node implements Runnable
     /** peer to peer data */
 
     private Thread miningThread;
-
-    private Peer2Peer p2p;
-    private ServerInfo serverInfo;
-    private int localPort;
     private boolean shouldMine;
 
     HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();

@@ -18,7 +18,7 @@ public class PeriodicCatchup implements Runnable {
 	@Override
 	public void run() {
 		while(true) {
-			String LBmessage = "lb|" + String.valueOf(localPort) + "still working ...";
+			String LBmessage = "Peer on port: " + String.valueOf(localPort) + " still working ...";
 
 			if (serverStatus.size() <= 5) {
 				this.broadcast(LBmessage);
@@ -38,7 +38,7 @@ public class PeriodicCatchup implements Runnable {
 
 			//sleep for 2 secs
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(50000);
 			} catch (Exception e) {
 			}
 		}

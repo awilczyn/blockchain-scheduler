@@ -35,7 +35,7 @@ public class Node3
         new Thread(new PeriodicHeartBeat(serverStatus, localPort)).start();
 
         //periodically catchup
-        new Thread(new PeriodicCatchup(serverStatus, localPort)).start();
+        //new Thread(new PeriodicCatchup(serverStatus, localPort)).start();
 
         Context context = new Context();
         Wallet wallet = new Wallet();
@@ -66,7 +66,6 @@ public class Node3
 
     public static void prepareNodeList()
     {
-        serverStatus.put(new ServerInfo("127.0.0.1", 7001), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7002), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7004), new Date());
     }
