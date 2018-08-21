@@ -4,6 +4,7 @@ import blockchain.core.genesis.GenesisBlock;
 import blockchain.db.Context;
 import blockchain.networking.MessageSender;
 import blockchain.networking.ServerInfo;
+import blockchain.serialization.PublicKeyDeserizlizer;
 import blockchain.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -11,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.security.PublicKey;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -144,11 +146,12 @@ public class Node implements Runnable
         Transaction transaction1 = minerWallet.sendFunds(testWallet.publicKey, value);
         pool.put(transaction1.getTransactionId(), transaction1);
 
-        String transactionJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
-        Gson gson = new Gson();
-        JsonParser parser = new JsonParser();
-        JsonObject object = (JsonObject) parser.parse(transactionJson);
-        Transaction trans = gson.fromJson(object, Transaction.class);
+        String transactionJson = new GsonBuilder().setPrettyPrinting().create().toJson(transaction1);
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(PublicKey.class, new PublicKeyDeserizlizer());
+        Gson gson = gsonBuilder.create();
+        Transaction test = gson.fromJson(transactionJson, Transaction.class);
         broadcast(transaction1.toString());
     }
 }
