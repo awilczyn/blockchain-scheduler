@@ -1,6 +1,9 @@
 package blockchain.core;
 
+import blockchain.serialization.Serializer;
+import blockchain.util.HashUtil;
 import blockchain.util.StringUtil;
+import blockchain.util.ecdsa.ECKey;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -8,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.security.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 
 /**
@@ -16,16 +20,20 @@ import java.util.Base64;
 public class Transaction implements Serializable
 {
     public String transactionId;
-    public PublicKey sender;
-    public PublicKey recipient;
+    private final byte[] sender;
+    private final byte[] recipient;
     public float value;
     public byte[] signature;
+    /* this transaction signed by the sender, with separate values for r, s and v */
+    private final byte[] r;
+    private final byte[] s;
+    private final byte[] v = new byte[1];
     public int sequence;
 
     public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
     public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
 
-    public Transaction(PublicKey sender, PublicKey recipient, float value,  ArrayList<TransactionInput> inputs)
+    public Transaction(byte[] sender, byte[] recipient, float value,  ArrayList<TransactionInput> inputs)
     {
         this.sender = sender;
         this.recipient = recipient;
@@ -33,26 +41,34 @@ public class Transaction implements Serializable
         this.inputs = inputs;
     }
 
-    private String calculateHash() {
-        sequence++; //increase the sequence to avoid 2 identical transactions having the same hash
-        return StringUtil.applySha256(
-                StringUtil.getStringFromKey(sender) +
-                        StringUtil.getStringFromKey(recipient) +
-                        Float.toString(value) + sequence
-        );
+    public byte[] getParcelled() {
+        return Serializer.createParcel(new Object[]{  this.sender, this.recipient, this.value, this.sequence});
     }
 
-    public void generateSignature(PrivateKey privateKey)
+    private byte[] calculateHash() {
+        sequence++; //increase the sequence to avoid 2 identical transactions having the same hash
+        return HashUtil.applySha256(getParcelled());
+    }
+
+    public ECKey.ECDSASignature generateSignature(byte[] privateKey)
     {
-        String data = StringUtil.getStringFromKey(sender) +
-                StringUtil.getStringFromKey(recipient) + Float.toString(value)	;
-        signature = StringUtil.applyECDSASig(privateKey,data);
+        return (ECKey.fromPrivate(privateKey)).sign(HashUtil.applyKeccak(getParcelledSansSig()));
+    }
+
+    public byte[] getParcelledSansSig() {
+        return Serializer.createParcel(new Object[]{this.sender, this.recipient, this.value});
     }
 
     public boolean verifiySignature() {
-        String data = StringUtil.getStringFromKey(sender) +
-                StringUtil.getStringFromKey(recipient) + Float.toString(value)	;
-        return StringUtil.verifyECDSASig(sender, data, signature);
+        boolean verified = false;
+        try {
+            ECKey.ECDSASignature sig = ECKey.ECDSASignature.fromComponents(getR(), getS(), getV());
+            ECKey temp = ECKey.fromPublicOnly(ECKey.signatureToKeyBytes(HashUtil.applyKeccak(getParcelledSansSig()), sig));
+            if(ECKey.verifyWithRecovery(HashUtil.applyKeccak(getParcelledSansSig()), sig) && Arrays.equals(getSender(),temp.getAddress())) verified = true;
+        } catch (Exception e) {
+            verified = false;
+        }
+        return verified;
     }
 
     public boolean processTransaction()
@@ -115,5 +131,21 @@ public class Transaction implements Serializable
     public String getTransactionId()
     {
         return transactionId;
+    }
+
+    public byte[] getR() {
+        return r;
+    }
+
+    public byte[] getS() {
+        return s;
+    }
+
+    public byte getV() {
+        return v[0];
+    }
+
+    public byte[] getSender(){
+        return this.sender;
     }
 }
