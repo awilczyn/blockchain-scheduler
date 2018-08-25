@@ -38,7 +38,7 @@ public class Node1
         Node localNode = new blockchain.core.Node(context, wallet);
         localNode.start();
 
-        localNode.addTransactionToPool(10);
+       // localNode.addTransactionToPool(10);
 
         ServerSocket serverSocket = null;
         try {

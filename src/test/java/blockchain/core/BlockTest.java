@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.security.Security;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.Assert.*;
@@ -36,15 +37,15 @@ public class BlockTest
         Node.UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
 
         Block block1 = new Block(genesisBlock.hash);
-        block1.addTransaction(localWallet.sendFunds(walletB.publicKey, 40f));
+        block1.addTransaction(localWallet.sendFunds(walletB.getPublicKey(), 40f));
         addBlock(block1);
 
         Block block2 = new Block(block1.hash);
-        block2.addTransaction(localWallet.sendFunds(walletB.publicKey, 1000f));
+        block2.addTransaction(localWallet.sendFunds(walletB.getPublicKey(), 1000f));
         addBlock(block2);
 
         Block block3 = new Block(block2.hash);
-        block3.addTransaction(walletB.sendFunds(localWallet.publicKey, 20));
+        block3.addTransaction(walletB.sendFunds(localWallet.getPublicKey(), 20));
     }
 
     @Test
@@ -54,7 +55,7 @@ public class BlockTest
         Block previousBlock;
         Boolean valid = true;
         String hashTarget = new String(new char[difficulty]).replace('\0', '0');
-        HashMap<String,TransactionOutput> tempUTXOs = new HashMap<String,TransactionOutput>();
+        HashMap<byte [],TransactionOutput> tempUTXOs = new HashMap<>();
         tempUTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
 
         for(int i=1; i < blockchain.size(); i++) {
@@ -110,11 +111,11 @@ public class BlockTest
                     tempUTXOs.put(output.id, output);
                 }
 
-                if( currentTransaction.outputs.get(0).recipient != currentTransaction.recipient) {
+                if(!Arrays.equals(currentTransaction.outputs.get(0).recipient, currentTransaction.getRecipient())) {
                     System.out.println("#Transaction(" + t + ") output reciepient is not who it should be");
                     valid = false;
                 }
-                if( currentTransaction.outputs.get(1).recipient != currentTransaction.sender) {
+                if(!Arrays.equals(currentTransaction.outputs.get(1).recipient, currentTransaction.getSender())) {
                     System.out.println("#Transaction(" + t + ") output 'change' is not sender.");
                     valid = false;
                 }

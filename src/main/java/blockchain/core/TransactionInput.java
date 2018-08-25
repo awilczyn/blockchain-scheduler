@@ -7,10 +7,10 @@ import java.io.Serializable;
  */
 public class TransactionInput implements Serializable
 {
-    public String transactionOutputId;
+    public byte [] transactionOutputId;
     public TransactionOutput UTXO; //Contains the Unspent transaction output
 
-    public TransactionInput(String transactionOutputId)
+    public TransactionInput(byte [] transactionOutputId)
     {
         this.transactionOutputId = transactionOutputId;
     }

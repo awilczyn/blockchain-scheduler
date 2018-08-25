@@ -1,6 +1,7 @@
 package blockchain.core;
 
 import blockchain.serialization.Serializer;
+import blockchain.util.ByteUtil;
 import blockchain.util.HashUtil;
 import blockchain.util.StringUtil;
 import blockchain.util.ecdsa.ECKey;
@@ -19,11 +20,10 @@ import java.util.Base64;
  */
 public class Transaction implements Serializable
 {
-    public String transactionId;
+    public byte[] transactionId;
     private final byte[] sender;
     private final byte[] recipient;
     public float value;
-    public byte[] signature;
     /* this transaction signed by the sender, with separate values for r, s and v */
     private final byte[] r;
     private final byte[] s;
@@ -33,12 +33,16 @@ public class Transaction implements Serializable
     public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
     public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
 
-    public Transaction(byte[] sender, byte[] recipient, float value,  ArrayList<TransactionInput> inputs)
+    public Transaction(byte[] privateKey, byte[] sender, byte[] recipient, float value,  ArrayList<TransactionInput> inputs)
     {
         this.sender = sender;
         this.recipient = recipient;
         this.value = value;
         this.inputs = inputs;
+        ECKey.ECDSASignature temp = generateSignature(privateKey);
+        this.r = temp.r.toByteArray();
+        this.s = temp.s.toByteArray();
+        this.v[0] = temp.v;
     }
 
     public byte[] getParcelled() {
@@ -56,7 +60,8 @@ public class Transaction implements Serializable
     }
 
     public byte[] getParcelledSansSig() {
-        return Serializer.createParcel(new Object[]{this.sender, this.recipient, this.value});
+        return ByteUtil.stringToBytes("test");
+      //  return Serializer.createParcel(new Object[]{this.sender, this.recipient, this.value});
     }
 
     public boolean verifiySignature() {
@@ -92,8 +97,8 @@ public class Transaction implements Serializable
         //generate transaction outputs:
         float leftOver = getInputsValue() - value; //get value of inputs then the left over change:
         transactionId = calculateHash();
-        outputs.add(new TransactionOutput( this.recipient, value,transactionId)); //send value to recipient
-        outputs.add(new TransactionOutput( this.sender, leftOver,transactionId)); //send the left over 'change' back to sender
+        outputs.add(new TransactionOutput( this.recipient, value, transactionId)); //send value to recipient
+        outputs.add(new TransactionOutput( this.sender, leftOver, transactionId)); //send the left over 'change' back to sender
 
         //add outputs to Unspent list
         for(TransactionOutput o : outputs) {
@@ -128,24 +133,29 @@ public class Transaction implements Serializable
         return total;
     }
 
-    public String getTransactionId()
+    public byte[] getTransactionId()
     {
         return transactionId;
     }
 
     public byte[] getR() {
-        return r;
+        return this.r;
     }
 
     public byte[] getS() {
-        return s;
+        return this.s;
     }
 
     public byte getV() {
-        return v[0];
+        return this.v[0];
     }
 
     public byte[] getSender(){
         return this.sender;
+    }
+
+    public byte[] getRecipient()
+    {
+        return this.recipient;
     }
 }

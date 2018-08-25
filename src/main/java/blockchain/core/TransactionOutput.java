@@ -1,33 +1,38 @@
 package blockchain.core;
 
+import blockchain.serialization.Serializer;
+import blockchain.util.HashUtil;
 import blockchain.util.StringUtil;
 
 import java.io.Serializable;
 import java.security.PublicKey;
+import java.util.Arrays;
 
 /**
  * Created by andrzejwilczynski on 31/07/2018.
  */
 public class TransactionOutput implements Serializable
 {
-    public String id;
-    public PublicKey recipient;
+    public byte[] id;
+    public byte[] recipient;
     public float value;
-    public String parentTransactionId;
+    public byte[] parentTransactionId;
 
 
-    public TransactionOutput(PublicKey recipient, float value, String parentTransactionId)
+    public TransactionOutput(byte[] recipient, float value, byte[] parentTransactionId)
     {
         this.recipient = recipient;
         this.value = value;
         this.parentTransactionId = parentTransactionId;
-        this.id = StringUtil.applySha256(
-                StringUtil.getStringFromKey(recipient)+Float.toString(value)+parentTransactionId
-        );
+        this.id = HashUtil.applySha256(getParcelled());
     }
 
-    public boolean isMine(PublicKey publicKey)
+    public byte[] getParcelled() {
+        return Serializer.createParcel(new Object[]{this.recipient, this.value, this.parentTransactionId});
+    }
+
+    public boolean isMine(byte[]  publicKey)
     {
-        return (publicKey == recipient);
+        return Arrays.equals(publicKey,recipient);
     }
 }

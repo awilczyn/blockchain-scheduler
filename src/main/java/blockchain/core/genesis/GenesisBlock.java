@@ -2,6 +2,7 @@ package blockchain.core.genesis;
 
 import blockchain.core.*;
 import blockchain.db.Context;
+import blockchain.util.ByteUtil;
 import blockchain.util.StringUtil;
 
 import static blockchain.core.Node.difficulty;
@@ -30,18 +31,17 @@ public class GenesisBlock
     public void createGenesisBlock()
     {
         // get first block from database
-        System.out.println("Searching genesis block in database... ");
-        block = context.getBlock(this.getGenesisHash());
+        //System.out.println("Searching genesis block in database... ");
+        //block = context.getBlock(this.getGenesisHash());
 
 
         if (block == null) {
             wallet = new Wallet();
-            genesisTransaction = new Transaction(wallet.publicKey, localWallet.publicKey, 100f, null);
-            genesisTransaction.generateSignature(wallet.privateKey);
-            genesisTransaction.transactionId = "0";
+            genesisTransaction = new Transaction(wallet.getPrivateKey(), wallet.getPublicKey(), localWallet.getPublicKey(), 100f, null);
+            genesisTransaction.transactionId = ByteUtil.stringToBytes("0");
             genesisTransaction.outputs.add(
                     new TransactionOutput(
-                            genesisTransaction.recipient,
+                            genesisTransaction.getRecipient(),
                             genesisTransaction.value,
                             genesisTransaction.transactionId
                     )
@@ -53,7 +53,7 @@ public class GenesisBlock
             block.mineBlock(difficulty);
             block.genesisBlock(getGenesisHash());
             // put genesis block to database
-            context.putBlock(block);
+            //context.putBlock(block);
         } else {
             System.out.println("Genesis block found in database");
         }
