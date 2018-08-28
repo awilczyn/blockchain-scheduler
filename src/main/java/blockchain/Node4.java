@@ -40,7 +40,7 @@ public class Node4
         Context context = new Context();
         Wallet wallet = new Wallet();
 
-        Node localNode = new Node(context, wallet, serverStatus);
+        Node localNode = new Node(context, wallet, serverStatus, localPort);
         new Thread(localNode).start();
 
         ServerSocket serverSocket = null;

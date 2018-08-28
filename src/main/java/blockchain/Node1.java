@@ -43,7 +43,7 @@ public class Node1
         Context context = new Context();
         Wallet wallet = new Wallet();
 
-        Node localNode = new blockchain.core.Node(context, wallet, serverStatus);
+        Node localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
 
         localNode.addTransactionToPool(10);

@@ -37,7 +37,6 @@ public class HeartBeatReceiver implements Runnable{
     
     public void heartBeatServerHandler(InputStream clientInputStream) {
     	BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientInputStream));
-        
         try {
         	while (true) {
             	String line = bufferedReader.readLine();
@@ -47,14 +46,19 @@ public class HeartBeatReceiver implements Runnable{
             	
             	String[] tokens = line.split("\\|");
             	String remoteIP = (((InetSocketAddress) toClient.getRemoteSocketAddress()).getAddress()).toString().replace("/", "");
+				int remotePort = Integer.valueOf(tokens[2]);
 
+				ServerInfo serverInQuestion;
             	switch (tokens[0]) {
                 	case "hb":
 						System.out.println("receiving " + line);
 						break;
                 	case "tx":
-						this.serverHandler(tokens[1]);
+						serverInQuestion = new ServerInfo(remoteIP, remotePort);
+						this.serverHandler(serverInQuestion, tokens[1]);
 						break;
+					case "txv":
+						this.transactionVerifiedHandler(tokens[1]);
                 	default:
             	}
 			}
@@ -62,16 +66,22 @@ public class HeartBeatReceiver implements Runnable{
     	}
     }
 
-	public void serverHandler(String inputLine) {
+	public void serverHandler(ServerInfo serverInQuestion, String inputLine) {
 		try {
 		  Gson gson = new GsonBuilder().create();
           Transaction transaction = gson.fromJson(inputLine, Transaction.class);
-          System.out.println("Checking transaction "+transaction.getTransactionId());
+          System.out.println("Checking transaction "+transaction);
           if (transaction.verifyTransaction()) {
-          	System.out.println("Transaction verified");
+			  String transactionVerified = "txv|"+transaction;
+			  System.out.println("Transaction correct");
+			  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
 		  }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void transactionVerifiedHandler(String inputLine) {
+		System.out.println("transaction was verified");
 	}
 }

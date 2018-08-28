@@ -41,6 +41,8 @@ public class Node implements Runnable
 
     private Wallet testWallet;
 
+    private int localPort;
+
     HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
     public static HashMap<byte [], Transaction> pool = new HashMap();
@@ -53,9 +55,10 @@ public class Node implements Runnable
         this.serverStatus = serverStatus;
     }
 
-    public Node(Context localContext, Wallet localWallet, HashMap<ServerInfo, Date> serverStatus)
+    public Node(Context localContext, Wallet localWallet, HashMap<ServerInfo, Date> serverStatus, int localPort)
     {
         this(localContext, localWallet, GenesisBlock.getInstance(localContext, localWallet).getBlock(), serverStatus);
+        this.localPort = localPort;
     }
 
     public void start()
@@ -126,6 +129,7 @@ public class Node implements Runnable
 
     public void broadcast(String message) {
         for (ServerInfo info: this.serverStatus.keySet()) {
+            message = message+"|"+localPort;
             new Thread(new MessageSender(info, message)).start();
         }
     }
