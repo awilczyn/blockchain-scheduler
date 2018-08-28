@@ -1,7 +1,5 @@
 package blockchain.util.ecdsa;
 
-import blockchain.util.ByteUtil;
-import blockchain.util.ecdsa.jce.*;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.DLSequence;
@@ -26,6 +24,9 @@ import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.util.BigIntegers;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
+import blockchain.util.ByteUtil;
+import blockchain.util.HashUtil;
+import blockchain.util.ecdsa.jce.*;
 
 import javax.annotation.Nullable;
 import javax.crypto.KeyAgreement;
@@ -458,7 +459,7 @@ public class ECKey implements Serializable {
      *
      * @return  -
      *
-     * @throws IllegalStateException if the private key bytes are not available.
+     * @throws java.lang.IllegalStateException if the private key bytes are not available.
      */
     public BigInteger getPrivKey() {
         if (privKey == null) {

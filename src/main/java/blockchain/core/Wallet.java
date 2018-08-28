@@ -2,9 +2,6 @@ package blockchain.core;
 
 
 import blockchain.util.ecdsa.ECKey;
-
-import java.security.*;
-import java.security.spec.ECGenParameterSpec;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,10 +35,10 @@ public class Wallet
 
     public Transaction sendFunds(byte [] recipient,float value )
     {
-        if(getBalance() < value) { //gather balance and check funds.
-            System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
-            return null;
-        }
+//        if(getBalance() < value) { //gather balance and check funds.
+//            System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
+//            return null;
+//        }
         //create array list of inputs
         ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
 

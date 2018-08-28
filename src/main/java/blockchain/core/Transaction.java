@@ -3,17 +3,10 @@ package blockchain.core;
 import blockchain.serialization.Serializer;
 import blockchain.util.ByteUtil;
 import blockchain.util.HashUtil;
-import blockchain.util.StringUtil;
 import blockchain.util.ecdsa.ECKey;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.security.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
 
 /**
  * Created by andrzejwilczynski on 31/07/2018.
@@ -43,6 +36,7 @@ public class Transaction implements Serializable
         this.r = temp.r.toByteArray();
         this.s = temp.s.toByteArray();
         this.v[0] = temp.v;
+        this.transactionId = calculateHash();
     }
 
     public byte[] getParcelled() {
@@ -54,12 +48,12 @@ public class Transaction implements Serializable
         return HashUtil.applySha256(getParcelled());
     }
 
-    public ECKey.ECDSASignature generateSignature(byte[] privateKey)
+    public static ECKey.ECDSASignature generateSignature(byte[] privateKey)
     {
         return (ECKey.fromPrivate(privateKey)).sign(HashUtil.applyKeccak(getParcelledSansSig()));
     }
 
-    public byte[] getParcelledSansSig() {
+    public static byte[] getParcelledSansSig() {
         return ByteUtil.stringToBytes("test");
       //  return Serializer.createParcel(new Object[]{this.sender, this.recipient, this.value});
     }
@@ -69,7 +63,8 @@ public class Transaction implements Serializable
         try {
             ECKey.ECDSASignature sig = ECKey.ECDSASignature.fromComponents(getR(), getS(), getV());
             ECKey temp = ECKey.fromPublicOnly(ECKey.signatureToKeyBytes(HashUtil.applyKeccak(getParcelledSansSig()), sig));
-            if(ECKey.verifyWithRecovery(HashUtil.applyKeccak(getParcelledSansSig()), sig) && Arrays.equals(getSender(),temp.getAddress())) verified = true;
+            //if(ECKey.verifyWithRecovery(HashUtil.applyKeccak(getParcelledSansSig()), sig) && Arrays.equals(getSender(),temp.getAddress())) verified = true;
+            if(ECKey.verifyWithRecovery(HashUtil.applyKeccak(getParcelledSansSig()), sig)) verified = true;
         } catch (Exception e) {
             verified = false;
         }
@@ -96,7 +91,6 @@ public class Transaction implements Serializable
 
         //generate transaction outputs:
         float leftOver = getInputsValue() - value; //get value of inputs then the left over change:
-        transactionId = calculateHash();
         outputs.add(new TransactionOutput( this.recipient, value, transactionId)); //send value to recipient
         outputs.add(new TransactionOutput( this.sender, leftOver, transactionId)); //send the left over 'change' back to sender
 
@@ -157,5 +151,17 @@ public class Transaction implements Serializable
     public byte[] getRecipient()
     {
         return this.recipient;
+    }
+
+    public boolean verifyTransaction() {
+        if(!this.verifiySignature()) return false;
+
+        //Transaction is verified;
+        return true;
+    }
+
+    public String toString()
+    {
+        return ByteUtil.bytesToString(this.transactionId);
     }
 }

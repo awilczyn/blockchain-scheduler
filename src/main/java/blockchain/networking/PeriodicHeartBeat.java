@@ -20,7 +20,7 @@ public class PeriodicHeartBeat implements Runnable {
     	String message;
         while(true) {
             // broadcast HeartBeat message to all peers
-            message = "heartbeat from another peer working on port: " + String.valueOf(localPort);
+            message = "hb|heartbeat from another peer working on port: " + String.valueOf(localPort);
 
             for (ServerInfo info : serverStatus.keySet()) {
                 Thread thread = new Thread(new HeartBeatSender(info, message));
