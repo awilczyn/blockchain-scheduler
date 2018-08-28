@@ -1,12 +1,15 @@
 package blockchain.networking;
 
 
+import blockchain.core.Node;
 import blockchain.core.Transaction;
+import blockchain.util.ByteUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigInteger;
 import java.net.Socket;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -46,7 +49,6 @@ public class HeartBeatReceiver implements Runnable{
             	
             	String[] tokens = line.split("\\|");
             	String remoteIP = (((InetSocketAddress) toClient.getRemoteSocketAddress()).getAddress()).toString().replace("/", "");
-				int remotePort = Integer.valueOf(tokens[2]);
 
 				ServerInfo serverInQuestion;
             	switch (tokens[0]) {
@@ -54,11 +56,13 @@ public class HeartBeatReceiver implements Runnable{
 						System.out.println("receiving " + line);
 						break;
                 	case "tx":
+						int remotePort = Integer.valueOf(tokens[2]);
 						serverInQuestion = new ServerInfo(remoteIP, remotePort);
 						this.serverHandler(serverInQuestion, tokens[1]);
 						break;
 					case "txv":
 						this.transactionVerifiedHandler(tokens[1]);
+						break;
                 	default:
             	}
 			}
@@ -72,7 +76,7 @@ public class HeartBeatReceiver implements Runnable{
           Transaction transaction = gson.fromJson(inputLine, Transaction.class);
           System.out.println("Checking transaction "+transaction);
           if (transaction.verifyTransaction()) {
-			  String transactionVerified = "txv|"+transaction;
+			  String transactionVerified = "txv|"+inputLine;
 			  System.out.println("Transaction correct");
 			  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
 		  }
@@ -81,7 +85,18 @@ public class HeartBeatReceiver implements Runnable{
 		}
 	}
 
-	public void transactionVerifiedHandler(String inputLine) {
-		System.out.println("transaction was verified");
+	public void transactionVerifiedHandler(String inputLine)
+	{
+		Gson gson = new GsonBuilder().create();
+		Transaction transaction = gson.fromJson(inputLine, Transaction.class);
+		BigInteger key = ByteUtil.bytesToBigInteger(transaction.transactionId);
+		if(Node.pool.containsKey(key)) {
+			Transaction trans = Node.pool.get(key);
+			trans.numberOfVerification++;
+			if (trans.numberOfVerification >= Node.getMinimumNumberOfConfirmation()) {
+				Node.transactionVerifiedPool.add(trans);
+			}
+		}
+    	System.out.println("transaction was verified");
 	}
 }

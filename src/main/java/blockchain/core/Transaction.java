@@ -26,6 +26,8 @@ public class Transaction implements Serializable
     public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
     public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
 
+    public int numberOfVerification = 0;
+
     public Transaction(byte[] privateKey, byte[] sender, byte[] recipient, float value,  ArrayList<TransactionInput> inputs)
     {
         this.sender = sender;

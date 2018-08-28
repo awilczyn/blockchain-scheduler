@@ -5,6 +5,7 @@ import blockchain.db.Context;
 import blockchain.networking.MessageSender;
 import blockchain.networking.ServerInfo;
 import blockchain.serialization.PublicKeyDeserizlizer;
+import blockchain.util.ByteUtil;
 import blockchain.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.*;
 import java.util.logging.Level;
@@ -43,9 +45,11 @@ public class Node implements Runnable
 
     private int localPort;
 
-    HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
+    public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
-    public static HashMap<byte [], Transaction> pool = new HashMap();
+    public static HashMap<BigInteger, Transaction> pool = new HashMap();
+
+    public static Queue<Transaction> transactionVerifiedPool = new PriorityQueue<Transaction>();;
 
     public Node(Context context, Wallet wallet, Block genesisBlock, HashMap<ServerInfo, Date> serverStatus){
         this.context = context;
@@ -87,9 +91,12 @@ public class Node implements Runnable
         blockchain.add(genesisBlock);
         UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
         while(shouldMine) {
-            if (!pool.isEmpty()) {
-
-
+            if (transactionVerifiedPool.size() >= Block.minimumNumberOfTransaction) {
+                Block block1 = new Block(genesisBlock.hash);
+                for(Transaction trans : transactionVerifiedPool) {
+                    block1.addTransaction(trans);
+                }
+                addBlock(block1);
             }
 //            Block block1 = new Block(genesisBlock.hash);
 //            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
@@ -136,9 +143,14 @@ public class Node implements Runnable
 
     public void addTransactionToPool(float value) throws IOException {
         Transaction transaction1 = minerWallet.sendFunds(testWallet.getPublicKey(), value);
-        pool.put(transaction1.getTransactionId(), transaction1);
+        pool.put(ByteUtil.bytesToBigInteger(transaction1.getTransactionId()), transaction1);
         String transactionJson = new GsonBuilder().create().toJson(transaction1);
         System.out.println("Sending transaction to peers for accept... ");
         broadcast("tx|"+transactionJson);
+    }
+
+    public static double getMinimumNumberOfConfirmation()
+    {
+        return serverStatus.size()*0.75;
     }
 }
