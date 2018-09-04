@@ -24,8 +24,7 @@ public class Node4
 
     public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) throws IOException {
         Security.addProvider(new BouncyCastleProvider());
 
         int localPort = 7004;
@@ -40,8 +39,10 @@ public class Node4
         Context context = new Context();
         Wallet wallet = new Wallet();
 
-        Node localNode = new Node(context, wallet, serverStatus, localPort);
-        new Thread(localNode).start();
+        Node localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
+        localNode.start();
+
+        localNode.addTransactionToPool(40);
 
         ServerSocket serverSocket = null;
         try {

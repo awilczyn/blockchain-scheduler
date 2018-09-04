@@ -97,6 +97,10 @@ public class Node implements Runnable
                     block1.addTransaction(trans);
                 }
                 addBlock(block1);
+                transactionVerifiedPool.clear();
+                String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
+                System.out.println("\nThe block chain: ");
+                System.out.println(blockchainJson);
             }
 //            Block block1 = new Block(genesisBlock.hash);
 //            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());

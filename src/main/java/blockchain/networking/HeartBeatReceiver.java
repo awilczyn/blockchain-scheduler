@@ -74,6 +74,13 @@ public class HeartBeatReceiver implements Runnable{
 		try {
 		  Gson gson = new GsonBuilder().create();
           Transaction transaction = gson.fromJson(inputLine, Transaction.class);
+
+          BigInteger key = ByteUtil.bytesToBigInteger(transaction.transactionId);
+          if(!Node.pool.containsKey(key)) {
+			  System.out.println("Sending transaction to peers for accept... ");
+			  broadcast("tx|" + inputLine);
+		  }
+
           System.out.println("Checking transaction "+transaction);
           if (transaction.verifyTransaction()) {
 			  String transactionVerified = "txv|"+inputLine;
@@ -98,5 +105,12 @@ public class HeartBeatReceiver implements Runnable{
 			}
 		}
     	System.out.println("transaction was verified");
+	}
+
+	public void broadcast(String message) {
+		for (ServerInfo info: this.serverStatus.keySet()) {
+			message = message+"|"+localPort;
+			new Thread(new MessageSender(info, message)).start();
+		}
 	}
 }

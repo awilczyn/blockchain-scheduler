@@ -23,7 +23,7 @@ public class Block implements Serializable
 
     public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
-    public static int minimumNumberOfTransaction = 0;
+    public static int minimumNumberOfTransaction = 5;
 
     /**
      *
