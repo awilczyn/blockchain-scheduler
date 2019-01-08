@@ -1,5 +1,8 @@
 package blockchain.core;
 
+import blockchain.scheduler.Machine;
+import blockchain.scheduler.Schedule;
+import blockchain.scheduler.Task;
 import blockchain.serialization.Serializer;
 import blockchain.util.ByteUtil;
 import blockchain.util.HashUtil;
@@ -17,6 +20,8 @@ public class Transaction implements Serializable
     private final byte[] sender;
     private final byte[] recipient;
     public float value;
+    public Schedule schedule;
+
     /* this transaction signed by the sender, with separate values for r, s and v */
     private final byte[] r;
     private final byte[] s;
@@ -28,11 +33,12 @@ public class Transaction implements Serializable
 
     public int numberOfVerification = 0;
 
-    public Transaction(byte[] privateKey, byte[] sender, byte[] recipient, float value,  ArrayList<TransactionInput> inputs)
+    public Transaction(byte[] privateKey, byte[] sender, byte[] recipient, float value, Schedule schedule, ArrayList<TransactionInput> inputs)
     {
         this.sender = sender;
         this.recipient = recipient;
         this.value = value;
+        this.schedule = schedule;
         this.inputs = inputs;
         ECKey.ECDSASignature temp = generateSignature(privateKey);
         this.r = temp.r.toByteArray();
@@ -42,7 +48,7 @@ public class Transaction implements Serializable
     }
 
     public byte[] getParcelled() {
-        return Serializer.createParcel(new Object[]{  this.sender, this.recipient, this.value, this.sequence});
+        return Serializer.createParcel(new Object[]{  this.sender, this.recipient, this.value, this.schedule, this.sequence});
     }
 
     private byte[] calculateHash() {

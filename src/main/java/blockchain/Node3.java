@@ -4,15 +4,16 @@ import blockchain.core.Node;
 import blockchain.core.Wallet;
 import blockchain.db.Context;
 import blockchain.networking.HeartBeatReceiver;
-import blockchain.networking.PeriodicCatchup;
 import blockchain.networking.PeriodicHeartBeat;
 import blockchain.networking.ServerInfo;
+import blockchain.scheduler.*;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.Security;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -42,7 +43,7 @@ public class Node3
         Node localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
 
-        localNode.addTransactionToPool(30);
+        localNode.addTransactionToPool(30, getDataToSchedule());
 
         ServerSocket serverSocket = null;
         try {
@@ -69,6 +70,21 @@ public class Node3
     {
         serverStatus.put(new ServerInfo("127.0.0.1", 7002), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7004), new Date());
+    }
+
+    public static Schedule getDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1,10000));
+        tasks.add(new Task(2,5000));
+        tasks.add(new Task(3,1000));
+        tasks.add(new Task(4,15000));
+        ArrayList<Machine> machines = new ArrayList<>();
+        machines.add(new Machine(3000));
+        machines.add(new Machine(30000));
+        machines.add(new Machine(10000));
+
+        return new IbmSchedule(tasks, machines);
     }
 }
 

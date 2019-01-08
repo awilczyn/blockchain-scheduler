@@ -4,6 +4,7 @@ import blockchain.core.genesis.GenesisBlock;
 import blockchain.db.Context;
 import blockchain.networking.MessageSender;
 import blockchain.networking.ServerInfo;
+import blockchain.scheduler.Schedule;
 import blockchain.serialization.PublicKeyDeserizlizer;
 import blockchain.util.ByteUtil;
 import blockchain.util.Log;
@@ -145,8 +146,8 @@ public class Node implements Runnable
         }
     }
 
-    public void addTransactionToPool(float value) throws IOException {
-        Transaction transaction1 = minerWallet.sendFunds(testWallet.getPublicKey(), value);
+    public void addTransactionToPool(float value, Schedule schedule) throws IOException {
+        Transaction transaction1 = minerWallet.sendDataToSchedule(testWallet.getPublicKey(), value, schedule);
         pool.put(ByteUtil.bytesToBigInteger(transaction1.getTransactionId()), transaction1);
         String transactionJson = new GsonBuilder().create().toJson(transaction1);
         System.out.println("Sending transaction to peers for accept... ");

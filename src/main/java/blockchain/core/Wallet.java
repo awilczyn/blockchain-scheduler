@@ -1,6 +1,9 @@
 package blockchain.core;
 
 
+import blockchain.scheduler.Machine;
+import blockchain.scheduler.Schedule;
+import blockchain.scheduler.Task;
 import blockchain.util.ecdsa.ECKey;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +36,7 @@ public class Wallet
         return total;
     }
 
-    public Transaction sendFunds(byte [] recipient,float value )
+    public Transaction sendDataToSchedule(byte [] recipient, float value, Schedule schedule)
     {
 //        if(getBalance() < value) { //gather balance and check funds.
 //            System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
@@ -50,7 +53,7 @@ public class Wallet
             if(total > value) break;
         }
 
-        Transaction newTransaction = new Transaction(keyPair.getPrivKeyBytes(), keyPair.getPubKey(), recipient , value, inputs);
+        Transaction newTransaction = new Transaction(keyPair.getPrivKeyBytes(), keyPair.getPubKey(), recipient , value, schedule, inputs);
 
         for(TransactionInput input: inputs) {
             UTXOs.remove(input.transactionOutputId);

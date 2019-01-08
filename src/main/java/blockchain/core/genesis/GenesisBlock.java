@@ -5,6 +5,8 @@ import blockchain.db.Context;
 import blockchain.util.ByteUtil;
 import blockchain.util.StringUtil;
 
+import java.util.ArrayList;
+
 import static blockchain.core.Node.difficulty;
 
 /**
@@ -37,7 +39,7 @@ public class GenesisBlock
 
         if (block == null) {
             wallet = new Wallet();
-            genesisTransaction = new Transaction(wallet.getPrivateKey(), wallet.getPublicKey(), localWallet.getPublicKey(), 100f, null);
+            genesisTransaction = new Transaction(wallet.getPrivateKey(), wallet.getPublicKey(), localWallet.getPublicKey(), 100f, null, null);
             genesisTransaction.transactionId = ByteUtil.stringToBytes("0");
             genesisTransaction.outputs.add(
                     new TransactionOutput(

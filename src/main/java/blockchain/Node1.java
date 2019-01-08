@@ -3,17 +3,17 @@ package blockchain;
 import blockchain.core.*;
 import blockchain.db.Context;
 import blockchain.networking.*;
-import blockchain.util.ByteUtil;
-import blockchain.util.HashUtil;
-import blockchain.util.ecdsa.ECKey;
+import blockchain.scheduler.AwsSchedule;
+import blockchain.scheduler.Machine;
+import blockchain.scheduler.Schedule;
+import blockchain.scheduler.Task;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.Security;
-import java.security.SignatureException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -46,7 +46,7 @@ public class Node1
         Node localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
 
-        localNode.addTransactionToPool(10);
+        localNode.addTransactionToPool(10, getDataToSchedule());
 
         ServerSocket serverSocket = null;
         try {
@@ -72,6 +72,21 @@ public class Node1
     {
         serverStatus.put(new ServerInfo("127.0.0.1", 7002), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7004), new Date());
+    }
+
+    public static Schedule getDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1,10000));
+        tasks.add(new Task(2,5000));
+        tasks.add(new Task(3,1000));
+        tasks.add(new Task(4,15000));
+        ArrayList<Machine> machines = new ArrayList<>();
+        machines.add(new Machine(3000));
+        machines.add(new Machine(30000));
+        machines.add(new Machine(10000));
+
+        return new AwsSchedule(tasks, machines);
     }
 }
 

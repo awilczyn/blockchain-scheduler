@@ -2,10 +2,8 @@ package blockchain.core;
 
 import blockchain.serialization.Serializer;
 import blockchain.util.HashUtil;
-import blockchain.util.StringUtil;
 
 import java.io.Serializable;
-import java.security.PublicKey;
 import java.util.Arrays;
 
 /**
@@ -17,7 +15,6 @@ public class TransactionOutput implements Serializable
     public byte[] recipient;
     public float value;
     public byte[] parentTransactionId;
-
 
     public TransactionOutput(byte[] recipient, float value, byte[] parentTransactionId)
     {

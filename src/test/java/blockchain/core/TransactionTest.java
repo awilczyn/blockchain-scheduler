@@ -1,5 +1,6 @@
 package blockchain.core;
 
+import blockchain.Node1;
 import blockchain.util.ByteUtil;
 import org.junit.Test;
 import blockchain.util.StringUtil;
@@ -28,7 +29,7 @@ public class TransactionTest
         System.out.println(ByteUtil.bytesToString(walletA.getPrivateKey()));
         System.out.println(ByteUtil.bytesToString(walletA.getPublicKey()));
 
-        Transaction transaction = new Transaction(walletA.getPrivateKey(), walletA.getPublicKey(), walletB.getPublicKey(), 5, null);
+        Transaction transaction = new Transaction(walletA.getPrivateKey(), walletA.getPublicKey(), walletB.getPublicKey(), 5, Node1.getDataToSchedule(), null);
         transaction.generateSignature(walletA.getPrivateKey());
 
         System.out.println("Checking signature...");
