@@ -7,7 +7,9 @@ import blockchain.networking.HeartBeatReceiver;
 import blockchain.networking.PeriodicHeartBeat;
 import blockchain.networking.ServerInfo;
 import blockchain.scheduler.*;
+import blockchain.util.ecdsa.ECKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -22,6 +24,8 @@ import java.util.HashMap;
  */
 public class Node3
 {
+    public static String privateKeyString = "bbc5e5b8cc1b799fc169de3a5b71812cd6a7b91e875b20f0ded238d2491bc30e";
+
     public static Node localNode;
 
     public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
@@ -39,7 +43,8 @@ public class Node3
         //new Thread(new PeriodicCatchup(serverStatus, localPort)).start();
 
         Context context = new Context();
-        Wallet wallet = new Wallet();
+        ECKey keyPair = ECKey.fromPrivate(Hex.decode(privateKeyString));
+        Wallet wallet = new Wallet(keyPair.getPrivKeyBytes());
 
         localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();

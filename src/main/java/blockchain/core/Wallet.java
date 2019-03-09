@@ -23,6 +23,10 @@ public class Wallet
         this.keyPair = new ECKey();
     }
 
+    public Wallet(byte[] privKey){
+        this.keyPair = ECKey.fromPrivate(privKey);
+    }
+
     public float getBalance()
     {
         float total = 0;

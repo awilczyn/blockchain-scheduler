@@ -4,7 +4,9 @@ import blockchain.core.*;
 import blockchain.db.Context;
 import blockchain.networking.*;
 import blockchain.scheduler.*;
+import blockchain.util.ecdsa.ECKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -21,13 +23,14 @@ import static blockchain.util.HashUtil.applyKeccak;
  */
 public class Node1
 {
+    public static String privateKeyString = "20a2790bfd13ec2af6ec1595f054dab53a5b0890524c6bd719530939cd974bbc";
+
     public static Node localNode;
 
     public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
     public static void main(String[] args) throws IOException {
         Security.addProvider(new BouncyCastleProvider());
-
 
         int localPort = 7001;
         prepareNodeList();
@@ -39,12 +42,13 @@ public class Node1
         //new Thread(new PeriodicCatchup(serverStatus, localPort)).start();
 
         Context context = new Context();
-        Wallet wallet = new Wallet();
+        ECKey keyPair = ECKey.fromPrivate(Hex.decode(privateKeyString));
+        Wallet wallet = new Wallet(keyPair.getPrivKeyBytes());
 
         localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
 
-        //localNode.addTransactionToPool(10, getDataToSchedule());
+        localNode.addTransactionToPool(10, getDataToSchedule());
 
         ServerSocket serverSocket = null;
         try {
