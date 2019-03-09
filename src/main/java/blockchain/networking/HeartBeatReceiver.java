@@ -79,14 +79,19 @@ public class HeartBeatReceiver implements Runnable{
           if(!Node.pool.containsKey(key)) {
 			  System.out.println("Sending transaction to peers for accept... ");
 			  broadcast("tx|" + inputLine);
+
+			  System.out.println("Checking transaction "+transaction);
+			  if (transaction.verifyTransaction()) {
+				  String transactionVerified = "txv|"+inputLine;
+				  System.out.println("Schedule correct, transaction verified");
+				  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
+			  } else {
+				  System.out.println("Schedule incorrect, transaction rejected");
+				  String transactionVerified = "tx|"+inputLine;
+				  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
+			  }
 		  }
 
-          System.out.println("Checking transaction "+transaction);
-          if (transaction.verifyTransaction()) {
-			  String transactionVerified = "txv|"+inputLine;
-			  System.out.println("Transaction correct");
-			  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
-		  }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

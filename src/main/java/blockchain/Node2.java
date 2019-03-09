@@ -22,6 +22,7 @@ import java.util.HashMap;
  */
 public class Node2
 {
+    public static Node localNode;
 
     public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
@@ -40,7 +41,7 @@ public class Node2
         Context context = new Context();
         Wallet wallet = new Wallet();
 
-        Node localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
+        localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
 
         localNode.addTransactionToPool(20, getDataToSchedule());

@@ -3,10 +3,7 @@ package blockchain;
 import blockchain.core.*;
 import blockchain.db.Context;
 import blockchain.networking.*;
-import blockchain.scheduler.AwsSchedule;
-import blockchain.scheduler.Machine;
-import blockchain.scheduler.Schedule;
-import blockchain.scheduler.Task;
+import blockchain.scheduler.*;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.IOException;
@@ -24,6 +21,7 @@ import static blockchain.util.HashUtil.applyKeccak;
  */
 public class Node1
 {
+    public static Node localNode;
 
     public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
@@ -43,10 +41,10 @@ public class Node1
         Context context = new Context();
         Wallet wallet = new Wallet();
 
-        Node localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
+        localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
 
-        localNode.addTransactionToPool(10, getDataToSchedule());
+        //localNode.addTransactionToPool(10, getDataToSchedule());
 
         ServerSocket serverSocket = null;
         try {

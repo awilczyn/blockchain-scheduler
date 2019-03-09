@@ -17,4 +17,8 @@ public class Machine
     {
         this.tasksToExecute = tasksToExecute;
     }
+
+    public float getNumberOfOperationsPerSecond() {
+        return numberOfOperationsPerSecond;
+    }
 }

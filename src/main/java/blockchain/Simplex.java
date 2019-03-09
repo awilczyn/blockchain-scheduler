@@ -15,7 +15,7 @@ public class Simplex
 {
     public static void main(String[] args)
     {
-        LinearObjectiveFunction f = new LinearObjectiveFunction(new double[] { 0.5, 2 }, 0);
+        LinearObjectiveFunction f = new LinearObjectiveFunction(new double[] { 2.8125, 6 }, 0);
         Collection<LinearConstraint> constraints = new
                 ArrayList<LinearConstraint>();
         constraints.add(new LinearConstraint(new double[] { 1, 1 }, Relationship.EQ,  1));

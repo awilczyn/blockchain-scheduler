@@ -10,7 +10,7 @@ public class Task
 
     public Task(int id, float numberOfOperations)
     {
-        this.id = 1;
+        this.id = id;
         this.numberOfOperations = numberOfOperations;
     }
 }

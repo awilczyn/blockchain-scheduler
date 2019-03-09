@@ -1,13 +1,16 @@
 package blockchain.core;
 
-import blockchain.scheduler.Machine;
-import blockchain.scheduler.Schedule;
-import blockchain.scheduler.Task;
+import blockchain.Node1;
+import blockchain.Node2;
+import blockchain.Node3;
+import blockchain.Node4;
+import blockchain.scheduler.*;
 import blockchain.serialization.Serializer;
 import blockchain.util.ByteUtil;
 import blockchain.util.HashUtil;
 import blockchain.util.ecdsa.ECKey;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -161,8 +164,10 @@ public class Transaction implements Serializable
         return this.recipient;
     }
 
-    public boolean verifyTransaction() {
+    public boolean verifyTransaction() throws IOException {
         if(!this.verifiySignature()) return false;
+
+        if (!this.verifySchedule()) return false;
 
         //Transaction is verified;
         return true;
@@ -171,5 +176,50 @@ public class Transaction implements Serializable
     public String toString()
     {
         return ByteUtil.bytesToString(this.transactionId);
+    }
+
+    private boolean verifySchedule() throws IOException {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.addAll(this.schedule.tasks);
+        ArrayList<Machine> machines = new ArrayList<>();
+        for (int i=0; i<this.schedule.machines.size(); i++) {
+            machines.add(new Machine(this.schedule.machines.get(i).getNumberOfOperationsPerSecond()));
+        }
+        String nodeName = System.getProperty("sun.java.command");
+        Schedule ownSchedule;
+        boolean betterSchedule = false;
+        if (nodeName.equals("blockchain.Node1")) {
+            ownSchedule = new AwsSchedule(tasks, machines);
+            if (ownSchedule.getTime() < schedule.getTime()) {
+                //Node1.localNode.addTransactionToPool(10, ownSchedule);
+                betterSchedule = true;
+            }
+        }
+        if (nodeName.equals("blockchain.Node2")) {
+            ownSchedule = new AzureSchedule(tasks, machines);
+            if (ownSchedule.getTime() < schedule.getTime()) {
+                //Node2.localNode.addTransactionToPool(10, ownSchedule);
+                betterSchedule = true;
+            }
+        }
+        if (nodeName.equals("blockchain.Node3")) {
+            ownSchedule = new IbmSchedule(tasks, machines);
+            if (ownSchedule.getTime() < schedule.getTime()) {
+                //Node3.localNode.addTransactionToPool(10, ownSchedule);
+                betterSchedule = true;
+            }
+        }
+        if (nodeName.equals("blockchain.Node4")) {
+            ownSchedule = new OtherSchedule(tasks, machines);
+            if (ownSchedule.getTime() < schedule.getTime()) {
+                //Node4.localNode.addTransactionToPool(10, ownSchedule);
+                betterSchedule = true;
+            }
+        }
+        if (betterSchedule) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

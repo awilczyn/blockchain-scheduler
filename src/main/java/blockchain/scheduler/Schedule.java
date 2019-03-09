@@ -18,4 +18,8 @@ public class Schedule
         this.tasks = tasks;
         this.machines = machines;
     }
+
+    public float getTime() {
+        return time;
+    }
 }
