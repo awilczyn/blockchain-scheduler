@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 /**
@@ -50,9 +51,9 @@ public class Node implements Runnable
 
     public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
-    public static HashMap<BigInteger, Transaction> pool = new HashMap();
+    public static ConcurrentHashMap<BigInteger, Transaction> pool = new ConcurrentHashMap<BigInteger, Transaction>();
 
-    public static Queue<Transaction> transactionVerifiedPool = new PriorityQueue<Transaction>();;
+    public static ConcurrentHashMap<BigInteger, Transaction> transactionVerifiedPool = new ConcurrentHashMap<BigInteger, Transaction>();;
 
     public Node(Context context, Wallet wallet, Block genesisBlock, HashMap<ServerInfo, Date> serverStatus){
         this.context = context;
@@ -95,9 +96,9 @@ public class Node implements Runnable
         while(shouldMine) {
             if (transactionVerifiedPool.size() >= Block.minimumNumberOfTransaction) {
                 Block block1 = new Block(genesisBlock.hash);
-                for(Transaction trans : transactionVerifiedPool) {
-                    block1.addTransaction(trans);
-                }
+//                for(Transaction trans : transactionVerifiedPool) {
+//                    block1.addTransaction(trans);
+//                }
                 addBlock(block1);
                 transactionVerifiedPool.clear();
                 String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);

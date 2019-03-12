@@ -19,10 +19,11 @@ public class MessageSender implements Runnable{
     public void run() {
         try {
             // create socket with a timeout of 2 seconds
+
             Socket s = new Socket();
             s.connect(new InetSocketAddress(this.destServer.getHost(), this.destServer.getPort()), 10000);
             PrintWriter pw =  new PrintWriter(s.getOutputStream(), true);
-            
+
             System.out.println("sending " + message);
             // send the message forward
         	pw.println(message);

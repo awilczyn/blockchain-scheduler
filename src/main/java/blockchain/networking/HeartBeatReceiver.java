@@ -78,18 +78,20 @@ public class HeartBeatReceiver implements Runnable{
           BigInteger key = ByteUtil.bytesToBigInteger(transaction.transactionId);
           if(!Node.pool.containsKey(key)) {
 			  System.out.println("Sending transaction to peers for accept... ");
-			  broadcast("tx|" + inputLine);
 
 			  System.out.println("Checking transaction "+transaction);
 			  if (transaction.verifyTransaction()) {
 				  String transactionVerified = "txv|"+inputLine;
 				  System.out.println("Schedule correct, transaction verified");
+				  //broadcast("txv|" + inputLine);
 				  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
 			  } else {
 				  System.out.println("Schedule incorrect, transaction rejected");
 				  String transactionVerified = "tx|"+inputLine;
+				  //broadcast("tx|" + inputLine);
 				  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
 			  }
+
 		  }
 
 		} catch (Exception e) {
@@ -106,7 +108,7 @@ public class HeartBeatReceiver implements Runnable{
 			Transaction trans = Node.pool.get(key);
 			trans.numberOfVerification++;
 			if (trans.numberOfVerification >= Node.getMinimumNumberOfConfirmation()) {
-				Node.transactionVerifiedPool.add(trans);
+				Node.transactionVerifiedPool.put(key, trans);
 			}
 		}
     	System.out.println("transaction was verified");

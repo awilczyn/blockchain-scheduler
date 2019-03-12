@@ -51,6 +51,9 @@ public class Node1
         localNode.start();
 
         localNode.addTransactionToPool(10, getDataToSchedule());
+        localNode.addTransactionToPool(20, getDataToSchedule());
+        localNode.addTransactionToPool(30, getDataToSchedule());
+        localNode.addTransactionToPool(40, getDataToSchedule());
 
         ServerSocket serverSocket = null;
         try {

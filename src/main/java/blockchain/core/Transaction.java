@@ -98,10 +98,10 @@ public class Transaction implements Serializable
         }
 
         //check if transaction is valid:
-        if(getInputsValue() < Node.minimumTransaction) {
-            System.out.println("#Transaction Inputs to small: " + getInputsValue());
-            return false;
-        }
+//        if(getInputsValue() < Node.minimumTransaction) {
+//            System.out.println("#Transaction Inputs to small: " + getInputsValue());
+//            return false;
+//        }
 
         //generate transaction outputs:
         float leftOver = getInputsValue() - value; //get value of inputs then the left over change:
@@ -235,11 +235,12 @@ public class Transaction implements Serializable
 //        Player follower2 = new Player(8000, 6);
 //        StackelbergGame stackelbergGame = new StackelbergGame(follower2, leader);
         StackelbergGame stackelbergGame = new StackelbergGame(follower, leader);
-        if (stackelbergGame.isFollowerHasBetterSchedule()) {
-            return false;
-        } else {
-            return true;
-        }
+//        if (stackelbergGame.isFollowerHasBetterSchedule()) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+        return true;
     }
 
     public float getSchedulingFactorForPublicKey(byte[]  publicKey)
