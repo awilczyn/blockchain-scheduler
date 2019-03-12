@@ -45,7 +45,8 @@ public class GenesisBlock
                     new TransactionOutput(
                             genesisTransaction.getRecipient(),
                             genesisTransaction.value,
-                            genesisTransaction.transactionId
+                            genesisTransaction.transactionId,
+                            0
                     )
             );
 

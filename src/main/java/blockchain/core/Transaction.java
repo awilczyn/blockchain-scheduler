@@ -105,8 +105,8 @@ public class Transaction implements Serializable
 
         //generate transaction outputs:
         float leftOver = getInputsValue() - value; //get value of inputs then the left over change:
-        outputs.add(new TransactionOutput( this.recipient, value, transactionId)); //send value to recipient
-        outputs.add(new TransactionOutput( this.sender, leftOver, transactionId)); //send the left over 'change' back to sender
+        outputs.add(new TransactionOutput( this.recipient, value, transactionId, getSumOfInstructionsInBlockchain())); //send value to recipient
+        outputs.add(new TransactionOutput( this.sender, leftOver, transactionId, getSumOfInstructionsInBlockchain())); //send the left over 'change' back to sender
 
         //add outputs to Unspent list
         for(TransactionOutput o : outputs) {
@@ -120,6 +120,15 @@ public class Transaction implements Serializable
         }
 
         return true;
+    }
+
+    public float getSumOfInstructionsInBlockchain()
+    {
+        float total = 0;
+        for (int i=0; i<this.schedule.tasks.size(); i++) {
+            total += this.schedule.tasks.get(i).getNumberOfOperations();
+        }
+        return total;
     }
 
     public float getInputsValue()
@@ -240,7 +249,7 @@ public class Transaction implements Serializable
             TransactionOutput UTXO = item.getValue();
             if(UTXO.isMine(publicKey)) { //if output belongs to me ( if coins belong to me )
                 Node.UTXOs.put(UTXO.id,UTXO); //add it to our list of unspent transactions.
-                total += UTXO.value ;
+                total += UTXO.schedulingFactor ;
             }
         }
         return total;

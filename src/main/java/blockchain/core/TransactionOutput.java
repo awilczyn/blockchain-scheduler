@@ -15,17 +15,19 @@ public class TransactionOutput implements Serializable
     public byte[] recipient;
     public float value;
     public byte[] parentTransactionId;
+    public float schedulingFactor;
 
-    public TransactionOutput(byte[] recipient, float value, byte[] parentTransactionId)
+    public TransactionOutput(byte[] recipient, float value, byte[] parentTransactionId, float schedulingFactor)
     {
         this.recipient = recipient;
         this.value = value;
         this.parentTransactionId = parentTransactionId;
         this.id = HashUtil.applySha256(getParcelled());
+        this.schedulingFactor = schedulingFactor;
     }
 
     public byte[] getParcelled() {
-        return Serializer.createParcel(new Object[]{this.recipient, this.value, this.parentTransactionId});
+        return Serializer.createParcel(new Object[]{this.recipient, this.value, this.parentTransactionId, this.schedulingFactor});
     }
 
     public boolean isMine(byte[]  publicKey)

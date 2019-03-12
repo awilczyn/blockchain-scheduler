@@ -13,4 +13,8 @@ public class Task
         this.id = id;
         this.numberOfOperations = numberOfOperations;
     }
+
+    public float getNumberOfOperations() {
+        return numberOfOperations;
+    }
 }
