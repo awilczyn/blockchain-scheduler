@@ -24,6 +24,8 @@ import java.util.logging.Level;
  */
 public class Node implements Runnable
 {
+    private static int NUMBEROFNODES = 4;
+
     private Context context;
 
     private Wallet minerWallet;
@@ -88,7 +90,6 @@ public class Node implements Runnable
 
     private void mine()
     {
-        Wallet walletB = new Wallet();
         blockchain.add(genesisBlock);
         UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
         while(shouldMine) {
@@ -156,6 +157,6 @@ public class Node implements Runnable
 
     public static double getMinimumNumberOfConfirmation()
     {
-        return serverStatus.size()*0.75;
+        return NUMBEROFNODES*0.50;
     }
 }

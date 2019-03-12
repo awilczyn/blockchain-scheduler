@@ -30,6 +30,8 @@ public class Node2
 
     public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
+    public static Wallet wallet;
+
     public static void main(String[] args) throws IOException {
         Security.addProvider(new BouncyCastleProvider());
 
@@ -44,12 +46,12 @@ public class Node2
 
         Context context = new Context();
         ECKey keyPair = ECKey.fromPrivate(Hex.decode(privateKeyString));
-        Wallet wallet = new Wallet(keyPair.getPrivKeyBytes());
+        wallet = new Wallet(keyPair.getPrivKeyBytes());
 
         localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
 
-        localNode.addTransactionToPool(20, getDataToSchedule());
+        //localNode.addTransactionToPool(20, getDataToSchedule());
 
         ServerSocket serverSocket = null;
         try {

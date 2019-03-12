@@ -4,6 +4,8 @@ import blockchain.Node1;
 import blockchain.Node2;
 import blockchain.Node3;
 import blockchain.Node4;
+import blockchain.game.Player;
+import blockchain.game.StackelbergGame;
 import blockchain.scheduler.*;
 import blockchain.serialization.Serializer;
 import blockchain.util.ByteUtil;
@@ -13,6 +15,7 @@ import blockchain.util.ecdsa.ECKey;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by andrzejwilczynski on 31/07/2018.
@@ -188,38 +191,58 @@ public class Transaction implements Serializable
         String nodeName = System.getProperty("sun.java.command");
         Schedule ownSchedule;
         boolean betterSchedule = false;
+
+        Player leader = new Player(this.getSchedulingFactorForPublicKey(sender), schedule.getTime());
+//        Player leader = new Player(1500, 15);
+        Player follower = null;
         if (nodeName.equals("blockchain.Node1")) {
             ownSchedule = new AwsSchedule(tasks, machines);
-            if (ownSchedule.getTime() < schedule.getTime()) {
-                //Node1.localNode.addTransactionToPool(10, ownSchedule);
-                betterSchedule = true;
-            }
+            follower = new Player(
+                    this.getSchedulingFactorForPublicKey(Node1.wallet.getPublicKey()),
+                    ownSchedule.getTime()
+            );
         }
         if (nodeName.equals("blockchain.Node2")) {
             ownSchedule = new AzureSchedule(tasks, machines);
-            if (ownSchedule.getTime() < schedule.getTime()) {
-                //Node2.localNode.addTransactionToPool(10, ownSchedule);
-                betterSchedule = true;
-            }
+            follower = new Player(
+                    this.getSchedulingFactorForPublicKey(Node2.wallet.getPublicKey()),
+                    ownSchedule.getTime()
+            );
         }
         if (nodeName.equals("blockchain.Node3")) {
             ownSchedule = new IbmSchedule(tasks, machines);
-            if (ownSchedule.getTime() < schedule.getTime()) {
-                //Node3.localNode.addTransactionToPool(10, ownSchedule);
-                betterSchedule = true;
-            }
+            follower = new Player(
+                    this.getSchedulingFactorForPublicKey(Node3.wallet.getPublicKey()),
+                    ownSchedule.getTime()
+            );
         }
         if (nodeName.equals("blockchain.Node4")) {
             ownSchedule = new OtherSchedule(tasks, machines);
-            if (ownSchedule.getTime() < schedule.getTime()) {
-                //Node4.localNode.addTransactionToPool(10, ownSchedule);
-                betterSchedule = true;
-            }
+            follower = new Player(
+                    this.getSchedulingFactorForPublicKey(Node4.wallet.getPublicKey()),
+                    ownSchedule.getTime()
+            );
         }
-        if (betterSchedule) {
+//        Player follower2 = new Player(8000, 6);
+//        StackelbergGame stackelbergGame = new StackelbergGame(follower2, leader);
+        StackelbergGame stackelbergGame = new StackelbergGame(follower, leader);
+        if (stackelbergGame.isFollowerHasBetterSchedule()) {
             return false;
         } else {
             return true;
         }
+    }
+
+    public float getSchedulingFactorForPublicKey(byte[]  publicKey)
+    {
+        float total = 0;
+        for (Map.Entry<byte [], TransactionOutput> item: Node.UTXOs.entrySet()){
+            TransactionOutput UTXO = item.getValue();
+            if(UTXO.isMine(publicKey)) { //if output belongs to me ( if coins belong to me )
+                Node.UTXOs.put(UTXO.id,UTXO); //add it to our list of unspent transactions.
+                total += UTXO.value ;
+            }
+        }
+        return total;
     }
 }

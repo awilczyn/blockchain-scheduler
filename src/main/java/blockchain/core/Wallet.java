@@ -40,6 +40,19 @@ public class Wallet
         return total;
     }
 
+    public float getSchedulingFactor()
+    {
+        float total = 0;
+        for (Map.Entry<byte [], TransactionOutput> item: Node.UTXOs.entrySet()){
+            TransactionOutput UTXO = item.getValue();
+            if(UTXO.isMine(keyPair.getPubKey())) { //if output belongs to me ( if coins belong to me )
+                UTXOs.put(UTXO.id,UTXO); //add it to our list of unspent transactions.
+                total += UTXO.value ;
+            }
+        }
+        return total;
+    }
+
     public Transaction sendDataToSchedule(byte [] recipient, float value, Schedule schedule)
     {
 //        if(getBalance() < value) { //gather balance and check funds.
