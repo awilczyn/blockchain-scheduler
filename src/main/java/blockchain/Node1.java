@@ -50,16 +50,19 @@ public class Node1
         localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
 
-        localNode.addTransactionToPool(10, getDataToSchedule());
-        localNode.addTransactionToPool(20, getDataToSchedule());
-        localNode.addTransactionToPool(30, getDataToSchedule());
-        localNode.addTransactionToPool(40, getDataToSchedule());
-
         ServerSocket serverSocket = null;
+        boolean addTransaction = true;
         try {
             serverSocket = new ServerSocket(localPort);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
+                if (addTransaction) {
+                    localNode.addTransactionToPool(10, getDataToSchedule());
+                    localNode.addTransactionToPool(20, getDataToSchedule());
+                    localNode.addTransactionToPool(30, getDataToSchedule());
+                    localNode.addTransactionToPool(40, getDataToSchedule());
+                }
+                addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
             }
         } catch (IllegalArgumentException e) {

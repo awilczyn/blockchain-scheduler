@@ -51,13 +51,16 @@ public class Node3
         localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
 
-        localNode.addTransactionToPool(30, getDataToSchedule());
-
+        boolean addTransaction = true;
         ServerSocket serverSocket = null;
         try {
             serverSocket = new ServerSocket(localPort);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
+                if (addTransaction) {
+                    localNode.addTransactionToPool(30, getDataToSchedule());
+                }
+                addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
 
             }

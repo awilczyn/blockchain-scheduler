@@ -109,9 +109,11 @@ public class HeartBeatReceiver implements Runnable{
 			trans.numberOfVerification++;
 			if (trans.numberOfVerification >= Node.getMinimumNumberOfConfirmation()) {
 				Node.transactionVerifiedPool.put(key, trans);
+				Node.pool.remove(key);
+				System.out.println("Transaction added to verified pool: "+ transaction.value);
 			}
 		}
-    	System.out.println("transaction was verified");
+    	System.out.println("transaction was verified: " + transaction.value);
 	}
 
 	public void broadcast(String message) {
