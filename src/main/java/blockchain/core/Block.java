@@ -5,6 +5,7 @@ import blockchain.util.StringUtil;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by andrzejwilczynski on 24/07/2018.
@@ -24,6 +25,9 @@ public class Block implements Serializable
     public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
     public static int minimumNumberOfTransaction = 2;
+    public static int maxNumberOfTransaction = 2;
+
+    public byte[] minerPublicKey;
 
     /**
      *
@@ -93,5 +97,9 @@ public class Block implements Serializable
         transactions.add(transaction);
         System.out.println("Transaction Successfully added to Block");
         return true;
+    }
+
+    public void setMinerPublicKey(byte[] minerPublicKey) {
+        this.minerPublicKey = minerPublicKey;
     }
 }

@@ -32,7 +32,7 @@ public class Transaction implements Serializable
     private final byte[] r;
     private final byte[] s;
     private final byte[] v = new byte[1];
-    public int sequence;
+    public static int sequence;
 
     public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
     public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
@@ -201,34 +201,34 @@ public class Transaction implements Serializable
         Schedule ownSchedule;
         boolean betterSchedule = false;
 
-        Player leader = new Player(this.getSchedulingFactorForPublicKey(sender), schedule.getTime());
+        Player leader = new Player(Node.getSchedulingFactorForPublicKey(sender), schedule.getTime());
 //        Player leader = new Player(1500, 15);
         Player follower = null;
         if (nodeName.equals("blockchain.Node1")) {
             ownSchedule = new AwsSchedule(tasks, machines);
             follower = new Player(
-                    this.getSchedulingFactorForPublicKey(Node1.wallet.getPublicKey()),
+                    Node.getSchedulingFactorForPublicKey(Node1.wallet.getPublicKey()),
                     ownSchedule.getTime()
             );
         }
         if (nodeName.equals("blockchain.Node2")) {
             ownSchedule = new AzureSchedule(tasks, machines);
             follower = new Player(
-                    this.getSchedulingFactorForPublicKey(Node2.wallet.getPublicKey()),
+                    Node.getSchedulingFactorForPublicKey(Node2.wallet.getPublicKey()),
                     ownSchedule.getTime()
             );
         }
         if (nodeName.equals("blockchain.Node3")) {
             ownSchedule = new IbmSchedule(tasks, machines);
             follower = new Player(
-                    this.getSchedulingFactorForPublicKey(Node3.wallet.getPublicKey()),
+                    Node.getSchedulingFactorForPublicKey(Node3.wallet.getPublicKey()),
                     ownSchedule.getTime()
             );
         }
         if (nodeName.equals("blockchain.Node4")) {
             ownSchedule = new OtherSchedule(tasks, machines);
             follower = new Player(
-                    this.getSchedulingFactorForPublicKey(Node4.wallet.getPublicKey()),
+                    Node.getSchedulingFactorForPublicKey(Node4.wallet.getPublicKey()),
                     ownSchedule.getTime()
             );
         }
@@ -241,18 +241,5 @@ public class Transaction implements Serializable
 //            return true;
 //        }
         return true;
-    }
-
-    public float getSchedulingFactorForPublicKey(byte[]  publicKey)
-    {
-        float total = 0;
-        for (Map.Entry<byte [], TransactionOutput> item: Node.UTXOs.entrySet()){
-            TransactionOutput UTXO = item.getValue();
-            if(UTXO.isMine(publicKey)) { //if output belongs to me ( if coins belong to me )
-                Node.UTXOs.put(UTXO.id,UTXO); //add it to our list of unspent transactions.
-                total += UTXO.schedulingFactor ;
-            }
-        }
-        return total;
     }
 }

@@ -96,11 +96,18 @@ public class Node implements Runnable
         while(shouldMine) {
             if (transactionVerifiedPool.size() >= Block.minimumNumberOfTransaction) {
                 Block block1 = new Block(genesisBlock.hash);
-//                for(Transaction trans : transactionVerifiedPool) {
-//                    block1.addTransaction(trans);
-//                }
+                block1.setMinerPublicKey(minerWallet.getPublicKey());
+                for (Map.Entry<BigInteger, Transaction> entry : transactionVerifiedPool.entrySet())
+                {
+                    BigInteger key = entry.getKey();
+                    Transaction trans = entry.getValue();
+                    if (Block.maxNumberOfTransaction > block1.transactions.size())
+                    {
+                        block1.addTransaction(trans);
+                        transactionVerifiedPool.remove(key);
+                    }
+                }
                 addBlock(block1);
-                transactionVerifiedPool.clear();
                 String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
                 System.out.println("\nThe block chain: ");
                 System.out.println(blockchainJson);
@@ -159,5 +166,18 @@ public class Node implements Runnable
     public static double getMinimumNumberOfConfirmation()
     {
         return NUMBEROFNODES*0.50;
+    }
+
+    public static float getSchedulingFactorForPublicKey(byte[]  publicKey)
+    {
+        float total = 0;
+        for (Map.Entry<byte [], TransactionOutput> item: Node.UTXOs.entrySet()){
+            TransactionOutput UTXO = item.getValue();
+            if(UTXO.isMine(publicKey)) { //if output belongs to me ( if coins belong to me )
+                Node.UTXOs.put(UTXO.id,UTXO); //add it to our list of unspent transactions.
+                total += UTXO.schedulingFactor ;
+            }
+        }
+        return total;
     }
 }
