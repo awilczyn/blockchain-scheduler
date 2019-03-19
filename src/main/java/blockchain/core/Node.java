@@ -8,6 +8,7 @@ import blockchain.scheduler.Schedule;
 import blockchain.serialization.PublicKeyDeserizlizer;
 import blockchain.util.ByteUtil;
 import blockchain.util.Log;
+import blockchain.util.SortByTimestamp;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -102,29 +103,31 @@ public class Node implements Runnable
             }
             blockchain.add(currentBlock);
         }
+        Collections.sort(blockchain, new SortByTimestamp());
+
         String BC = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
         System.out.println(BC);
 
         while(shouldMine) {
-//            if (transactionVerifiedPool.size() >= Block.minimumNumberOfTransaction) {
-//                Block block1 = new Block(genesisBlock.hash);
-//                for (Map.Entry<BigInteger, Transaction> entry : transactionVerifiedPool.entrySet())
-//                {
-//                    BigInteger key = entry.getKey();
-//                    Transaction trans = entry.getValue();
-//                    if (Block.maxNumberOfTransaction > block1.transactions.size())
-//                    {
-//                        block1.addTransaction(trans);
-//                        transactionVerifiedPool.remove(key);
-//                    }
-//                }
-//                addBlock(block1, minerWallet.getPublicKey());
-//                System.out.println("\nMiner scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
-//                context.putBlock(block1);
-//                String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
-//                System.out.println("\nThe block chain: ");
-//                System.out.println(blockchainJson);
-//            }
+            if (transactionVerifiedPool.size() >= Block.minimumNumberOfTransaction) {
+                Block block1 = new Block(blockchain.get(blockchain.size() - 1).hash);
+                for (Map.Entry<BigInteger, Transaction> entry : transactionVerifiedPool.entrySet())
+                {
+                    BigInteger key = entry.getKey();
+                    Transaction trans = entry.getValue();
+                    if (Block.maxNumberOfTransaction > block1.transactions.size())
+                    {
+                        block1.addTransaction(trans);
+                        transactionVerifiedPool.remove(key);
+                    }
+                }
+                addBlock(block1, minerWallet.getPublicKey());
+                System.out.println("\nMiner scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
+                context.putBlock(block1);
+                String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block1);
+                System.out.println("\nThe block: ");
+                System.out.println(blockJson);
+            }
 
 //            Block block1 = new Block(genesisBlock.hash);
 //            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
