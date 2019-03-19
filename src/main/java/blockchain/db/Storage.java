@@ -75,4 +75,12 @@ public class Storage<T>
         }
         return null;
     }
+
+
+    public HTreeMap<byte[], byte[]> getMapForType(StorageTypes map) {
+        if(map == StorageTypes.BLOCKS){
+            return blocksMap;
+        }
+        return null;
+    }
 }

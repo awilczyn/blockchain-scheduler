@@ -2,6 +2,10 @@ package blockchain.core.genesis;
 
 import blockchain.core.*;
 import blockchain.db.Context;
+import blockchain.scheduler.AwsSchedule;
+import blockchain.scheduler.Machine;
+import blockchain.scheduler.Schedule;
+import blockchain.scheduler.Task;
 import blockchain.util.ByteUtil;
 import blockchain.util.StringUtil;
 
@@ -39,7 +43,7 @@ public class GenesisBlock
 
         if (block == null) {
             wallet = new Wallet();
-            genesisTransaction = new Transaction(wallet.getPrivateKey(), wallet.getPublicKey(), localWallet.getPublicKey(), 100f, null, null);
+            genesisTransaction = new Transaction(wallet.getPrivateKey(), wallet.getPublicKey(), localWallet.getPublicKey(), 100f, getDataToSchedule(), null);
             genesisTransaction.transactionId = ByteUtil.stringToBytes("0");
             genesisTransaction.outputs.add(
                     new TransactionOutput(
@@ -53,7 +57,7 @@ public class GenesisBlock
             System.out.println("Creating and Mining Genesis block... ");
             block = new Block( "0");
             block.addTransaction(genesisTransaction);
-            block.mineBlock(difficulty);
+            block.mineBlock(difficulty, wallet.getPublicKey());
             block.genesisBlock(getGenesisHash());
             // put genesis block to database
             context.putBlock(block);
@@ -77,5 +81,13 @@ public class GenesisBlock
 
     private String getGenesisHash() {
         return StringUtil.applySha256("scheduler");
+    }
+
+    public Schedule getDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Machine> machines = new ArrayList<>();
+
+        return new AwsSchedule(tasks, machines);
     }
 }

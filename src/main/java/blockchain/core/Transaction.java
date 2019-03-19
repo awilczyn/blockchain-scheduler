@@ -54,7 +54,7 @@ public class Transaction implements Serializable
     }
 
     public byte[] getParcelled() {
-        return Serializer.createParcel(new Object[]{  this.sender, this.recipient, this.value, this.schedule, this.sequence});
+        return Serializer.createParcel(new Object[]{  this.sender, this.recipient, this.value, this.schedule, sequence});
     }
 
     private byte[] calculateHash() {
@@ -235,11 +235,11 @@ public class Transaction implements Serializable
 //        Player follower2 = new Player(8000, 6);
 //        StackelbergGame stackelbergGame = new StackelbergGame(follower2, leader);
         StackelbergGame stackelbergGame = new StackelbergGame(follower, leader);
-//        if (stackelbergGame.isFollowerHasBetterSchedule()) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-        return true;
+        if (stackelbergGame.isFollowerHasBetterSchedule()) {
+            return false;
+        } else {
+            return true;
+        }
+//        return true;
     }
 }

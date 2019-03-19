@@ -128,7 +128,7 @@ public class BlockTest
 
     public static void addBlock(Block newBlock)
     {
-        newBlock.mineBlock(difficulty);
+        newBlock.mineBlock(difficulty, null);
         blockchain.add(newBlock);
     }
 }

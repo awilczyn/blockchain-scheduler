@@ -1,7 +1,9 @@
 package blockchain.db;
 
 import blockchain.core.Block;
+import blockchain.util.ByteUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -13,7 +15,17 @@ public class Context
 
     public Context()
     {
-        this.blocks = new HashMap<String, Block>();
+        this.blocks = initBlocks();
+    }
+
+    public HashMap<String, Block> initBlocks()
+    {
+        HashMap<String, Block> blocks = new HashMap<String, Block>();
+        for (Object block :  Storage.getInstance().getMapForType(StorageTypes.BLOCKS).values()) {
+            Block blockDB = (Block) block;
+            blocks.put(blockDB.hash, blockDB);
+        }
+        return blocks;
     }
 
     /**

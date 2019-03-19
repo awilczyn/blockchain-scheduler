@@ -27,8 +27,6 @@ public class Block implements Serializable
     public static int minimumNumberOfTransaction = 2;
     public static int maxNumberOfTransaction = 2;
 
-    public byte[] minerPublicKey;
-
     /**
      *
      * @param data
@@ -69,7 +67,7 @@ public class Block implements Serializable
      *
      * @param difficulty
      */
-    public void mineBlock(int difficulty)
+    public void mineBlock(int difficulty, byte[]  publicKey)
     {
         merkleRoot = StringUtil.getMerkleRoot(transactions);
         String target = StringUtil.getDificultyString(difficulty);
@@ -97,9 +95,5 @@ public class Block implements Serializable
         transactions.add(transaction);
         System.out.println("Transaction Successfully added to Block");
         return true;
-    }
-
-    public void setMinerPublicKey(byte[] minerPublicKey) {
-        this.minerPublicKey = minerPublicKey;
     }
 }

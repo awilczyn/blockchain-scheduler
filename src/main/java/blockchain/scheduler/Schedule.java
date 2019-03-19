@@ -1,11 +1,12 @@
 package blockchain.scheduler;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by andrzejwilczynski on 08/01/2019.
  */
-public class Schedule
+public class Schedule implements Serializable
 {
     public ArrayList<Task> tasks = new ArrayList<>();
     public ArrayList<Machine> machines = new ArrayList<>();

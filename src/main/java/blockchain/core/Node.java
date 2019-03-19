@@ -91,27 +91,41 @@ public class Node implements Runnable
 
     private void mine()
     {
-        blockchain.add(genesisBlock);
-        UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
-        while(shouldMine) {
-            if (transactionVerifiedPool.size() >= Block.minimumNumberOfTransaction) {
-                Block block1 = new Block(genesisBlock.hash);
-                block1.setMinerPublicKey(minerWallet.getPublicKey());
-                for (Map.Entry<BigInteger, Transaction> entry : transactionVerifiedPool.entrySet())
-                {
-                    BigInteger key = entry.getKey();
-                    Transaction trans = entry.getValue();
-                    if (Block.maxNumberOfTransaction > block1.transactions.size())
-                    {
-                        block1.addTransaction(trans);
-                        transactionVerifiedPool.remove(key);
-                    }
+        for (Map.Entry<String, Block> entry : context.blocks.entrySet()) {
+            Block currentBlock = entry.getValue();
+            for(int t=0; t <currentBlock.transactions.size(); t++) {
+                Transaction currentTransaction = currentBlock.transactions.get(t);
+                //add outputs to Unspent list
+                for(TransactionOutput o : currentTransaction.outputs) {
+                    UTXOs.put(o.id , o);
                 }
-                addBlock(block1);
-                String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
-                System.out.println("\nThe block chain: ");
-                System.out.println(blockchainJson);
             }
+            blockchain.add(currentBlock);
+        }
+        String BC = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
+        System.out.println(BC);
+
+        while(shouldMine) {
+//            if (transactionVerifiedPool.size() >= Block.minimumNumberOfTransaction) {
+//                Block block1 = new Block(genesisBlock.hash);
+//                for (Map.Entry<BigInteger, Transaction> entry : transactionVerifiedPool.entrySet())
+//                {
+//                    BigInteger key = entry.getKey();
+//                    Transaction trans = entry.getValue();
+//                    if (Block.maxNumberOfTransaction > block1.transactions.size())
+//                    {
+//                        block1.addTransaction(trans);
+//                        transactionVerifiedPool.remove(key);
+//                    }
+//                }
+//                addBlock(block1, minerWallet.getPublicKey());
+//                System.out.println("\nMiner scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
+//                context.putBlock(block1);
+//                String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
+//                System.out.println("\nThe block chain: ");
+//                System.out.println(blockchainJson);
+//            }
+
 //            Block block1 = new Block(genesisBlock.hash);
 //            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
 //            System.out.println("\nLocal wallet is Attempting to send funds (40) to WalletB...");
@@ -142,9 +156,9 @@ public class Node implements Runnable
         }
     }
 
-    public static void addBlock(Block newBlock)
+    public static void addBlock(Block newBlock, byte[]  publicKey)
     {
-        newBlock.mineBlock(difficulty);
+        newBlock.mineBlock(difficulty, publicKey);
         blockchain.add(newBlock);
     }
 
