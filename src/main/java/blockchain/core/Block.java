@@ -78,6 +78,11 @@ public class Block implements Serializable
         String target = StringUtil.getDificultyString(difficulty);
         float TF = Node.getTrustFactor(publicKey, numberOfDayLimit, true, this.getCurrentBlockTransaction());
         float W = Node.getTrustFactor(publicKey, numberOfDayLimit, false, this.getCurrentBlockTransaction());
+        float P = TF/W*100;
+        if (P<10) {
+            P = 10;
+        }
+        difficulty = 5;
         while(!hash.substring( 0, difficulty).equals(target)) {
             nonce ++;
             hash = calculateHash();

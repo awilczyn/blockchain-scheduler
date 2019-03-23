@@ -173,14 +173,14 @@ public class Node implements Runnable
         return total;
     }
 
-    public static float getTrustFactor(byte[]  publicKey, long time, boolean forMe, ArrayList<BigInteger> currentBlockTransactions)
+    public static float getTrustFactor(byte[]  publicKey, int time, boolean forMe, ArrayList<BigInteger> currentBlockTransactions)
     {
         float total = 0;
         float totalMe = 0;
         Timestamp timestamp = new Timestamp(new Date().getTime());
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(timestamp.getTime());
-        cal.add(Calendar.DAY_OF_MONTH, -30);
+        cal.add(Calendar.DAY_OF_MONTH, - time);
         timestamp = new Timestamp(cal.getTime().getTime());
         for (Map.Entry<byte [], TransactionOutput> item: Node.UTXOs.entrySet()){
             TransactionOutput UTXO = item.getValue();
