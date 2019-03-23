@@ -17,6 +17,8 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.PublicKey;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -107,6 +109,7 @@ public class Node implements Runnable
 
         String BC = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
         System.out.println(BC);
+        System.out.println("\nMiner scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
 
         while(shouldMine) {
             if (transactionVerifiedPool.size() >= Block.minimumNumberOfTransaction) {
@@ -128,34 +131,6 @@ public class Node implements Runnable
                 System.out.println("\nThe block: ");
                 System.out.println(blockJson);
             }
-
-//            Block block1 = new Block(genesisBlock.hash);
-//            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
-//            System.out.println("\nLocal wallet is Attempting to send funds (40) to WalletB...");
-//
-//            Transaction transaction1 = minerWallet.sendFunds(walletB.getPublicKey(), 40f);
-//            block1.addTransaction(transaction1);
-//            addBlock(block1);
-//            //context.putBlock(block1);
-//            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
-//            System.out.println("WalletB's balance is: " + walletB.getBalance());
-//
-//            Block block2 = new Block(block1.hash);
-//            System.out.println("\nMiner wallet attempting to send more funds (1000) than it has...");
-//            block2.addTransaction(minerWallet.sendFunds(walletB.getPublicKey(), 1000f));
-//            addBlock(block2);
-//            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
-//            System.out.println("WalletB's balance is: " + walletB.getBalance());
-//
-//            Block block3 = new Block(block2.hash);
-//            System.out.println("\nWalletB is Attempting to send funds (20) to Miner wallet...");
-//            block3.addTransaction(walletB.sendFunds( minerWallet.getPublicKey(), 20));
-//            System.out.println("\nMiner wallet balance is: " + minerWallet.getBalance());
-//            System.out.println("WalletB's balance is: " + walletB.getBalance());
-//
-//            String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
-//            System.out.println("\nThe block chain: ");
-//            System.out.println(blockchainJson);
         }
     }
 
@@ -196,5 +171,33 @@ public class Node implements Runnable
             }
         }
         return total;
+    }
+
+    public static float getTrustFactor(byte[]  publicKey, long time, boolean forMe, ArrayList<BigInteger> currentBlockTransactions)
+    {
+        float total = 0;
+        float totalMe = 0;
+        Timestamp timestamp = new Timestamp(new Date().getTime());
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(timestamp.getTime());
+        cal.add(Calendar.DAY_OF_MONTH, -30);
+        timestamp = new Timestamp(cal.getTime().getTime());
+        for (Map.Entry<byte [], TransactionOutput> item: Node.UTXOs.entrySet()){
+            TransactionOutput UTXO = item.getValue();
+            Timestamp transactionTimestamp = new Timestamp(UTXO.timestamp);
+            if(transactionTimestamp.after(timestamp) &&
+                    !currentBlockTransactions.contains(ByteUtil.bytesToBigInteger(UTXO.parentTransactionId))){
+                if(UTXO.isMine(publicKey)) {
+                    totalMe += UTXO.schedulingFactor ;
+                } else {
+                    total += UTXO.schedulingFactor ;
+                }
+            }
+        }
+        if (forMe) {
+            return totalMe;
+        } else {
+            return total;
+        }
     }
 }

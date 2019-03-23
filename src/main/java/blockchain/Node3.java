@@ -58,7 +58,11 @@ public class Node3
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
+                    localNode.addTransactionToPool(10, getDataToSchedule());
+                    localNode.addTransactionToPool(20, getDataToSchedule());
                     localNode.addTransactionToPool(30, getDataToSchedule());
+                    localNode.addTransactionToPool(40, getDataToSchedule());
+                    localNode.addTransactionToPool(50, getDataToSchedule());
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();

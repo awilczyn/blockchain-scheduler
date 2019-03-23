@@ -1,11 +1,14 @@
 package blockchain.core;
 
+import blockchain.util.ByteUtil;
 import blockchain.util.StringUtil;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by andrzejwilczynski on 24/07/2018.
@@ -26,6 +29,8 @@ public class Block implements Serializable
 
     public static int minimumNumberOfTransaction = 2;
     public static int maxNumberOfTransaction = 2;
+
+    public static int numberOfDayLimit = 30;
 
     /**
      *
@@ -71,11 +76,24 @@ public class Block implements Serializable
     {
         merkleRoot = StringUtil.getMerkleRoot(transactions);
         String target = StringUtil.getDificultyString(difficulty);
+        float TF = Node.getTrustFactor(publicKey, numberOfDayLimit, true, this.getCurrentBlockTransaction());
+        float W = Node.getTrustFactor(publicKey, numberOfDayLimit, false, this.getCurrentBlockTransaction());
         while(!hash.substring( 0, difficulty).equals(target)) {
             nonce ++;
             hash = calculateHash();
         }
         System.out.println("Block Mined!!! : " + hash);
+    }
+
+    private ArrayList<BigInteger> getCurrentBlockTransaction()
+    {
+        ArrayList<BigInteger> currentTransactionIds = new ArrayList<BigInteger>();
+        for (Transaction i : transactions) {
+            // accessing each element of array
+            BigInteger transactionId = ByteUtil.bytesToBigInteger(i.getTransactionId());
+            currentTransactionIds.add(transactionId);
+        }
+        return currentTransactionIds;
     }
 
     /**
@@ -87,7 +105,7 @@ public class Block implements Serializable
         //process transaction and check if valid, unless block is genesis block then ignore.
         if(transaction == null) return false;
         if((previousHash != "0")) {
-            if((transaction.processTransaction() != true)) {
+            if((transaction.processTransaction(timeStamp) != true)) {
                 System.out.println("Transaction failed to process. Discarded.");
                 return false;
             }

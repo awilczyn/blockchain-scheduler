@@ -16,14 +16,16 @@ public class TransactionOutput implements Serializable
     public float value;
     public byte[] parentTransactionId;
     public float schedulingFactor;
+    public long timestamp;
 
-    public TransactionOutput(byte[] recipient, float value, byte[] parentTransactionId, float schedulingFactor)
+    public TransactionOutput(byte[] recipient, float value, byte[] parentTransactionId, float schedulingFactor, long timestamp)
     {
         this.recipient = recipient;
         this.value = value;
         this.parentTransactionId = parentTransactionId;
         this.id = HashUtil.applySha256(getParcelled());
         this.schedulingFactor = schedulingFactor;
+        this.timestamp = timestamp;
     }
 
     public byte[] getParcelled() {

@@ -50,6 +50,7 @@ public class GenesisBlock
                             genesisTransaction.getRecipient(),
                             genesisTransaction.value,
                             genesisTransaction.transactionId,
+                            0,
                             0
                     )
             );

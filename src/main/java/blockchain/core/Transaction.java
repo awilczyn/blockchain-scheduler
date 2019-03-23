@@ -85,7 +85,7 @@ public class Transaction implements Serializable
         return verified;
     }
 
-    public boolean processTransaction()
+    public boolean processTransaction(long timestamp)
     {
         if(verifiySignature() == false) {
             System.out.println("#Transaction Signature failed to verify");
@@ -105,8 +105,7 @@ public class Transaction implements Serializable
 
         //generate transaction outputs:
         float leftOver = getInputsValue() - value; //get value of inputs then the left over change:
-        outputs.add(new TransactionOutput( this.recipient, value, transactionId, getSumOfInstructionsInBlockchain())); //send value to recipient
-        outputs.add(new TransactionOutput( this.sender, leftOver, transactionId, getSumOfInstructionsInBlockchain())); //send the left over 'change' back to sender
+        outputs.add(new TransactionOutput( this.sender, leftOver, transactionId, getSumOfInstructionsInBlockchain(), timestamp)); //send the left over 'change' back to sender
 
         //add outputs to Unspent list
         for(TransactionOutput o : outputs) {
@@ -235,11 +234,11 @@ public class Transaction implements Serializable
 //        Player follower2 = new Player(8000, 6);
 //        StackelbergGame stackelbergGame = new StackelbergGame(follower2, leader);
         StackelbergGame stackelbergGame = new StackelbergGame(follower, leader);
-        if (stackelbergGame.isFollowerHasBetterSchedule()) {
-            return false;
-        } else {
-            return true;
-        }
-//        return true;
+//        if (stackelbergGame.isFollowerHasBetterSchedule()) {
+//            return false;
+//        } else {
+//            return true;
+//        }
+        return true;
     }
 }
