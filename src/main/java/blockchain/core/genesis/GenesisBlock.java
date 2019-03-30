@@ -44,6 +44,7 @@ public class GenesisBlock
 
         if (block == null) {
             wallet = new Wallet();
+            block = new Block( "0");
             genesisTransaction = new Transaction(wallet.getPrivateKey(), wallet.getPublicKey(), localWallet.getPublicKey(), 100f, getDataToSchedule(), null);
             genesisTransaction.transactionId = ByteUtil.stringToBytes("0");
             genesisTransaction.outputs.add(
@@ -52,12 +53,12 @@ public class GenesisBlock
                             genesisTransaction.value,
                             genesisTransaction.transactionId,
                             0,
-                            0
+                            block.getTimeStamp()
+
                     )
             );
 
             System.out.println("Creating and Mining Genesis block... ");
-            block = new Block( "0");
             block.addTransaction(genesisTransaction);
             block.mineBlock(difficulty, wallet.getPublicKey());
             block.genesisBlock(getGenesisHash());
