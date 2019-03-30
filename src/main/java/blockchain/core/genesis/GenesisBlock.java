@@ -8,6 +8,7 @@ import blockchain.scheduler.Schedule;
 import blockchain.scheduler.Task;
 import blockchain.util.ByteUtil;
 import blockchain.util.StringUtil;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 
@@ -47,7 +48,7 @@ public class GenesisBlock
             genesisTransaction.transactionId = ByteUtil.stringToBytes("0");
             genesisTransaction.outputs.add(
                     new TransactionOutput(
-                            genesisTransaction.getRecipient(),
+                            genesisTransaction.getSender(),
                             genesisTransaction.value,
                             genesisTransaction.transactionId,
                             0,
@@ -60,6 +61,8 @@ public class GenesisBlock
             block.addTransaction(genesisTransaction);
             block.mineBlock(difficulty, wallet.getPublicKey());
             block.genesisBlock(getGenesisHash());
+            String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block);
+            System.out.println(blockJson);
             // put genesis block to database
             context.putBlock(block);
         } else {

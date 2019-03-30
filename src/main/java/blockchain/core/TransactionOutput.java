@@ -12,15 +12,15 @@ import java.util.Arrays;
 public class TransactionOutput implements Serializable
 {
     public byte[] id;
-    public byte[] recipient;
+    public byte[] sender;
     public float value;
     public byte[] parentTransactionId;
     public float schedulingFactor;
     public long timestamp;
 
-    public TransactionOutput(byte[] recipient, float value, byte[] parentTransactionId, float schedulingFactor, long timestamp)
+    public TransactionOutput(byte[] sender, float value, byte[] parentTransactionId, float schedulingFactor, long timestamp)
     {
-        this.recipient = recipient;
+        this.sender = sender;
         this.value = value;
         this.parentTransactionId = parentTransactionId;
         this.id = HashUtil.applySha256(getParcelled());
@@ -29,11 +29,11 @@ public class TransactionOutput implements Serializable
     }
 
     public byte[] getParcelled() {
-        return Serializer.createParcel(new Object[]{this.recipient, this.value, this.parentTransactionId, this.schedulingFactor});
+        return Serializer.createParcel(new Object[]{this.sender, this.value, this.parentTransactionId, this.schedulingFactor});
     }
 
     public boolean isMine(byte[]  publicKey)
     {
-        return Arrays.equals(publicKey,recipient);
+        return Arrays.equals(publicKey,sender);
     }
 }

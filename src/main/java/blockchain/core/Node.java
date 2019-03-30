@@ -107,8 +107,8 @@ public class Node implements Runnable
         }
         Collections.sort(blockchain, new SortByTimestamp());
 
-        String BC = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
-        System.out.println(BC);
+//        String BC = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
+//        System.out.println(BC);
         System.out.println("\nMiner scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
 
         while(shouldMine) {

@@ -112,11 +112,11 @@ public class BlockTest
                     tempUTXOs.put(output.id, output);
                 }
 
-                if(!Arrays.equals(currentTransaction.outputs.get(0).recipient, currentTransaction.getRecipient())) {
+                if(!Arrays.equals(currentTransaction.outputs.get(0).sender, currentTransaction.getRecipient())) {
                     System.out.println("#Transaction(" + t + ") output reciepient is not who it should be");
                     valid = false;
                 }
-                if(!Arrays.equals(currentTransaction.outputs.get(1).recipient, currentTransaction.getSender())) {
+                if(!Arrays.equals(currentTransaction.outputs.get(1).sender, currentTransaction.getSender())) {
                     System.out.println("#Transaction(" + t + ") output 'change' is not sender.");
                     valid = false;
                 }

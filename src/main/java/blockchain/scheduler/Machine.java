@@ -1,6 +1,7 @@
 package blockchain.scheduler;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by andrzejwilczynski on 08/01/2019.
@@ -8,16 +9,17 @@ import java.io.Serializable;
 public class Machine implements Serializable
 {
     public float numberOfOperationsPerSecond;
-    public int tasksToExecute [];
+    public ArrayList<Integer> tasksToExecute;
 
     public Machine(float numberOfOperationsPerSecond)
     {
         this.numberOfOperationsPerSecond = numberOfOperationsPerSecond;
+        this.tasksToExecute = new ArrayList<>();
     }
 
-    public void setTasksToExecute(int[] tasksToExecute)
+    public void addTaskToExecute(int taskId)
     {
-        this.tasksToExecute = tasksToExecute;
+        tasksToExecute.add(taskId);
     }
 
     public float getNumberOfOperationsPerSecond() {
