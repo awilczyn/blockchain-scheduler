@@ -92,6 +92,19 @@ public class Node implements Runnable
         mine();
     }
 
+
+    private float getNumberOfCurrentInstructions()
+    {
+        float numberOfTransactions = 0;
+        for (Map.Entry<BigInteger, Transaction> entry : transactionVerifiedPool.entrySet())
+        {
+            BigInteger key = entry.getKey();
+            Transaction trans = entry.getValue();
+            numberOfTransactions += trans.getSumOfInstructionsInBlockchain();
+        }
+        return numberOfTransactions;
+    }
+
     private void mine()
     {
         for (Map.Entry<String, Block> entry : context.blocks.entrySet()) {
@@ -112,17 +125,14 @@ public class Node implements Runnable
         System.out.println("\nMiner scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
 
         while(shouldMine) {
-            if (transactionVerifiedPool.size() >= Block.minimumNumberOfTransaction) {
+            if (getNumberOfCurrentInstructions() >= Block.minimumNumberOfInstruction) {
                 Block block1 = new Block(blockchain.get(blockchain.size() - 1).hash);
                 for (Map.Entry<BigInteger, Transaction> entry : transactionVerifiedPool.entrySet())
                 {
                     BigInteger key = entry.getKey();
                     Transaction trans = entry.getValue();
-                    if (Block.maxNumberOfTransaction > block1.transactions.size())
-                    {
-                        block1.addTransaction(trans);
-                        transactionVerifiedPool.remove(key);
-                    }
+                    block1.addTransaction(trans);
+                    transactionVerifiedPool.remove(key);
                 }
                 addBlock(block1, minerWallet.getPublicKey());
                 System.out.println("\nMiner scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
