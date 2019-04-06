@@ -82,11 +82,13 @@ public class HeartBeatReceiver implements Runnable{
 			  System.out.println("Checking transaction "+transaction);
 			  if (transaction.verifyTransaction()) {
 				  String transactionVerified = "txv|"+inputLine;
-				  System.out.println("Schedule correct, transaction verified");
+				  System.out.println("Task execution time: "+transaction.schedule.getTime()+" seconds");
+				  System.out.println("Schedule correct, transaction verified.");
 				  //broadcast("txv|" + inputLine);
 				  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
 			  } else {
-				  System.out.println("Schedule incorrect, transaction rejected");
+				  System.out.println("Task execution time: "+transaction.schedule.getTime()+" seconds");
+				  System.out.println("Schedule incorrect, transaction rejected.");
 				  String transactionVerified = "tx|"+inputLine;
 				  //broadcast("tx|" + inputLine);
 				  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
@@ -113,7 +115,7 @@ public class HeartBeatReceiver implements Runnable{
 				System.out.println("Transaction added to verified pool: "+ transaction.value);
 			}
 		}
-    	System.out.println("transaction was verified: " + transaction.value);
+    	System.out.println("Transaction was verified.");
 	}
 
 	public void broadcast(String message) {

@@ -62,6 +62,9 @@ public class Node1
                     localNode.addTransactionToPool(30, getThirdTransactionDataToSchedule());
                     localNode.addTransactionToPool(40, getFourthTransactionDataToSchedule());
                     localNode.addTransactionToPool(50, getFifthTransactionDataToSchedule());
+                    localNode.addTransactionToPool(60, getSixthTransactionDataToSchedule());
+                    localNode.addTransactionToPool(60, getSeventhTransactionDataToSchedule());
+                    localNode.addTransactionToPool(60, getEigthTransactionDataToSchedule());
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
@@ -168,6 +171,50 @@ public class Node1
         ArrayList<Machine> machines = new ArrayList<>();
         machines.add(new Machine(8000));
         machines.add(new Machine(6000));
+
+        return new AwsSchedule(tasks, machines);
+    }
+
+    public static Schedule getSixthTransactionDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1,20000));
+        tasks.add(new Task(2,7500));
+        tasks.add(new Task(1,10000));
+        ArrayList<Machine> machines = new ArrayList<>();
+        machines.add(new Machine(1000));
+        machines.add(new Machine(14000));
+        machines.add(new Machine(2000));
+
+        return new AwsSchedule(tasks, machines);
+    }
+
+    public static Schedule getSeventhTransactionDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1,10000));
+        tasks.add(new Task(2,18500));
+        tasks.add(new Task(1,1000));
+        ArrayList<Machine> machines = new ArrayList<>();
+        machines.add(new Machine(4000));
+        machines.add(new Machine(11000));
+        machines.add(new Machine(12000));
+        machines.add(new Machine(1000));
+
+        return new AwsSchedule(tasks, machines);
+    }
+
+    public static Schedule getEigthTransactionDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1,12000));
+        tasks.add(new Task(2,28500));
+        tasks.add(new Task(1,37000));
+        ArrayList<Machine> machines = new ArrayList<>();
+        machines.add(new Machine(2000));
+        machines.add(new Machine(15000));
+        machines.add(new Machine(12000));
+        machines.add(new Machine(1000));
 
         return new AwsSchedule(tasks, machines);
     }

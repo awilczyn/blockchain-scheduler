@@ -234,11 +234,15 @@ public class Transaction implements Serializable
 //        Player follower2 = new Player(8000, 6);
 //        StackelbergGame stackelbergGame = new StackelbergGame(follower2, leader);
         StackelbergGame stackelbergGame = new StackelbergGame(follower, leader);
-//        if (stackelbergGame.isFollowerHasBetterSchedule()) {
-//            return false;
-//        } else {
-//            return true;
-//        }
-        return true;
+        long startTime = System.nanoTime();
+        boolean followerHasBetterSchedule = stackelbergGame.isFollowerHasBetterSchedule();
+        final long duration = System.nanoTime() - startTime;
+        System.out.println("Time of schedule verification: "+ duration +" [NS].");
+        if (followerHasBetterSchedule) {
+            return false;
+        } else {
+            return true;
+        }
+//        return true;
     }
 }
