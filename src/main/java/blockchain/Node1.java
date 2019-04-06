@@ -57,10 +57,11 @@ public class Node1
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
-                    localNode.addTransactionToPool(10, getDataToSchedule());
-                    localNode.addTransactionToPool(20, getDataToSchedule());
-                    localNode.addTransactionToPool(30, getDataToSchedule());
-                    localNode.addTransactionToPool(40, getDataToSchedule());
+                    localNode.addTransactionToPool(10, getFirstTransactionDataToSchedule());
+                    localNode.addTransactionToPool(20, getSecondTransactionDataToSchedule());
+                    localNode.addTransactionToPool(30, getThirdTransactionDataToSchedule());
+                    localNode.addTransactionToPool(40, getFourthTransactionDataToSchedule());
+                    localNode.addTransactionToPool(50, getFifthTransactionDataToSchedule());
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
@@ -84,7 +85,7 @@ public class Node1
         serverStatus.put(new ServerInfo("127.0.0.1", 7004), new Date());
     }
 
-    public static Schedule getDataToSchedule()
+    public static Schedule getFirstTransactionDataToSchedule()
     {
         ArrayList<Task> tasks = new ArrayList<>();
         tasks.add(new Task(1,10000));
@@ -95,6 +96,63 @@ public class Node1
         machines.add(new Machine(3000));
         machines.add(new Machine(30000));
         machines.add(new Machine(10000));
+
+        return new AwsSchedule(tasks, machines);
+    }
+
+    public static Schedule getSecondTransactionDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1,8000));
+        tasks.add(new Task(2,1000));
+        tasks.add(new Task(3,40000));
+        ArrayList<Machine> machines = new ArrayList<>();
+        machines.add(new Machine(3000));
+        machines.add(new Machine(30000));
+        machines.add(new Machine(2500));
+        machines.add(new Machine(20000));
+
+        return new AwsSchedule(tasks, machines);
+    }
+
+    public static Schedule getThirdTransactionDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1,1000));
+        tasks.add(new Task(2,3000));
+        tasks.add(new Task(3,8000));
+        tasks.add(new Task(4,18000));
+        tasks.add(new Task(4,900));
+        ArrayList<Machine> machines = new ArrayList<>();
+        machines.add(new Machine(7000));
+        machines.add(new Machine(18000));
+        machines.add(new Machine(6000));
+
+        return new AwsSchedule(tasks, machines);
+    }
+
+    public static Schedule getFourthTransactionDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1,10000));
+        tasks.add(new Task(2,7500));
+        tasks.add(new Task(3,1000));
+        ArrayList<Machine> machines = new ArrayList<>();
+        machines.add(new Machine(1500));
+        machines.add(new Machine(6000));
+
+        return new AwsSchedule(tasks, machines);
+    }
+
+    public static Schedule getFifthTransactionDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1,20000));
+        tasks.add(new Task(2,4500));
+        tasks.add(new Task(3,3000));
+        ArrayList<Machine> machines = new ArrayList<>();
+        machines.add(new Machine(8000));
+        machines.add(new Machine(6000));
 
         return new AwsSchedule(tasks, machines);
     }
