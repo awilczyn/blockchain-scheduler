@@ -75,14 +75,18 @@ public class Block implements Serializable
     public void mineBlock(int difficulty, byte[]  publicKey)
     {
         merkleRoot = StringUtil.getMerkleRoot(transactions);
-        String target = StringUtil.getDificultyString(difficulty);
         float TF = Node.getTrustFactor(publicKey, numberOfDayLimit, true, this.getCurrentBlockTransaction());
         float W = Node.getTrustFactor(publicKey, numberOfDayLimit, false, this.getCurrentBlockTransaction());
-        float P = TF/W*100;
-        if (P<10) {
-            P = 10;
+        double Pt = 0;
+        if (W > 0 && TF > 0) {
+            Pt = TF/W;
         }
-        difficulty = 5;
+        if (Pt >= 0.1) {
+            difficulty = 10 - Math.min((int)Math.round(Pt*10), 9);
+        } else {
+            difficulty = 10;
+        }
+        String target = StringUtil.getDifficultyString(difficulty);
         while(!hash.substring( 0, difficulty).equals(target)) {
             nonce ++;
             hash = calculateHash();
