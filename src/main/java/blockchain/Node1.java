@@ -85,6 +85,21 @@ public class Node1
         serverStatus.put(new ServerInfo("127.0.0.1", 7004), new Date());
     }
 
+    public static Schedule getDataToSchedule()
+    {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Task(1,10000));
+        tasks.add(new Task(2,5000));
+        tasks.add(new Task(3,1000));
+        tasks.add(new Task(4,15000));
+        ArrayList<Machine> machines = new ArrayList<>();
+        machines.add(new Machine(3000));
+        machines.add(new Machine(30000));
+        machines.add(new Machine(10000));
+
+        return new AzureSchedule(tasks, machines);
+    }
+
     public static Schedule getFirstTransactionDataToSchedule()
     {
         ArrayList<Task> tasks = new ArrayList<>();
