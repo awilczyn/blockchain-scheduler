@@ -127,6 +127,7 @@ public class Node implements Runnable
         while(shouldMine) {
             if (getNumberOfCurrentInstructions() >= Block.minimumNumberOfInstruction) {
                 Block block1 = new Block(blockchain.get(blockchain.size() - 1).hash);
+                System.out.println("Number of operations or instructions needed to execute the tasks within the created block: "+getNumberOfCurrentInstructions());
                 for (Map.Entry<BigInteger, Transaction> entry : transactionVerifiedPool.entrySet())
                 {
                     BigInteger key = entry.getKey();

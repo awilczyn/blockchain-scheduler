@@ -78,6 +78,7 @@ public class Block implements Serializable
         merkleRoot = StringUtil.getMerkleRoot(transactions);
         float TF = Node.getTrustFactor(publicKey, numberOfDayLimit, true, this.getCurrentBlockTransaction());
         float W = Node.getTrustFactor(publicKey, numberOfDayLimit, false, this.getCurrentBlockTransaction());
+        System.out.println("Trust factor of mining node: "+ TF);
         double Pt = 0;
         if (W > 0 && TF > 0) {
             Pt = TF/W;
@@ -87,12 +88,13 @@ public class Block implements Serializable
         } else {
             difficulty = 10;
         }
+        System.out.println("Calculated difficulty to mine the block: "+difficulty);
         String target = StringUtil.getDifficultyString(difficulty);
         while(!hash.substring( 0, difficulty).equals(target)) {
             nonce ++;
             hash = calculateHash();
         }
-        System.out.println("Block Mined!!! : " + hash);
+        System.out.println("Block mined!!! : " + hash);
     }
 
     private ArrayList<BigInteger> getCurrentBlockTransaction()
