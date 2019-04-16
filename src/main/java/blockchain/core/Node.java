@@ -141,7 +141,7 @@ public class Node implements Runnable
                 blockIsReady = true;
             }
             if (Arrays.equals(validators.getLeader(), minerWallet.getPublicKey()) && blockIsReady) {
-                System.out.println("\nMiner scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
+                System.out.println("\nValidator scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
                 addBlock(block1, minerWallet.getPublicKey());
                 context.putBlock(block1);
                 String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block1);
