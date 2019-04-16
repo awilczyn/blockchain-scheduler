@@ -46,8 +46,7 @@ public class GenesisBlock
 
 
         if (block == null) {
-            ECKey keyPair = ECKey.fromPrivate(Hex.decode(Node1.privateKeyString));
-            wallet = new Wallet(keyPair.getPrivKeyBytes());
+            wallet = new Wallet();
             block = new Block( "0");
             genesisTransaction = new Transaction(wallet.getPrivateKey(), wallet.getPublicKey(), localWallet.getPublicKey(), 100f, getDataToSchedule(), null);
             genesisTransaction.transactionId = ByteUtil.stringToBytes("0");
