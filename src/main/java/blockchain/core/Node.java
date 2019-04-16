@@ -140,9 +140,12 @@ public class Node implements Runnable
                 }
                 blockIsReady = true;
             }
+            long startTime = System.nanoTime();
             if (Arrays.equals(validators.getLeader(), minerWallet.getPublicKey()) && blockIsReady) {
                 System.out.println("\nValidator scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
                 addBlock(block1, minerWallet.getPublicKey());
+                final long duration = System.nanoTime() - startTime;
+                System.out.println("Time of mining "+ duration +" [NS].");
                 context.putBlock(block1);
                 String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block1);
                 System.out.println("\nThe block: ");
