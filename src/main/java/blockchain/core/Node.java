@@ -40,6 +40,7 @@ public class Node implements Runnable
 
     public static ArrayList<Block> blockchain = new ArrayList<Block>();
     public static HashMap<byte [], TransactionOutput> UTXOs = new HashMap<>();
+    public static Validators validators = new Validators();
     public static int difficulty = 5;
     public static float minimumTransaction = 0.1f;
 
@@ -122,11 +123,12 @@ public class Node implements Runnable
 
 //        String BC = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
 //        System.out.println(BC);
-        System.out.println("\nMiner scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
 
         while(shouldMine) {
+            boolean blockIsReady = false;
+            Block block1 = null;
             if (getNumberOfCurrentInstructions() >= Block.minimumNumberOfInstruction) {
-                Block block1 = new Block(blockchain.get(blockchain.size() - 1).hash);
+                block1 = new Block(blockchain.get(blockchain.size() - 1).hash);
                 System.out.println("Number of operations or instructions needed to execute the tasks within the created block: "+getNumberOfCurrentInstructions());
                 for (Map.Entry<BigInteger, Transaction> entry : transactionVerifiedPool.entrySet())
                 {
@@ -135,8 +137,11 @@ public class Node implements Runnable
                     block1.addTransaction(trans);
                     transactionVerifiedPool.remove(key);
                 }
-                addBlock(block1, minerWallet.getPublicKey());
+                blockIsReady = true;
+            }
+            if (Arrays.equals(validators.getLeader(), minerWallet.getPublicKey()) && blockIsReady) {
                 System.out.println("\nMiner scheduling factor: " + getSchedulingFactorForPublicKey(minerWallet.getPublicKey()));
+                addBlock(block1, minerWallet.getPublicKey());
                 context.putBlock(block1);
                 String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block1);
                 System.out.println("\nThe block: ");
@@ -147,7 +152,7 @@ public class Node implements Runnable
 
     public static void addBlock(Block newBlock, byte[]  publicKey)
     {
-        newBlock.mineBlock(difficulty, publicKey);
+        newBlock.mineBlock();
         blockchain.add(newBlock);
     }
 
@@ -161,6 +166,7 @@ public class Node implements Runnable
     public void addTransactionToPool(float value, Schedule schedule) throws IOException {
         Transaction transaction1 = minerWallet.sendDataToSchedule(testWallet.getPublicKey(), value, schedule);
         pool.put(ByteUtil.bytesToBigInteger(transaction1.getTransactionId()), transaction1);
+        Node.validators.update(transaction1);
         String transactionJson = new GsonBuilder().create().toJson(transaction1);
         System.out.println("Sending transaction to peers for accept... ");
         broadcast("tx|"+transactionJson);
@@ -184,7 +190,7 @@ public class Node implements Runnable
         return total;
     }
 
-    public static float getTrustFactor(byte[]  publicKey, int time, boolean forMe, ArrayList<BigInteger> currentBlockTransactions)
+    public static float getTrustFactor(byte[]  publicKey, int time, boolean forMe)
     {
         float total = 0;
         float totalMe = 0;
@@ -196,8 +202,7 @@ public class Node implements Runnable
         for (Map.Entry<byte [], TransactionOutput> item: Node.UTXOs.entrySet()){
             TransactionOutput UTXO = item.getValue();
             Timestamp transactionTimestamp = new Timestamp(UTXO.timestamp);
-            if(transactionTimestamp.after(timestamp) &&
-                    !currentBlockTransactions.contains(ByteUtil.bytesToBigInteger(UTXO.parentTransactionId))){
+            if(transactionTimestamp.after(timestamp)){
                 if(UTXO.isMine(publicKey)) {
                     totalMe += UTXO.schedulingFactor ;
                 } else {

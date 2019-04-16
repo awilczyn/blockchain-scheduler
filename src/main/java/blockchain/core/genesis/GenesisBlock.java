@@ -1,5 +1,6 @@
 package blockchain.core.genesis;
 
+import blockchain.Node1;
 import blockchain.core.*;
 import blockchain.db.Context;
 import blockchain.scheduler.AwsSchedule;
@@ -8,7 +9,9 @@ import blockchain.scheduler.Schedule;
 import blockchain.scheduler.Task;
 import blockchain.util.ByteUtil;
 import blockchain.util.StringUtil;
+import blockchain.util.ecdsa.ECKey;
 import com.google.gson.GsonBuilder;
+import org.bouncycastle.util.encoders.Hex;
 
 import java.util.ArrayList;
 
@@ -43,7 +46,8 @@ public class GenesisBlock
 
 
         if (block == null) {
-            wallet = new Wallet();
+            ECKey keyPair = ECKey.fromPrivate(Hex.decode(Node1.privateKeyString));
+            wallet = new Wallet(keyPair.getPrivKeyBytes());
             block = new Block( "0");
             genesisTransaction = new Transaction(wallet.getPrivateKey(), wallet.getPublicKey(), localWallet.getPublicKey(), 100f, getDataToSchedule(), null);
             genesisTransaction.transactionId = ByteUtil.stringToBytes("0");
@@ -60,7 +64,7 @@ public class GenesisBlock
 
             System.out.println("Creating and Mining Genesis block... ");
             block.addTransaction(genesisTransaction);
-            block.mineBlock(difficulty, wallet.getPublicKey());
+            block.mineBlock();
             block.genesisBlock(getGenesisHash());
             String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block);
             System.out.println(blockJson);

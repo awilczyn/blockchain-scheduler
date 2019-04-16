@@ -21,8 +21,6 @@ public class Block implements Serializable
 
     private long timeStamp;
 
-    private int nonce;
-
     public String merkleRoot;
 
     public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
@@ -63,7 +61,6 @@ public class Block implements Serializable
         String calculatedhash = StringUtil.applySha256(
                 previousHash +
                         Long.toString(timeStamp) +
-                        Integer.toString(nonce) +
                         merkleRoot
         );
         return calculatedhash;
@@ -73,27 +70,10 @@ public class Block implements Serializable
      *
      * @param difficulty
      */
-    public void mineBlock(int difficulty, byte[]  publicKey)
+    public void mineBlock()
     {
         merkleRoot = StringUtil.getMerkleRoot(transactions);
-        float TF = Node.getTrustFactor(publicKey, numberOfDayLimit, true, this.getCurrentBlockTransaction());
-        float W = Node.getTrustFactor(publicKey, numberOfDayLimit, false, this.getCurrentBlockTransaction());
-        System.out.println("Trust factor of mining node: "+ TF);
-        double Pt = 0;
-        if (W > 0 && TF > 0) {
-            Pt = TF/W;
-        }
-        if (Pt >= 0.1) {
-            difficulty = 10 - Math.min((int)Math.round(Pt*10), 9);
-        } else {
-            difficulty = 10;
-        }
-        System.out.println("Calculated difficulty to mine the block: "+difficulty);
-        String target = StringUtil.getDifficultyString(difficulty);
-        while(!hash.substring( 0, difficulty).equals(target)) {
-            nonce ++;
-            hash = calculateHash();
-        }
+        hash = calculateHash();
         System.out.println("Block mined!!! : " + hash);
     }
 

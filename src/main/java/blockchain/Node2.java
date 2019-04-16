@@ -58,7 +58,7 @@ public class Node2
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
-//                    localNode.addTransactionToPool(10, getDataToSchedule());
+                    localNode.addTransactionToPool(5, getDataToSchedule());
 //                    localNode.addTransactionToPool(20, getDataToSchedule());
 //                    localNode.addTransactionToPool(30, getDataToSchedule());
 //                    localNode.addTransactionToPool(40, getDataToSchedule());

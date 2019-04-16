@@ -59,7 +59,7 @@ public class Node4
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
-                    //localNode.addTransactionToPool(40, getDataToSchedule());
+                    localNode.addTransactionToPool(5, getDataToSchedule());
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();

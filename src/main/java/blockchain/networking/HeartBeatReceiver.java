@@ -110,6 +110,7 @@ public class HeartBeatReceiver implements Runnable{
 			Transaction trans = Node.pool.get(key);
 			trans.numberOfVerification++;
 			if (trans.numberOfVerification >= Node.getMinimumNumberOfConfirmation()) {
+				Node.validators.update(trans);
 				Node.transactionVerifiedPool.put(key, trans);
 				Node.pool.remove(key);
 				System.out.println("Transaction added to verified pool: "+ transaction.value);
