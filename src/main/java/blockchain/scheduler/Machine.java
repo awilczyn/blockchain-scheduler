@@ -8,10 +8,11 @@ import java.util.ArrayList;
  */
 public class Machine implements Serializable
 {
-    public float numberOfOperationsPerSecond;
+    public int id;
+    public double numberOfOperationsPerSecond;
     public ArrayList<Integer> tasksToExecute;
 
-    public Machine(float numberOfOperationsPerSecond)
+    public Machine(double numberOfOperationsPerSecond)
     {
         this.numberOfOperationsPerSecond = numberOfOperationsPerSecond;
         this.tasksToExecute = new ArrayList<>();
@@ -22,7 +23,7 @@ public class Machine implements Serializable
         tasksToExecute.add(taskId);
     }
 
-    public float getNumberOfOperationsPerSecond() {
+    public double getNumberOfOperationsPerSecond() {
         return numberOfOperationsPerSecond;
     }
 }

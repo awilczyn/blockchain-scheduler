@@ -7,6 +7,7 @@ import blockchain.networking.HeartBeatReceiver;
 import blockchain.networking.PeriodicHeartBeat;
 import blockchain.networking.ServerInfo;
 import blockchain.scheduler.*;
+import blockchain.scheduler.RoundRobinSchedule;
 import blockchain.util.ecdsa.ECKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
@@ -98,7 +99,7 @@ public class Node2
         machines.add(new Machine(30000));
         machines.add(new Machine(10000));
 
-        return new AzureSchedule(tasks, machines);
+        return new RoundRobinSchedule(tasks, machines);
     }
 }
 

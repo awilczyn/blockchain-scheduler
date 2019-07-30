@@ -15,7 +15,6 @@ import blockchain.util.ecdsa.ECKey;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by andrzejwilczynski on 31/07/2018.
@@ -211,7 +210,7 @@ public class Transaction implements Serializable
             );
         }
         if (nodeName.equals("blockchain.Node2")) {
-            ownSchedule = new AzureSchedule(tasks, machines);
+            ownSchedule = new RoundRobinSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node2.wallet.getPublicKey()),
                     ownSchedule.getTime()

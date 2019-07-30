@@ -8,15 +8,15 @@ import java.io.Serializable;
 public class Task implements Serializable
 {
     public int id;
-    public float numberOfOperations;
+    public double numberOfOperations;
 
-    public Task(int id, float numberOfOperations)
+    public Task(int id, double numberOfOperations)
     {
         this.id = id;
         this.numberOfOperations = numberOfOperations;
     }
 
-    public float getNumberOfOperations() {
+    public double getNumberOfOperations() {
         return numberOfOperations;
     }
 }

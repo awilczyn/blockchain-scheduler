@@ -4,6 +4,8 @@ import blockchain.core.*;
 import blockchain.db.Context;
 import blockchain.networking.*;
 import blockchain.scheduler.*;
+import blockchain.scheduler.RoundRobinSchedule;
+import blockchain.scheduler.utils.GenerateSimulationData;
 import blockchain.util.ecdsa.ECKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
@@ -15,8 +17,6 @@ import java.security.Security;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
-import static blockchain.util.HashUtil.applyKeccak;
 
 /**
  * Created by andrzejwilczynski on 24/07/2018.
@@ -90,32 +90,46 @@ public class Node1
 
     public static Schedule getDataToSchedule()
     {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,10000));
-        tasks.add(new Task(2,5000));
-        tasks.add(new Task(3,1000));
-        tasks.add(new Task(4,15000));
-        ArrayList<Machine> machines = new ArrayList<>();
-        machines.add(new Machine(3000));
-        machines.add(new Machine(30000));
-        machines.add(new Machine(10000));
+        double[] tasksData, machinesData;
+        new GenerateSimulationData();
+        tasksData = GenerateSimulationData.getTasks();
+        machinesData = GenerateSimulationData.getMachines();
 
-        return new AzureSchedule(tasks, machines);
+        ArrayList<Task> tasks = new ArrayList<>();
+        for(int i=1; i<=tasksData.length;i++)
+        {
+            tasks.add(new Task(i,tasksData[i]));
+        }
+
+        ArrayList<Machine> machines = new ArrayList<>();
+        for(int i=0; i<=machinesData.length;i++)
+        {
+            machines.add(new Machine(3000));
+        }
+
+        return new RoundRobinSchedule(tasks, machines);
     }
 
     public static Schedule getFirstTransactionDataToSchedule()
     {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,10000));
-        tasks.add(new Task(2,5000));
-        tasks.add(new Task(3,1000));
-        tasks.add(new Task(4,15000));
-        ArrayList<Machine> machines = new ArrayList<>();
-        machines.add(new Machine(3000));
-        machines.add(new Machine(30000));
-        machines.add(new Machine(10000));
+        double[] tasksData, machinesData;
+        new GenerateSimulationData();
+        tasksData = GenerateSimulationData.getTasks();
+        machinesData = GenerateSimulationData.getMachines();
 
-        return new AwsSchedule(tasks, machines);
+        ArrayList<Task> tasks = new ArrayList<>();
+        for(int i=1; i<=tasksData.length;i++)
+        {
+            tasks.add(new Task(i,tasksData[i]));
+        }
+
+        ArrayList<Machine> machines = new ArrayList<>();
+        for(int i=0; i<=machinesData.length;i++)
+        {
+            machines.add(new Machine(3000));
+        }
+
+        return new RoundRobinSchedule(tasks, machines);
     }
 
     public static Schedule getSecondTransactionDataToSchedule()
