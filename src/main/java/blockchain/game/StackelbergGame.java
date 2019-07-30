@@ -47,8 +47,8 @@ public class StackelbergGame
 
     public boolean isFollowerHasBetterSchedule()
     {
-        float s1Coefficient = leader.getTimeOfSchedule()*leader.getScaleSchedulingFactor();
-        float s2Coefficient = follower.getTimeOfSchedule()*follower.getScaleSchedulingFactor();
+        double s1Coefficient = leader.getTimeOfSchedule()*leader.getScaleSchedulingFactor();
+        double s2Coefficient = follower.getTimeOfSchedule()*follower.getScaleSchedulingFactor();
 
         LinearObjectiveFunction f = new LinearObjectiveFunction(new double[] { s1Coefficient, s2Coefficient }, 0);
         Collection<LinearConstraint> constraints = new

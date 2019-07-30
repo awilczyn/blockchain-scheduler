@@ -1,6 +1,6 @@
 package blockchain.scheduler;
 
-import blockchain.scheduler.RoundRobin.RoundRobinScheduler;
+import blockchain.scheduler.SJF.SJFScheduler;
 import blockchain.scheduler.utils.GenerateSimulationData;
 import org.cloudbus.cloudsim.Cloudlet;
 
@@ -10,9 +10,9 @@ import java.util.List;
 /**
  * Created by andrzejwilczynski on 08/01/2019.
  */
-public class RoundRobinSchedule extends Schedule
+public class SJFSchedule extends Schedule
 {
-    public RoundRobinSchedule(ArrayList<Task> tasks, ArrayList<Machine> machines)
+    public SJFSchedule(ArrayList<Task> tasks, ArrayList<Machine> machines)
     {
         super(tasks, machines);
         this.prepareSchedule();
@@ -20,7 +20,7 @@ public class RoundRobinSchedule extends Schedule
 
     public void prepareSchedule()
     {
-        RoundRobinScheduler scheduler = new RoundRobinScheduler(
+        SJFScheduler scheduler = new SJFScheduler(
                 GenerateSimulationData.getTasks(),
                 GenerateSimulationData.getMachines()
         );

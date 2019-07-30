@@ -9,9 +9,9 @@ public class Player
 
     private float scaleSchedulingFactor;
 
-    private float timeOfSchedule;
+    private double timeOfSchedule;
 
-    public Player(float schedulingFactor, float timeOfSchedule)
+    public Player(float schedulingFactor, double timeOfSchedule)
     {
         this.schedulingFactor = schedulingFactor;
         this.timeOfSchedule = timeOfSchedule;
@@ -30,7 +30,7 @@ public class Player
         return schedulingFactor;
     }
 
-    public float getTimeOfSchedule() {
+    public double getTimeOfSchedule() {
         return timeOfSchedule;
     }
 

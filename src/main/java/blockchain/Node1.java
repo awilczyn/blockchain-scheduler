@@ -96,15 +96,15 @@ public class Node1
         machinesData = GenerateSimulationData.getMachines();
 
         ArrayList<Task> tasks = new ArrayList<>();
-        for(int i=1; i<=tasksData.length;i++)
+        for(int i=0; i<tasksData.length;i++)
         {
-            tasks.add(new Task(i,tasksData[i]));
+            tasks.add(new Task(i+1,tasksData[i]));
         }
 
         ArrayList<Machine> machines = new ArrayList<>();
-        for(int i=0; i<=machinesData.length;i++)
+        for(int i=0; i<machinesData.length;i++)
         {
-            machines.add(new Machine(3000));
+            machines.add(new Machine(i+1,machinesData[i]));
         }
 
         return new RoundRobinSchedule(tasks, machines);
@@ -112,125 +112,42 @@ public class Node1
 
     public static Schedule getFirstTransactionDataToSchedule()
     {
-        double[] tasksData, machinesData;
-        new GenerateSimulationData();
-        tasksData = GenerateSimulationData.getTasks();
-        machinesData = GenerateSimulationData.getMachines();
-
-        ArrayList<Task> tasks = new ArrayList<>();
-        for(int i=1; i<=tasksData.length;i++)
-        {
-            tasks.add(new Task(i,tasksData[i]));
-        }
-
-        ArrayList<Machine> machines = new ArrayList<>();
-        for(int i=0; i<=machinesData.length;i++)
-        {
-            machines.add(new Machine(3000));
-        }
-
-        return new RoundRobinSchedule(tasks, machines);
+        return getDataToSchedule();
     }
 
     public static Schedule getSecondTransactionDataToSchedule()
     {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,8000));
-        tasks.add(new Task(2,1000));
-        tasks.add(new Task(3,40000));
-        ArrayList<Machine> machines = new ArrayList<>();
-        machines.add(new Machine(3000));
-        machines.add(new Machine(30000));
-        machines.add(new Machine(2500));
-        machines.add(new Machine(20000));
-
-        return new AwsSchedule(tasks, machines);
+        return getDataToSchedule();
     }
 
     public static Schedule getThirdTransactionDataToSchedule()
     {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,1000));
-        tasks.add(new Task(2,3000));
-        tasks.add(new Task(3,8000));
-        tasks.add(new Task(4,18000));
-        tasks.add(new Task(4,900));
-        ArrayList<Machine> machines = new ArrayList<>();
-        machines.add(new Machine(7000));
-        machines.add(new Machine(18000));
-        machines.add(new Machine(6000));
-
-        return new AwsSchedule(tasks, machines);
+        return getDataToSchedule();
     }
 
     public static Schedule getFourthTransactionDataToSchedule()
     {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,10000));
-        tasks.add(new Task(2,7500));
-        tasks.add(new Task(3,1000));
-        ArrayList<Machine> machines = new ArrayList<>();
-        machines.add(new Machine(1500));
-        machines.add(new Machine(6000));
-
-        return new AwsSchedule(tasks, machines);
+        return getDataToSchedule();
     }
 
     public static Schedule getFifthTransactionDataToSchedule()
     {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,20000));
-        tasks.add(new Task(2,4500));
-        tasks.add(new Task(3,3000));
-        ArrayList<Machine> machines = new ArrayList<>();
-        machines.add(new Machine(8000));
-        machines.add(new Machine(6000));
-
-        return new AwsSchedule(tasks, machines);
+        return getDataToSchedule();
     }
 
     public static Schedule getSixthTransactionDataToSchedule()
     {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,20000));
-        tasks.add(new Task(2,7500));
-        tasks.add(new Task(1,10000));
-        ArrayList<Machine> machines = new ArrayList<>();
-        machines.add(new Machine(1000));
-        machines.add(new Machine(14000));
-        machines.add(new Machine(2000));
-
-        return new AwsSchedule(tasks, machines);
+        return getDataToSchedule();
     }
 
     public static Schedule getSeventhTransactionDataToSchedule()
     {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,10000));
-        tasks.add(new Task(2,18500));
-        tasks.add(new Task(1,1000));
-        ArrayList<Machine> machines = new ArrayList<>();
-        machines.add(new Machine(4000));
-        machines.add(new Machine(11000));
-        machines.add(new Machine(12000));
-        machines.add(new Machine(1000));
-
-        return new AwsSchedule(tasks, machines);
+        return getDataToSchedule();
     }
 
     public static Schedule getEigthTransactionDataToSchedule()
     {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,12000));
-        tasks.add(new Task(2,28500));
-        tasks.add(new Task(1,37000));
-        ArrayList<Machine> machines = new ArrayList<>();
-        machines.add(new Machine(2000));
-        machines.add(new Machine(15000));
-        machines.add(new Machine(12000));
-        machines.add(new Machine(1000));
-
-        return new AwsSchedule(tasks, machines);
+        return getDataToSchedule();
     }
 }
 

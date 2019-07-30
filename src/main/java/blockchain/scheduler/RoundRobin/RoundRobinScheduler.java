@@ -71,7 +71,7 @@ public class RoundRobinScheduler
     }
 
 
-    public void schedule()
+    public List<Cloudlet> schedule()
     {
         Log.printLine("Starting Round Robin Scheduler...");
 
@@ -111,10 +111,13 @@ public class RoundRobinScheduler
             printCloudletList(newList);
 
             Log.printLine(RoundRobinScheduler.class.getName() + " finished!");
+
+            return newList;
         } catch (Exception e) {
             e.printStackTrace();
             Log.printLine("The simulation has been terminated due to an unexpected error");
         }
+        return null;
     }
 
     private static RoundRobinDatacenterBroker createBroker(String name) throws Exception {
@@ -126,7 +129,7 @@ public class RoundRobinScheduler
      *
      * @param list list of Cloudlets
      */
-    private static void printCloudletList(List<Cloudlet> list) {
+    private void printCloudletList(List<Cloudlet> list) {
         int size = list.size();
         Cloudlet cloudlet;
 
@@ -136,7 +139,8 @@ public class RoundRobinScheduler
         Log.printLine("Cloudlet ID" + indent + "STATUS" +
                 indent + "Data center ID" +
                 indent + "VM ID" +
-                indent + "Start Time" +
+                indent + indent + "Time" +
+                indent + indent + "Start Time" +
                 indent + "Finish Time");
 
         DecimalFormat dft = new DecimalFormat("###.##");
@@ -149,8 +153,9 @@ public class RoundRobinScheduler
             if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS) {
                 Log.print("SUCCESS");
 
-                Log.printLine(indent + indent + dft.format(cloudlet.getResourceId()) +
+                Log.printLine(indent + indent + dft.format(cloudlet.getCloudletLength()/1e3) +
                         indent + indent + indent + dft.format(cloudlet.getVmId()) +
+                        indent + indent + dft.format(cloudlet.getActualCPUTime()) +
                         indent + indent + dft.format(cloudlet.getExecStartTime()) +
                         indent + indent + indent + dft.format(cloudlet.getFinishTime()));
             }

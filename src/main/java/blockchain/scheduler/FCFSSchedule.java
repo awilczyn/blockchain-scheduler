@@ -1,6 +1,6 @@
 package blockchain.scheduler;
 
-import blockchain.scheduler.RoundRobin.RoundRobinScheduler;
+import blockchain.scheduler.FCFS.FCFSScheduler;
 import blockchain.scheduler.utils.GenerateSimulationData;
 import org.cloudbus.cloudsim.Cloudlet;
 
@@ -10,9 +10,9 @@ import java.util.List;
 /**
  * Created by andrzejwilczynski on 08/01/2019.
  */
-public class RoundRobinSchedule extends Schedule
+public class FCFSSchedule extends Schedule
 {
-    public RoundRobinSchedule(ArrayList<Task> tasks, ArrayList<Machine> machines)
+    public FCFSSchedule(ArrayList<Task> tasks, ArrayList<Machine> machines)
     {
         super(tasks, machines);
         this.prepareSchedule();
@@ -20,7 +20,7 @@ public class RoundRobinSchedule extends Schedule
 
     public void prepareSchedule()
     {
-        RoundRobinScheduler scheduler = new RoundRobinScheduler(
+        FCFSScheduler scheduler = new FCFSScheduler(
                 GenerateSimulationData.getTasks(),
                 GenerateSimulationData.getMachines()
         );

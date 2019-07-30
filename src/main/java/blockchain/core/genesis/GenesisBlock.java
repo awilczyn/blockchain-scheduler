@@ -3,10 +3,7 @@ package blockchain.core.genesis;
 import blockchain.Node1;
 import blockchain.core.*;
 import blockchain.db.Context;
-import blockchain.scheduler.AwsSchedule;
-import blockchain.scheduler.Machine;
-import blockchain.scheduler.Schedule;
-import blockchain.scheduler.Task;
+import blockchain.scheduler.*;
 import blockchain.util.ByteUtil;
 import blockchain.util.StringUtil;
 import blockchain.util.ecdsa.ECKey;
@@ -96,6 +93,6 @@ public class GenesisBlock
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Machine> machines = new ArrayList<>();
 
-        return new AwsSchedule(tasks, machines);
+        return new RoundRobinSchedule(tasks, machines);
     }
 }

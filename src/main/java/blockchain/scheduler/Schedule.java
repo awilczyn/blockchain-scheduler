@@ -11,7 +11,7 @@ public class Schedule implements Serializable
 {
     public ArrayList<Task> tasks = new ArrayList<>();
     public ArrayList<Machine> machines = new ArrayList<>();
-    public float time;
+    public double time;
 
     public Schedule() {}
 
@@ -21,7 +21,7 @@ public class Schedule implements Serializable
         this.machines = machines;
     }
 
-    public float getTime() {
+    public double getTime() {
         return time;
     }
 

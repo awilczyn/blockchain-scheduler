@@ -193,7 +193,7 @@ public class Transaction implements Serializable
         tasks.addAll(this.schedule.tasks);
         ArrayList<Machine> machines = new ArrayList<>();
         for (int i=0; i<this.schedule.machines.size(); i++) {
-            machines.add(new Machine(this.schedule.machines.get(i).getNumberOfOperationsPerSecond()));
+            machines.add(new Machine(this.schedule.machines.get(i).getId(), this.schedule.machines.get(i).getNumberOfOperationsPerSecond()));
         }
         String nodeName = System.getProperty("sun.java.command");
         Schedule ownSchedule;
@@ -203,7 +203,7 @@ public class Transaction implements Serializable
 //        Player leader = new Player(1500, 15);
         Player follower = null;
         if (nodeName.equals("blockchain.Node1")) {
-            ownSchedule = new AwsSchedule(tasks, machines);
+            ownSchedule = new RoundRobinSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node1.wallet.getPublicKey()),
                     ownSchedule.getTime()
@@ -217,14 +217,14 @@ public class Transaction implements Serializable
             );
         }
         if (nodeName.equals("blockchain.Node3")) {
-            ownSchedule = new IbmSchedule(tasks, machines);
+            ownSchedule = new SJFSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node3.wallet.getPublicKey()),
                     ownSchedule.getTime()
             );
         }
         if (nodeName.equals("blockchain.Node4")) {
-            ownSchedule = new OtherSchedule(tasks, machines);
+            ownSchedule = new FCFSSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node4.wallet.getPublicKey()),
                     ownSchedule.getTime()

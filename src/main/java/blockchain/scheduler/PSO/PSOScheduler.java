@@ -68,7 +68,7 @@ public class PSOScheduler
         return list;
     }
 
-    public void schedule()
+    public List<Cloudlet> schedule()
     {
         Log.printLine("Starting PSO Scheduler...");
 
@@ -126,10 +126,13 @@ public class PSOScheduler
             printCloudletList(newList);
 
             Log.printLine(PSOScheduler.class.getName() + " finished!");
+
+            return newList;
         } catch (Exception e) {
             e.printStackTrace();
             Log.printLine("The simulation has been terminated due to an unexpected error");
         }
+        return null;
     }
 
     private static PSODatacenterBroker createBroker(String name) throws Exception {
@@ -152,7 +155,7 @@ public class PSOScheduler
                 indent + "Data center ID" +
                 indent + "VM ID" +
                 indent + indent + "Time" +
-                indent + "Start Time" +
+                indent + indent + "Start Time" +
                 indent + "Finish Time");
 
         double maxFinishTime = 0;
@@ -164,7 +167,7 @@ public class PSOScheduler
 
             if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS) {
                 Log.print("SUCCESS");
-                Log.printLine(indent + indent + dft.format(cloudlet.getResourceId()) +
+                Log.printLine(indent + indent + dft.format(cloudlet.getCloudletLength()/1e3) +
                         indent + indent + indent + dft.format(cloudlet.getVmId()) +
                         indent + indent + dft.format(cloudlet.getActualCPUTime()) +
                         indent + indent + dft.format(cloudlet.getExecStartTime()) +

@@ -12,8 +12,9 @@ public class Machine implements Serializable
     public double numberOfOperationsPerSecond;
     public ArrayList<Integer> tasksToExecute;
 
-    public Machine(double numberOfOperationsPerSecond)
+    public Machine(int id, double numberOfOperationsPerSecond)
     {
+        this.id = id;
         this.numberOfOperationsPerSecond = numberOfOperationsPerSecond;
         this.tasksToExecute = new ArrayList<>();
     }
@@ -25,5 +26,10 @@ public class Machine implements Serializable
 
     public double getNumberOfOperationsPerSecond() {
         return numberOfOperationsPerSecond;
+    }
+
+    public int getId()
+    {
+        return id;
     }
 }

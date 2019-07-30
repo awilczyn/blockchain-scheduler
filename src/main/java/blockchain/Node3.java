@@ -7,6 +7,7 @@ import blockchain.networking.HeartBeatReceiver;
 import blockchain.networking.PeriodicHeartBeat;
 import blockchain.networking.ServerInfo;
 import blockchain.scheduler.*;
+import blockchain.scheduler.utils.GenerateSimulationData;
 import blockchain.util.ecdsa.ECKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
@@ -89,17 +90,24 @@ public class Node3
 
     public static Schedule getDataToSchedule()
     {
-        ArrayList<Task> tasks = new ArrayList<>();
-        tasks.add(new Task(1,10000));
-        tasks.add(new Task(2,5000));
-        tasks.add(new Task(3,1000));
-        tasks.add(new Task(4,15000));
-        ArrayList<Machine> machines = new ArrayList<>();
-        machines.add(new Machine(3000));
-        machines.add(new Machine(30000));
-        machines.add(new Machine(10000));
+        double[] tasksData, machinesData;
+        new GenerateSimulationData();
+        tasksData = GenerateSimulationData.getTasks();
+        machinesData = GenerateSimulationData.getMachines();
 
-        return new IbmSchedule(tasks, machines);
+        ArrayList<Task> tasks = new ArrayList<>();
+        for(int i=0; i<tasksData.length;i++)
+        {
+            tasks.add(new Task(i+1,tasksData[i]));
+        }
+
+        ArrayList<Machine> machines = new ArrayList<>();
+        for(int i=0; i<machinesData.length;i++)
+        {
+            machines.add(new Machine(i+1,machinesData[i]));
+        }
+
+        return new SJFSchedule(tasks, machines);
     }
 }
 
