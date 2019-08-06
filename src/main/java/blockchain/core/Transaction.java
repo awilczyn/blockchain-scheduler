@@ -210,7 +210,7 @@ public class Transaction implements Serializable
             );
         }
         if (nodeName.equals("blockchain.Node2")) {
-            ownSchedule = new RoundRobinSchedule(tasks, machines);
+            ownSchedule = new PSOSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node2.wallet.getPublicKey()),
                     ownSchedule.getTime()

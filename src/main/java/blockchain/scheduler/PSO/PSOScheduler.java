@@ -151,24 +151,27 @@ public class PSOScheduler
         String indent = "    ";
         Log.printLine();
         Log.printLine("========== OUTPUT ==========");
-        Log.printLine("Cloudlet ID" + indent + "STATUS" +
-                indent + "Data center ID" +
+        Log.printLine("Task ID" +
+                indent + indent + "Task length" +
                 indent + "VM ID" +
                 indent + indent + "Time" +
-                indent + indent + "Start Time" +
-                indent + "Finish Time");
+                indent + indent + indent +  "Start Time" +
+                indent + indent + "Finish Time");
 
-        double maxFinishTime = 0;
         DecimalFormat dft = new DecimalFormat("###.##");
-        dft.setMinimumIntegerDigits(2);
+        dft.setMinimumIntegerDigits(3);
+        dft.setMinimumFractionDigits(4);
+        DecimalFormat dft2 = new DecimalFormat("###.##");
+        dft2.setMinimumIntegerDigits(2);
+        double maxFinishTime = 0;
         for (int i = 0; i < size; i++) {
             cloudlet = list.get(i);
-            Log.print(indent + dft.format(cloudlet.getCloudletId()) + indent + indent);
+            Log.print(indent + dft2.format(cloudlet.getCloudletId()) + indent);
 
             if (cloudlet.getCloudletStatus() == Cloudlet.SUCCESS) {
-                Log.print("SUCCESS");
-                Log.printLine(indent + indent + dft.format(cloudlet.getCloudletLength()/1e3) +
-                        indent + indent + indent + dft.format(cloudlet.getVmId()) +
+
+                Log.printLine(indent + indent + dft2.format(cloudlet.getCloudletLength()) +
+                        indent + indent + dft2.format(cloudlet.getVmId()) +
                         indent + indent + dft.format(cloudlet.getActualCPUTime()) +
                         indent + indent + dft.format(cloudlet.getExecStartTime()) +
                         indent + indent + indent + dft.format(cloudlet.getFinishTime()));

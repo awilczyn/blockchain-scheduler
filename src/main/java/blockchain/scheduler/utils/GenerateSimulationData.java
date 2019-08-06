@@ -32,7 +32,7 @@ public class GenerateSimulationData
         BufferedWriter taskBufferedWriter = new BufferedWriter(new FileWriter(taskFile));
 
         for (int i = 0; i < Constants.NO_OF_TASKS; i++) {
-            tasks[i] = Math.random() * 500 + 10;
+            tasks[i] = (Math.random() * (700 - 100)) + 100;
             taskBufferedWriter.write(String.valueOf(tasks[i]) + ' ');
             taskBufferedWriter.write('\n');
         }
@@ -44,7 +44,7 @@ public class GenerateSimulationData
         BufferedWriter machineBufferedWriter = new BufferedWriter(new FileWriter(machineFile));
 
         for (int i = 0; i < Constants.NO_OF_VMS; i++) {
-            machines[i] = (Math.random() * (2000 - 500)) + 500;
+            machines[i] = (Math.random() * (4000 - 2000)) + 2000;
             machineBufferedWriter.write(String.valueOf(machines[i]) + ' ');
             machineBufferedWriter.write('\n');
         }
