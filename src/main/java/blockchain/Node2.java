@@ -34,6 +34,8 @@ public class Node2
     public static Wallet wallet;
 
     public static void main(String[] args) throws IOException {
+        new GenerateSimulationData();
+
         Security.addProvider(new BouncyCastleProvider());
 
         int localPort = 7002;
@@ -59,11 +61,14 @@ public class Node2
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
-                    localNode.addTransactionToPool(5, getDataToSchedule());
-//                    localNode.addTransactionToPool(20, getDataToSchedule());
-//                    localNode.addTransactionToPool(30, getDataToSchedule());
-//                    localNode.addTransactionToPool(40, getDataToSchedule());
-//                    localNode.addTransactionToPool(50, getDataToSchedule());
+//                    localNode.addTransactionToPool(5, getFirstTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(10, getSecondTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(15, getThirdTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(20, getFourthTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(30, getFifthTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(35, getSixthTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(40, getSeventhTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(45, getEigthTransactionDataToSchedule());
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
@@ -91,7 +96,6 @@ public class Node2
     public static Schedule getDataToSchedule()
     {
         double[] tasksData, machinesData;
-        new GenerateSimulationData();
         tasksData = GenerateSimulationData.getTasks();
         machinesData = GenerateSimulationData.getMachines();
 
@@ -108,6 +112,46 @@ public class Node2
         }
 
         return new PSOSchedule(tasks, machines);
+    }
+
+    public static Schedule getFirstTransactionDataToSchedule()
+    {
+        return getDataToSchedule();
+    }
+
+    public static Schedule getSecondTransactionDataToSchedule()
+    {
+        return getDataToSchedule();
+    }
+
+    public static Schedule getThirdTransactionDataToSchedule()
+    {
+        return getDataToSchedule();
+    }
+
+    public static Schedule getFourthTransactionDataToSchedule()
+    {
+        return getDataToSchedule();
+    }
+
+    public static Schedule getFifthTransactionDataToSchedule()
+    {
+        return getDataToSchedule();
+    }
+
+    public static Schedule getSixthTransactionDataToSchedule()
+    {
+        return getDataToSchedule();
+    }
+
+    public static Schedule getSeventhTransactionDataToSchedule()
+    {
+        return getDataToSchedule();
+    }
+
+    public static Schedule getEigthTransactionDataToSchedule()
+    {
+        return getDataToSchedule();
     }
 }
 

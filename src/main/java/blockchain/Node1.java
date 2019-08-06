@@ -32,6 +32,8 @@ public class Node1
     public static Wallet wallet;
 
     public static void main(String[] args) throws IOException {
+        new GenerateSimulationData();
+
         Security.addProvider(new BouncyCastleProvider());
 
         int localPort = 7001;
@@ -57,14 +59,14 @@ public class Node1
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
-                    localNode.addTransactionToPool(5, getFirstTransactionDataToSchedule());
-                    localNode.addTransactionToPool(10, getSecondTransactionDataToSchedule());
-                    localNode.addTransactionToPool(15, getThirdTransactionDataToSchedule());
-                    localNode.addTransactionToPool(20, getFourthTransactionDataToSchedule());
-                    localNode.addTransactionToPool(30, getFifthTransactionDataToSchedule());
-                    localNode.addTransactionToPool(35, getSixthTransactionDataToSchedule());
-                    localNode.addTransactionToPool(40, getSeventhTransactionDataToSchedule());
-                    localNode.addTransactionToPool(45, getEigthTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(5, getFirstTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(10, getSecondTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(15, getThirdTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(20, getFourthTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(30, getFifthTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(35, getSixthTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(40, getSeventhTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(45, getEigthTransactionDataToSchedule());
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
@@ -92,7 +94,6 @@ public class Node1
     public static Schedule getDataToSchedule()
     {
         double[] tasksData, machinesData;
-        new GenerateSimulationData();
         tasksData = GenerateSimulationData.getTasks();
         machinesData = GenerateSimulationData.getMachines();
 
