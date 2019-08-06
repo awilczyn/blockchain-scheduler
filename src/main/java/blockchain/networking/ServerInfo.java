@@ -1,7 +1,5 @@
 package blockchain.networking;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
-
 /**
  * Created by andrzejwilczynski on 18/08/2018.
  */

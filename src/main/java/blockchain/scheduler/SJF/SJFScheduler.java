@@ -61,7 +61,7 @@ public class SJFScheduler
 
         for (int i = 0; i < cloudlets; i++) {
             int dcId = (int) (Math.random() * Constants.NO_OF_VMS);
-            long length = (long) (1e3 * tasks[i]);
+            long length = (long) tasks[i];
             cloudlet[i] = new Cloudlet(idShift + i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
             // setting the owner of these Cloudlets
             cloudlet[i].setUserId(userId);

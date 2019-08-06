@@ -28,12 +28,14 @@ public class RoundRobinSchedule extends Schedule
         Cloudlet cloudlet;
         Machine machine;
         double maxFinishTime = 0;
-        for (int i = 0; i < list.size(); i++) {
-            cloudlet = list.get(i);
-            machine = this.machines.get(cloudlet.getVmId());
-            machine.addTaskToExecute(cloudlet.getCloudletId()+1);
-            maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
+        if (list instanceof RoundRobinScheduler) {
+            for (int i = 0; i < list.size(); i++) {
+                cloudlet = list.get(i);
+                machine = this.machines.get(cloudlet.getVmId());
+                machine.addTaskToExecute(cloudlet.getCloudletId()+1);
+                maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
+            }
+            this.time = maxFinishTime;
         }
-        this.time = maxFinishTime;
     }
 }

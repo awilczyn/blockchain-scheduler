@@ -59,7 +59,7 @@ public class PSOScheduler
         Cloudlet[] cloudlet = new Cloudlet[cloudlets];
 
         for (int i = 0; i < cloudlets; i++) {
-            long length = (long) (1e3 * tasks[i]);
+            long length = (long) tasks[i];
             cloudlet[i] = new Cloudlet(idShift + i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
             cloudlet[i].setUserId(userId);
             list.add(cloudlet[i]);

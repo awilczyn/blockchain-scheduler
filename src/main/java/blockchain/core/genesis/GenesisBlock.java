@@ -4,6 +4,7 @@ import blockchain.Node1;
 import blockchain.core.*;
 import blockchain.db.Context;
 import blockchain.scheduler.*;
+import blockchain.scheduler.utils.GenerateSimulationData;
 import blockchain.util.ByteUtil;
 import blockchain.util.StringUtil;
 import blockchain.util.ecdsa.ECKey;
@@ -11,8 +12,6 @@ import com.google.gson.GsonBuilder;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.util.ArrayList;
-
-import static blockchain.core.Node.difficulty;
 
 /**
  * Created by andrzejwilczynski on 07/08/2018.
@@ -23,9 +22,11 @@ public class GenesisBlock
     private Block block;
     private Context context;
 
-    public static Transaction genesisTransaction;
+    public static Transaction sjfTransaction;
+    public static Transaction rrTransaction;
+    public static Transaction psoTransaction;
+    public static Transaction fcfsTransaction;
 
-    private Wallet wallet;
     private Wallet localWallet;
 
     private GenesisBlock(Context context, Wallet localWallet)
@@ -43,15 +44,17 @@ public class GenesisBlock
 
 
         if (block == null) {
-            wallet = new Wallet();
             block = new Block( "0");
-            genesisTransaction = new Transaction(wallet.getPrivateKey(), wallet.getPublicKey(), localWallet.getPublicKey(), 100f, getDataToSchedule(), null);
-            genesisTransaction.transactionId = ByteUtil.stringToBytes("0");
-            genesisTransaction.outputs.add(
+
+            ECKey keyPair = ECKey.fromPrivate(Hex.decode(Node1.privateKeyString));
+            Wallet rrWallet = new Wallet(keyPair.getPrivKeyBytes());
+            rrTransaction = new Transaction(rrWallet.getPrivateKey(), rrWallet.getPublicKey(), localWallet.getPublicKey(), 100f, getRRSchedule(), null);
+            rrTransaction.transactionId = ByteUtil.stringToBytes("0");
+            rrTransaction.outputs.add(
                     new TransactionOutput(
-                            genesisTransaction.getSender(),
-                            genesisTransaction.value,
-                            genesisTransaction.transactionId,
+                            rrTransaction.getSender(),
+                            rrTransaction.value,
+                            rrTransaction.transactionId,
                             0,
                             block.getTimeStamp()
 
@@ -59,7 +62,7 @@ public class GenesisBlock
             );
 
             System.out.println("Creating and Mining Genesis block... ");
-            block.addTransaction(genesisTransaction);
+            block.addTransaction(rrTransaction);
             block.mineBlock();
             block.genesisBlock(getGenesisHash());
             String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block);
@@ -88,11 +91,91 @@ public class GenesisBlock
         return StringUtil.applySha256("scheduler");
     }
 
-    public Schedule getDataToSchedule()
+    public Schedule getRRSchedule()
     {
+        double[] tasksData, machinesData;
+        new GenerateSimulationData();
+        tasksData = GenerateSimulationData.getTasks();
+        machinesData = GenerateSimulationData.getMachines();
+
         ArrayList<Task> tasks = new ArrayList<>();
+        for(int i=0; i<tasksData.length;i++)
+        {
+            tasks.add(new Task(i+1,tasksData[i]));
+        }
+
         ArrayList<Machine> machines = new ArrayList<>();
+        for(int i=0; i<machinesData.length;i++)
+        {
+            machines.add(new Machine(i+1,machinesData[i]));
+        }
 
         return new RoundRobinSchedule(tasks, machines);
+    }
+
+    public Schedule getSJFSchedule()
+    {
+        double[] tasksData, machinesData;
+        new GenerateSimulationData();
+        tasksData = GenerateSimulationData.getTasks();
+        machinesData = GenerateSimulationData.getMachines();
+
+        ArrayList<Task> tasks = new ArrayList<>();
+        for(int i=0; i<tasksData.length;i++)
+        {
+            tasks.add(new Task(i+1,tasksData[i]));
+        }
+
+        ArrayList<Machine> machines = new ArrayList<>();
+        for(int i=0; i<machinesData.length;i++)
+        {
+            machines.add(new Machine(i+1,machinesData[i]));
+        }
+
+        return new SJFSchedule(tasks, machines);
+    }
+
+    public Schedule getFCFSSchedule()
+    {
+        double[] tasksData, machinesData;
+        new GenerateSimulationData();
+        tasksData = GenerateSimulationData.getTasks();
+        machinesData = GenerateSimulationData.getMachines();
+
+        ArrayList<Task> tasks = new ArrayList<>();
+        for(int i=0; i<tasksData.length;i++)
+        {
+            tasks.add(new Task(i+1,tasksData[i]));
+        }
+
+        ArrayList<Machine> machines = new ArrayList<>();
+        for(int i=0; i<machinesData.length;i++)
+        {
+            machines.add(new Machine(i+1,machinesData[i]));
+        }
+
+        return new FCFSSchedule(tasks, machines);
+    }
+
+    public Schedule getPSOSchedule()
+    {
+        double[] tasksData, machinesData;
+        new GenerateSimulationData();
+        tasksData = GenerateSimulationData.getTasks();
+        machinesData = GenerateSimulationData.getMachines();
+
+        ArrayList<Task> tasks = new ArrayList<>();
+        for(int i=0; i<tasksData.length;i++)
+        {
+            tasks.add(new Task(i+1,tasksData[i]));
+        }
+
+        ArrayList<Machine> machines = new ArrayList<>();
+        for(int i=0; i<machinesData.length;i++)
+        {
+            machines.add(new Machine(i+1,machinesData[i]));
+        }
+
+        return new PSOSchedule(tasks, machines);
     }
 }

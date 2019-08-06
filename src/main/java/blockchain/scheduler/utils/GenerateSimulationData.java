@@ -1,6 +1,7 @@
 package blockchain.scheduler.utils;
 
 import java.io.*;
+import java.util.Random;
 
 public class GenerateSimulationData
 {
@@ -32,7 +33,7 @@ public class GenerateSimulationData
         BufferedWriter taskBufferedWriter = new BufferedWriter(new FileWriter(taskFile));
 
         for (int i = 0; i < Constants.NO_OF_TASKS; i++) {
-            tasks[i] = (Math.random() * (700 - 100)) + 100;
+            tasks[i] = new Random().nextInt((700000 - 100000) + 1) + 100000;
             taskBufferedWriter.write(String.valueOf(tasks[i]) + ' ');
             taskBufferedWriter.write('\n');
         }
