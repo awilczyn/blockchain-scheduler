@@ -1,6 +1,9 @@
 package blockchain.core.genesis;
 
 import blockchain.Node1;
+import blockchain.Node2;
+import blockchain.Node3;
+import blockchain.Node4;
 import blockchain.core.*;
 import blockchain.db.Context;
 import blockchain.scheduler.*;
@@ -46,16 +49,65 @@ public class GenesisBlock
         if (block == null) {
             block = new Block( "0");
 
-            ECKey keyPair = ECKey.fromPrivate(Hex.decode(Node1.privateKeyString));
-            Wallet rrWallet = new Wallet(keyPair.getPrivKeyBytes());
-            rrTransaction = new Transaction(rrWallet.getPrivateKey(), rrWallet.getPublicKey(), localWallet.getPublicKey(), 100f, getRRSchedule(), null);
-            rrTransaction.transactionId = ByteUtil.stringToBytes("0");
+            ECKey node1 = ECKey.fromPrivate(Hex.decode(Node1.privateKeyString));
+            Wallet rrWallet = new Wallet(node1.getPrivKeyBytes());
+            Schedule rrSchedule = getRRSchedule();
+            rrTransaction = new Transaction(rrWallet.getPrivateKey(), rrWallet.getPublicKey(), localWallet.getPublicKey(), 100f, rrSchedule, null);
+            rrTransaction.transactionId = ByteUtil.stringToBytes("1");
             rrTransaction.outputs.add(
                     new TransactionOutput(
                             rrTransaction.getSender(),
                             rrTransaction.value,
                             rrTransaction.transactionId,
-                            0,
+                            rrSchedule.getSumOfInstruction(),
+                            block.getTimeStamp()
+
+                    )
+            );
+
+            ECKey node2 = ECKey.fromPrivate(Hex.decode(Node2.privateKeyString));
+            Wallet psoWallet = new Wallet(node2.getPrivKeyBytes());
+            Schedule psoSchedule = getRRSchedule();
+            psoTransaction = new Transaction(psoWallet.getPrivateKey(), psoWallet.getPublicKey(), localWallet.getPublicKey(), 100f, psoSchedule, null);
+            psoTransaction.transactionId = ByteUtil.stringToBytes("2");
+            psoTransaction.outputs.add(
+                    new TransactionOutput(
+                            psoTransaction.getSender(),
+                            psoTransaction.value,
+                            psoTransaction.transactionId,
+                            psoSchedule.getSumOfInstruction(),
+                            block.getTimeStamp()
+
+                    )
+            );
+
+            ECKey node3 = ECKey.fromPrivate(Hex.decode(Node3.privateKeyString));
+            Wallet sjfWallet = new Wallet(node3.getPrivKeyBytes());
+            Schedule sjfSchedule = getSJFSchedule();
+            sjfTransaction = new Transaction(sjfWallet.getPrivateKey(), sjfWallet.getPublicKey(), localWallet.getPublicKey(), 100f, sjfSchedule, null);
+            sjfTransaction.transactionId = ByteUtil.stringToBytes("3");
+            sjfTransaction.outputs.add(
+                    new TransactionOutput(
+                            sjfTransaction.getSender(),
+                            sjfTransaction.value,
+                            sjfTransaction.transactionId,
+                            sjfSchedule.getSumOfInstruction(),
+                            block.getTimeStamp()
+
+                    )
+            );
+
+            ECKey node4 = ECKey.fromPrivate(Hex.decode(Node4.privateKeyString));
+            Wallet fcfsWallet = new Wallet(node4.getPrivKeyBytes());
+            Schedule fcfsSchedule = getFCFSSchedule();
+            fcfsTransaction = new Transaction(fcfsWallet.getPrivateKey(), fcfsWallet.getPublicKey(), localWallet.getPublicKey(), 100f, fcfsSchedule, null);
+            fcfsTransaction.transactionId = ByteUtil.stringToBytes("4");
+            fcfsTransaction.outputs.add(
+                    new TransactionOutput(
+                            fcfsTransaction.getSender(),
+                            fcfsTransaction.value,
+                            fcfsTransaction.transactionId,
+                            fcfsSchedule.getSumOfInstruction(),
                             block.getTimeStamp()
 
                     )
@@ -63,6 +115,9 @@ public class GenesisBlock
 
             System.out.println("Creating and Mining Genesis block... ");
             block.addTransaction(rrTransaction);
+            block.addTransaction(psoTransaction);
+            block.addTransaction(sjfTransaction);
+            block.addTransaction(fcfsTransaction);
             block.mineBlock();
             block.genesisBlock(getGenesisHash());
             String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block);
