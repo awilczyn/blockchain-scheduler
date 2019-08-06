@@ -31,6 +31,7 @@ public class PSOSchedule extends Schedule
             machine.addTaskToExecute(cloudlet.getCloudletId()+1);
             maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
         }
+        System.out.println("PSO makespan: "+ maxFinishTime);
         this.time = maxFinishTime;
     }
 }

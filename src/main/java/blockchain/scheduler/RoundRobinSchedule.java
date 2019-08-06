@@ -34,6 +34,7 @@ public class RoundRobinSchedule extends Schedule
             machine.addTaskToExecute(cloudlet.getCloudletId()+1);
             maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
         }
+        System.out.println("Round Robin makespan: "+ maxFinishTime);
         this.time = maxFinishTime;
     }
 }

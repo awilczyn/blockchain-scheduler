@@ -108,7 +108,7 @@ public class RoundRobinScheduler
 
             CloudSim.stopSimulation();
 
-            printCloudletList(newList);
+            //printCloudletList(newList);
 
             Log.printLine(RoundRobinScheduler.class.getName() + " finished!");
 

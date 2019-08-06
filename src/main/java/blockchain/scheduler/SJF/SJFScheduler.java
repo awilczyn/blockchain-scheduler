@@ -108,7 +108,7 @@ public class SJFScheduler
 
             CloudSim.stopSimulation();
 
-            printCloudletList(newList);
+            //printCloudletList(newList);
 
             Log.printLine(SJFScheduler.class.getName() + " finished!");
             return newList;

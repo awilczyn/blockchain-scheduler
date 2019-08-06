@@ -5,6 +5,7 @@ import blockchain.db.Context;
 import blockchain.networking.MessageSender;
 import blockchain.networking.ServerInfo;
 import blockchain.scheduler.Schedule;
+import blockchain.scheduler.utils.Constants;
 import blockchain.serialization.PublicKeyDeserizlizer;
 import blockchain.util.ByteUtil;
 import blockchain.util.Log;
@@ -147,9 +148,16 @@ public class Node implements Runnable
                 final long duration = System.nanoTime() - startTime;
                 System.out.println("Time of mining "+ duration +" [NS].");
                 context.putBlock(block1);
+                double sumTime = 0;
+                for(int t=0; t <block1.transactions.size(); t++) {
+                    Transaction currentTransaction = block1.transactions.get(t);
+                    sumTime = sumTime + currentTransaction.schedule.time;
+                }
                 String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block1);
                 System.out.println("\nThe block: ");
                 System.out.println(blockJson);
+                System.out.println("Number of transactions in block: "+block1.transactions.size());
+                System.out.println("Average makespan: "+sumTime/block1.transactions.size());
             }
         }
     }

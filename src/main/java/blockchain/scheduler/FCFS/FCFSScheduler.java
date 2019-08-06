@@ -108,7 +108,7 @@ public class FCFSScheduler
 
             CloudSim.stopSimulation();
 
-            printCloudletList(newList);
+            //printCloudletList(newList);
 
             Log.printLine(FCFSScheduler.class.getName() + " finished!");
             return newList;

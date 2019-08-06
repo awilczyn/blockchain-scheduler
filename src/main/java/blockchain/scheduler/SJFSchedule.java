@@ -34,6 +34,7 @@ public class SJFSchedule extends Schedule
             machine.addTaskToExecute(cloudlet.getCloudletId()+1);
             maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
         }
+        System.out.println("SJF makespan: "+ maxFinishTime);
         this.time = maxFinishTime;
     }
 }

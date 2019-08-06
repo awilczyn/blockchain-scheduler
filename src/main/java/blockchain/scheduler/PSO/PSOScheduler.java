@@ -123,7 +123,7 @@ public class PSOScheduler
 
             CloudSim.stopSimulation();
 
-            printCloudletList(newList);
+            //printCloudletList(newList);
 
             Log.printLine(PSOScheduler.class.getName() + " finished!");
 
