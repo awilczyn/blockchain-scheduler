@@ -1,9 +1,6 @@
 package blockchain.core;
 
-import blockchain.Node1;
-import blockchain.Node2;
-import blockchain.Node3;
-import blockchain.Node4;
+import blockchain.*;
 import blockchain.game.Player;
 import blockchain.game.StackelbergGame;
 import blockchain.scheduler.*;
@@ -202,31 +199,31 @@ public class Transaction implements Serializable
         Player leader = new Player(Node.getSchedulingFactorForPublicKey(sender), schedule.getTime());
 //        Player leader = new Player(1500, 15);
         Player follower = null;
-        if (nodeName.equals("blockchain.Node1")) {
+        if (nodeName.contains("RoundRobin")) {
             ownSchedule = new RoundRobinSchedule(tasks, machines);
             follower = new Player(
-                    Node.getSchedulingFactorForPublicKey(Node1.wallet.getPublicKey()),
+                    Node.getSchedulingFactorForPublicKey(Node1RoundRobin.wallet.getPublicKey()),
                     ownSchedule.getTime()
             );
         }
-        if (nodeName.equals("blockchain.Node2")) {
+        if (nodeName.contains("PSO")) {
             ownSchedule = new PSOSchedule(tasks, machines);
             follower = new Player(
-                    Node.getSchedulingFactorForPublicKey(Node2.wallet.getPublicKey()),
+                    Node.getSchedulingFactorForPublicKey(Node1PSO.wallet.getPublicKey()),
                     ownSchedule.getTime()
             );
         }
-        if (nodeName.equals("blockchain.Node3")) {
+        if (nodeName.contains("SJF")) {
             ownSchedule = new SJFSchedule(tasks, machines);
             follower = new Player(
-                    Node.getSchedulingFactorForPublicKey(Node3.wallet.getPublicKey()),
+                    Node.getSchedulingFactorForPublicKey(Node1SJF.wallet.getPublicKey()),
                     ownSchedule.getTime()
             );
         }
-        if (nodeName.equals("blockchain.Node4")) {
+        if (nodeName.contains("FCFS")) {
             ownSchedule = new FCFSSchedule(tasks, machines);
             follower = new Player(
-                    Node.getSchedulingFactorForPublicKey(Node4.wallet.getPublicKey()),
+                    Node.getSchedulingFactorForPublicKey(Node1FCFS.wallet.getPublicKey()),
                     ownSchedule.getTime()
             );
         }

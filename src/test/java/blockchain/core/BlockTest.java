@@ -1,6 +1,6 @@
 package blockchain.core;
 
-import blockchain.Node1;
+import blockchain.Node1RoundRobin;
 import blockchain.core.genesis.GenesisBlock;
 import blockchain.db.Context;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -38,15 +38,15 @@ public class BlockTest
         Node.UTXOs.put(genesisBlock.transactions.get(0).outputs.get(0).id, genesisBlock.transactions.get(0).outputs.get(0));
 
         Block block1 = new Block(genesisBlock.hash);
-        block1.addTransaction(localWallet.sendDataToSchedule(walletB.getPublicKey(), 40f, Node1.getDataToSchedule()));
+        block1.addTransaction(localWallet.sendDataToSchedule(walletB.getPublicKey(), 40f, Node1RoundRobin.getDataToSchedule()));
         addBlock(block1);
 
         Block block2 = new Block(block1.hash);
-        block2.addTransaction(localWallet.sendDataToSchedule(walletB.getPublicKey(), 1000f, Node1.getDataToSchedule()));
+        block2.addTransaction(localWallet.sendDataToSchedule(walletB.getPublicKey(), 1000f, Node1RoundRobin.getDataToSchedule()));
         addBlock(block2);
 
         Block block3 = new Block(block2.hash);
-        block3.addTransaction(walletB.sendDataToSchedule(localWallet.getPublicKey(), 20, Node1.getDataToSchedule()));
+        block3.addTransaction(walletB.sendDataToSchedule(localWallet.getPublicKey(), 20, Node1RoundRobin.getDataToSchedule()));
     }
 
     @Test

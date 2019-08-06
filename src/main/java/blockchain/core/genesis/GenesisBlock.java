@@ -1,9 +1,9 @@
 package blockchain.core.genesis;
 
-import blockchain.Node1;
-import blockchain.Node2;
-import blockchain.Node3;
-import blockchain.Node4;
+import blockchain.Node1RoundRobin;
+import blockchain.Node2PSO;
+import blockchain.Node1SJF;
+import blockchain.Node1FCFS;
 import blockchain.core.*;
 import blockchain.db.Context;
 import blockchain.scheduler.*;
@@ -49,7 +49,7 @@ public class GenesisBlock
         if (block == null) {
             block = new Block( "0");
 
-            ECKey node1 = ECKey.fromPrivate(Hex.decode(Node1.privateKeyString));
+            ECKey node1 = ECKey.fromPrivate(Hex.decode(Node1RoundRobin.privateKeyString));
             Wallet rrWallet = new Wallet(node1.getPrivKeyBytes());
             Schedule rrSchedule = getRRSchedule();
             rrTransaction = new Transaction(rrWallet.getPrivateKey(), rrWallet.getPublicKey(), localWallet.getPublicKey(), 100f, rrSchedule, null);
@@ -65,7 +65,7 @@ public class GenesisBlock
                     )
             );
 
-            ECKey node2 = ECKey.fromPrivate(Hex.decode(Node2.privateKeyString));
+            ECKey node2 = ECKey.fromPrivate(Hex.decode(Node2PSO.privateKeyString));
             Wallet psoWallet = new Wallet(node2.getPrivKeyBytes());
             Schedule psoSchedule = getRRSchedule();
             psoTransaction = new Transaction(psoWallet.getPrivateKey(), psoWallet.getPublicKey(), localWallet.getPublicKey(), 100f, psoSchedule, null);
@@ -81,7 +81,7 @@ public class GenesisBlock
                     )
             );
 
-            ECKey node3 = ECKey.fromPrivate(Hex.decode(Node3.privateKeyString));
+            ECKey node3 = ECKey.fromPrivate(Hex.decode(Node1SJF.privateKeyString));
             Wallet sjfWallet = new Wallet(node3.getPrivKeyBytes());
             Schedule sjfSchedule = getSJFSchedule();
             sjfTransaction = new Transaction(sjfWallet.getPrivateKey(), sjfWallet.getPublicKey(), localWallet.getPublicKey(), 100f, sjfSchedule, null);
@@ -97,7 +97,7 @@ public class GenesisBlock
                     )
             );
 
-            ECKey node4 = ECKey.fromPrivate(Hex.decode(Node4.privateKeyString));
+            ECKey node4 = ECKey.fromPrivate(Hex.decode(Node1FCFS.privateKeyString));
             Wallet fcfsWallet = new Wallet(node4.getPrivKeyBytes());
             Schedule fcfsSchedule = getFCFSSchedule();
             fcfsTransaction = new Transaction(fcfsWallet.getPrivateKey(), fcfsWallet.getPublicKey(), localWallet.getPublicKey(), 100f, fcfsSchedule, null);

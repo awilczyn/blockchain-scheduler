@@ -1,12 +1,10 @@
 package blockchain;
 
-import blockchain.core.Node;
-import blockchain.core.Wallet;
+import blockchain.core.*;
 import blockchain.db.Context;
-import blockchain.networking.HeartBeatReceiver;
-import blockchain.networking.PeriodicHeartBeat;
-import blockchain.networking.ServerInfo;
+import blockchain.networking.*;
 import blockchain.scheduler.*;
+import blockchain.scheduler.RoundRobinSchedule;
 import blockchain.scheduler.utils.GenerateSimulationData;
 import blockchain.util.ecdsa.ECKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -23,22 +21,24 @@ import java.util.HashMap;
 /**
  * Created by andrzejwilczynski on 24/07/2018.
  */
-public class Node4
+public class Node1RoundRobin implements NodeInterface
 {
-    public static String privateKeyString = "60eb43cba3e4ae0098b92017065217e16165d71460a00cf51880cf6bf885e698";
+    public static String privateKeyString = "20a2790bfd13ec2af6ec1595f054dab53a5b0890524c6bd719530939cd974bbc";
 
     public static Node localNode;
 
     public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
-    public static Wallet wallet;
+    public static ECKey keyPair = ECKey.fromPrivate(Hex.decode(privateKeyString));
+
+    public static Wallet wallet = new Wallet(keyPair.getPrivKeyBytes());
 
     public static void main(String[] args) throws IOException {
         new GenerateSimulationData();
 
         Security.addProvider(new BouncyCastleProvider());
 
-        int localPort = 7004;
+        int localPort = 7001;
         prepareNodeList();
 
         //periodically send heartbeats
@@ -48,12 +48,9 @@ public class Node4
         //new Thread(new PeriodicCatchup(serverStatus, localPort)).start();
 
         Context context = new Context();
-        ECKey keyPair = ECKey.fromPrivate(Hex.decode(privateKeyString));
-        wallet = new Wallet(keyPair.getPrivKeyBytes());
 
         localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
-
 
         ServerSocket serverSocket = null;
         boolean addTransaction = true;
@@ -62,18 +59,17 @@ public class Node4
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
-//                    localNode.addTransactionToPool(5, getFirstTransactionDataToSchedule());
-//                    localNode.addTransactionToPool(10, getSecondTransactionDataToSchedule());
-//                    localNode.addTransactionToPool(15, getThirdTransactionDataToSchedule());
-//                    localNode.addTransactionToPool(20, getFourthTransactionDataToSchedule());
-//                    localNode.addTransactionToPool(30, getFifthTransactionDataToSchedule());
-//                    localNode.addTransactionToPool(35, getSixthTransactionDataToSchedule());
-//                    localNode.addTransactionToPool(40, getSeventhTransactionDataToSchedule());
-//                    localNode.addTransactionToPool(45, getEigthTransactionDataToSchedule());
+                    localNode.addTransactionToPool(5, getFirstTransactionDataToSchedule());
+                    localNode.addTransactionToPool(10, getSecondTransactionDataToSchedule());
+                    localNode.addTransactionToPool(15, getThirdTransactionDataToSchedule());
+                    localNode.addTransactionToPool(20, getFourthTransactionDataToSchedule());
+                    localNode.addTransactionToPool(30, getFifthTransactionDataToSchedule());
+                    localNode.addTransactionToPool(35, getSixthTransactionDataToSchedule());
+                    localNode.addTransactionToPool(40, getSeventhTransactionDataToSchedule());
+                    localNode.addTransactionToPool(45, getEigthTransactionDataToSchedule());
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
-
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -90,9 +86,23 @@ public class Node4
 
     public static void prepareNodeList()
     {
-        serverStatus.put(new ServerInfo("127.0.0.1", 7001), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7002), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7003), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7004), new Date());
+
+        serverStatus.put(new ServerInfo("127.0.0.1", 7101), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7102), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7104), new Date());
+
+        serverStatus.put(new ServerInfo("127.0.0.1", 7201), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7202), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7203), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7204), new Date());
+
+        serverStatus.put(new ServerInfo("127.0.0.1", 7301), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7302), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7303), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7304), new Date());
     }
 
     public static Schedule getDataToSchedule()
@@ -113,7 +123,7 @@ public class Node4
             machines.add(new Machine(i+1,machinesData[i]));
         }
 
-        return new FCFSSchedule(tasks, machines);
+        return new RoundRobinSchedule(tasks, machines);
     }
 
     public static Schedule getFirstTransactionDataToSchedule()

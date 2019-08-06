@@ -23,22 +23,24 @@ import java.util.HashMap;
 /**
  * Created by andrzejwilczynski on 24/07/2018.
  */
-public class Node2
+public class Node1FCFS
 {
-    public static String privateKeyString = "a46d14de782ac98fe0b3dab21814aa4d67edd2ef51e25044662e313457635b9d";
+    public static String privateKeyString = "60eb43cba3e4ae0098b92017065217e16165d71460a00cf51880cf6bf885e698";
 
     public static Node localNode;
 
     public static HashMap<ServerInfo, Date> serverStatus = new HashMap<ServerInfo, Date>();
 
-    public static Wallet wallet;
+    public static ECKey keyPair = ECKey.fromPrivate(Hex.decode(privateKeyString));
+
+    public static Wallet wallet = new Wallet(keyPair.getPrivKeyBytes());
 
     public static void main(String[] args) throws IOException {
         new GenerateSimulationData();
 
         Security.addProvider(new BouncyCastleProvider());
 
-        int localPort = 7002;
+        int localPort = 7301;
         prepareNodeList();
 
         //periodically send heartbeats
@@ -48,11 +50,10 @@ public class Node2
         //new Thread(new PeriodicCatchup(serverStatus, localPort)).start();
 
         Context context = new Context();
-        ECKey keyPair = ECKey.fromPrivate(Hex.decode(privateKeyString));
-        wallet = new Wallet(keyPair.getPrivKeyBytes());
 
         localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
+
 
         ServerSocket serverSocket = null;
         boolean addTransaction = true;
@@ -72,6 +73,7 @@ public class Node2
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
+
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -89,8 +91,22 @@ public class Node2
     public static void prepareNodeList()
     {
         serverStatus.put(new ServerInfo("127.0.0.1", 7001), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7002), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7003), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7004), new Date());
+
+        serverStatus.put(new ServerInfo("127.0.0.1", 7101), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7102), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7103), new Date());
+
+        serverStatus.put(new ServerInfo("127.0.0.1", 7201), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7202), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7203), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7204), new Date());
+
+        serverStatus.put(new ServerInfo("127.0.0.1", 7302), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7303), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7304), new Date());
     }
 
     public static Schedule getDataToSchedule()
@@ -111,7 +127,7 @@ public class Node2
             machines.add(new Machine(i+1,machinesData[i]));
         }
 
-        return new PSOSchedule(tasks, machines);
+        return new FCFSSchedule(tasks, machines);
     }
 
     public static Schedule getFirstTransactionDataToSchedule()

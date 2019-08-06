@@ -29,7 +29,7 @@ import java.util.logging.Level;
  */
 public class Node implements Runnable
 {
-    private static int NUMBEROFNODES = 4;
+    private static int NUMBEROFNODES = 16;
 
     private Context context;
 
