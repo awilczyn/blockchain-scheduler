@@ -82,6 +82,7 @@ public class Node4
     public static void prepareNodeList()
     {
         serverStatus.put(new ServerInfo("127.0.0.1", 7001), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7002), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7003), new Date());
     }
 

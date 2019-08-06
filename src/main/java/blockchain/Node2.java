@@ -85,6 +85,7 @@ public class Node2
     {
         serverStatus.put(new ServerInfo("127.0.0.1", 7001), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7003), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7004), new Date());
     }
 
     public static Schedule getDataToSchedule()
