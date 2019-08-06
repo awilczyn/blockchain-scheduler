@@ -21,7 +21,7 @@ import java.util.HashMap;
 /**
  * Created by andrzejwilczynski on 24/07/2018.
  */
-public class Node1RoundRobin implements NodeInterface
+public class Node1RoundRobin
 {
     public static String privateKeyString = "20a2790bfd13ec2af6ec1595f054dab53a5b0890524c6bd719530939cd974bbc";
 
@@ -32,6 +32,9 @@ public class Node1RoundRobin implements NodeInterface
     public static ECKey keyPair = ECKey.fromPrivate(Hex.decode(privateKeyString));
 
     public static Wallet wallet = new Wallet(keyPair.getPrivKeyBytes());
+
+    public static double sumTime = 0;
+    public static double counter = 0;
 
     public static void main(String[] args) throws IOException {
         new GenerateSimulationData();
@@ -59,14 +62,23 @@ public class Node1RoundRobin implements NodeInterface
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
-                    localNode.addTransactionToPool(5, getFirstTransactionDataToSchedule());
-                    localNode.addTransactionToPool(10, getSecondTransactionDataToSchedule());
-                    localNode.addTransactionToPool(15, getThirdTransactionDataToSchedule());
-                    localNode.addTransactionToPool(20, getFourthTransactionDataToSchedule());
-                    localNode.addTransactionToPool(30, getFifthTransactionDataToSchedule());
-                    localNode.addTransactionToPool(35, getSixthTransactionDataToSchedule());
-                    localNode.addTransactionToPool(40, getSeventhTransactionDataToSchedule());
-                    localNode.addTransactionToPool(45, getEigthTransactionDataToSchedule());
+//                    localNode.addTransactionToPool(5, getDataToSchedule());
+//                    localNode.addTransactionToPool(10, getDataToSchedule());
+//                    localNode.addTransactionToPool(15, getDataToSchedule());
+//                    localNode.addTransactionToPool(20, getDataToSchedule());
+//                    localNode.addTransactionToPool(30, getDataToSchedule());
+//                    localNode.addTransactionToPool(35, getDataToSchedule());
+//                    localNode.addTransactionToPool(40, getDataToSchedule());
+//                    localNode.addTransactionToPool(50, getDataToSchedule());
+//                    localNode.addTransactionToPool(60, getDataToSchedule());
+//                    localNode.addTransactionToPool(70, getDataToSchedule());
+//                    localNode.addTransactionToPool(80, getDataToSchedule());
+//                    localNode.addTransactionToPool(90, getDataToSchedule());
+//                    localNode.addTransactionToPool(100, getDataToSchedule());
+//                    localNode.addTransactionToPool(110, getDataToSchedule());
+//                    localNode.addTransactionToPool(120, getDataToSchedule());
+//                    localNode.addTransactionToPool(130, getDataToSchedule());
+                    System.out.println("Average makespan blockchain: "+sumTime/counter);
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
@@ -123,47 +135,10 @@ public class Node1RoundRobin implements NodeInterface
             machines.add(new Machine(i+1,machinesData[i]));
         }
 
-        return new RoundRobinSchedule(tasks, machines);
-    }
-
-    public static Schedule getFirstTransactionDataToSchedule()
-    {
-        return getDataToSchedule();
-    }
-
-    public static Schedule getSecondTransactionDataToSchedule()
-    {
-        return getDataToSchedule();
-    }
-
-    public static Schedule getThirdTransactionDataToSchedule()
-    {
-        return getDataToSchedule();
-    }
-
-    public static Schedule getFourthTransactionDataToSchedule()
-    {
-        return getDataToSchedule();
-    }
-
-    public static Schedule getFifthTransactionDataToSchedule()
-    {
-        return getDataToSchedule();
-    }
-
-    public static Schedule getSixthTransactionDataToSchedule()
-    {
-        return getDataToSchedule();
-    }
-
-    public static Schedule getSeventhTransactionDataToSchedule()
-    {
-        return getDataToSchedule();
-    }
-
-    public static Schedule getEigthTransactionDataToSchedule()
-    {
-        return getDataToSchedule();
+        Schedule schedule = new RoundRobinSchedule(tasks, machines);
+        counter++;
+        sumTime = sumTime + schedule.getTime();
+        return schedule;
     }
 }
 

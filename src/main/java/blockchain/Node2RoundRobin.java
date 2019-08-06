@@ -26,7 +26,7 @@ import java.util.HashMap;
 /**
  * Created by andrzejwilczynski on 24/07/2018.
  */
-public class Node2RoundRobin implements NodeInterface
+public class Node2RoundRobin
 {
     public static String privateKeyString = "20a2790bfd13ec2af6ec1595f054dab53a5b0890524c6bd719530939cd974bbc";
 
