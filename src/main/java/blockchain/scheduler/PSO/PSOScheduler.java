@@ -96,14 +96,14 @@ public class PSOScheduler
             vmList = createVM(brokerId, Constants.NO_OF_VMS);
             cloudletList = createCloudlet(brokerId, Constants.NO_OF_TASKS, 0);
 
-            // mapping our vmIds to cloudsim vmIds
-            HashSet<Integer> vmIds = new HashSet<>();
+            // mapping our dcIds to cloudsim dcIds
+            HashSet<Integer> dcIds = new HashSet<>();
             HashMap<Integer, Integer> hm = new HashMap<>();
-            for (Vm machine : vmList) {
-                if (!vmIds.contains(machine.getId()))
-                    vmIds.add(machine.getId());
+            for (Vm dc : vmList) {
+                if (!dcIds.contains(dc.getId()))
+                    dcIds.add(dc.getId());
             }
-            Iterator<Integer> it = vmIds.iterator();
+            Iterator<Integer> it = dcIds.iterator();
             for (int i = 0; i < mapping.length; i++) {
                 if (hm.containsKey((int) mapping[i])) continue;
                 hm.put((int) mapping[i], it.next());
@@ -179,6 +179,6 @@ public class PSOScheduler
             maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
         }
         Log.printLine("Makespan using PSO: " + maxFinishTime);
-        //PSOSchedularInstance.printBestFitness();
+        PSOSchedularInstance.printBestFitness();
     }
 }
