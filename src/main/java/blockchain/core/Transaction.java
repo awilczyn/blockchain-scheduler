@@ -206,10 +206,10 @@ public class Transaction implements Serializable
                     ownSchedule.getTime()
             );
         }
-        if (nodeName.contains("PSO")) {
-            ownSchedule = new PSOSchedule(tasks, machines);
+        if (nodeName.contains("HSGA")) {
+            ownSchedule = new HSGASchedule(tasks, machines);
             follower = new Player(
-                    Node.getSchedulingFactorForPublicKey(Node1PSO.wallet.getPublicKey()),
+                    Node.getSchedulingFactorForPublicKey(Node1HSGA.wallet.getPublicKey()),
                     ownSchedule.getTime()
             );
         }

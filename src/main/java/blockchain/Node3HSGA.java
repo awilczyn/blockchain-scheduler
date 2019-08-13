@@ -21,7 +21,7 @@ import java.util.HashMap;
 /**
  * Created by andrzejwilczynski on 24/07/2018.
  */
-public class Node4PSO
+public class Node3HSGA
 {
     public static String privateKeyString = "a46d14de782ac98fe0b3dab21814aa4d67edd2ef51e25044662e313457635b9d";
 
@@ -38,7 +38,7 @@ public class Node4PSO
 
         Security.addProvider(new BouncyCastleProvider());
 
-        int localPort = 7104;
+        int localPort = 7103;
         prepareNodeList();
 
         //periodically send heartbeats
@@ -81,7 +81,7 @@ public class Node4PSO
 
         serverStatus.put(new ServerInfo("127.0.0.1", 7101), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7102), new Date());
-        serverStatus.put(new ServerInfo("127.0.0.1", 7103), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7104), new Date());
 
         serverStatus.put(new ServerInfo("127.0.0.1", 7201), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7202), new Date());

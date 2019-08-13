@@ -1,13 +1,10 @@
 package blockchain.scheduler.HSGA;
 
-import blockchain.scheduler.FCFS.FCFSDatacenterBroker;
-import blockchain.scheduler.FCFS.FCFSScheduler;
 import blockchain.scheduler.utils.Constants;
 import blockchain.scheduler.utils.DatacenterCreator;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 
-import java.text.DecimalFormat;
 import java.util.*;
 
 public class HSGAScheduler {
@@ -251,7 +248,7 @@ public class HSGAScheduler {
 
             CloudSim.stopSimulation();
 
-            Log.printLine(FCFSScheduler.class.getName() + " finished!");
+            Log.printLine(HSGAScheduler.class.getName() + " finished!");
             return newList;
         } catch (Exception e) {
             e.printStackTrace();

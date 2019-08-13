@@ -1,7 +1,7 @@
 package blockchain.core.genesis;
 
 import blockchain.Node1RoundRobin;
-import blockchain.Node2PSO;
+import blockchain.Node2HSGA;
 import blockchain.Node1SJF;
 import blockchain.Node1FCFS;
 import blockchain.core.*;
@@ -65,7 +65,7 @@ public class GenesisBlock
                     )
             );
 
-            ECKey node2 = ECKey.fromPrivate(Hex.decode(Node2PSO.privateKeyString));
+            ECKey node2 = ECKey.fromPrivate(Hex.decode(Node2HSGA.privateKeyString));
             Wallet psoWallet = new Wallet(node2.getPrivKeyBytes());
             Schedule psoSchedule = getRRSchedule();
             psoTransaction = new Transaction(psoWallet.getPrivateKey(), psoWallet.getPublicKey(), localWallet.getPublicKey(), 100f, psoSchedule, null);

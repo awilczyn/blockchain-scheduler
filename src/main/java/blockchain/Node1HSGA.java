@@ -23,7 +23,7 @@ import java.util.HashMap;
 /**
  * Created by andrzejwilczynski on 24/07/2018.
  */
-public class Node1PSO
+public class Node1HSGA
 {
     public static String privateKeyString = "a46d14de782ac98fe0b3dab21814aa4d67edd2ef51e25044662e313457635b9d";
 
@@ -138,7 +138,7 @@ public class Node1PSO
             machines.add(new Machine(i+1,machinesData[i]));
         }
 
-        Schedule schedule = new PSOSchedule(tasks, machines);
+        Schedule schedule = new HSGASchedule(tasks, machines);
         counter++;
         sumTime = sumTime + schedule.getTime();
         return schedule;
