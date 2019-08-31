@@ -179,12 +179,14 @@ public class Node implements Runnable
     }
 
     public void addTransactionToPool(float value, Schedule schedule) throws IOException {
-        Transaction transaction1 = minerWallet.sendDataToSchedule(testWallet.getPublicKey(), value, schedule);
-        pool.put(ByteUtil.bytesToBigInteger(transaction1.getTransactionId()), transaction1);
-        Node.validators.update(transaction1);
-        String transactionJson = new GsonBuilder().create().toJson(transaction1);
-        System.out.println("Sending transaction to peers for accept... ");
-        broadcast("tx|"+transactionJson);
+        if (schedule != null) {
+            Transaction transaction1 = minerWallet.sendDataToSchedule(testWallet.getPublicKey(), value, schedule);
+            pool.put(ByteUtil.bytesToBigInteger(transaction1.getTransactionId()), transaction1);
+            Node.validators.update(transaction1);
+            String transactionJson = new GsonBuilder().create().toJson(transaction1);
+            System.out.println("Sending transaction to peers for accept... ");
+            broadcast("tx|"+transactionJson);
+        }
     }
 
     public static double getMinimumNumberOfConfirmation()

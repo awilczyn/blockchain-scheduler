@@ -33,5 +33,6 @@ public class FCFSSchedule extends Schedule
         }
         System.out.println("FCFS makespan: "+ maxFinishTime);
         this.makespan = maxFinishTime;
+        this.securityLevel = this.getSecurityLevel();
     }
 }

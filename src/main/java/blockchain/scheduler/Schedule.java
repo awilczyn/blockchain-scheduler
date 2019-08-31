@@ -1,5 +1,7 @@
 package blockchain.scheduler;
 
+import blockchain.scheduler.utils.Constants;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -60,5 +62,21 @@ public class Schedule implements Serializable
     public double getSecurityLevel()
     {
         return securityLevel;
+    }
+
+    public double calculateSecurityLevel()
+    {
+        double Pfailure = 0;
+        double localPfailure = 0;
+        for (Machine machine : machines) {
+            for (Integer taskId : machine.tasksToExecute) {
+                Task task = this.tasks.get(taskId-1);
+                if (task.securityDemand > machine.trustLevel) {
+                    localPfailure = 1 - Math.pow(Math.E, -Constants.FAILURE_COEFFICIENT*(task.securityDemand - machine.trustLevel));
+                    Pfailure = Pfailure + localPfailure;
+                }
+            }
+        }
+        return  1-(Pfailure/tasks.size());
     }
 }

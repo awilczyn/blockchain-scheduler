@@ -7,6 +7,7 @@ import blockchain.networking.HeartBeatReceiver;
 import blockchain.networking.PeriodicHeartBeat;
 import blockchain.networking.ServerInfo;
 import blockchain.scheduler.*;
+import blockchain.scheduler.utils.Constants;
 import blockchain.scheduler.utils.GenerateSimulationData;
 import blockchain.util.ecdsa.ECKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -46,19 +47,14 @@ public class Node1FCFS
         int localPort = 7301;
         prepareNodeList();
 
-        //periodically send heartbeats
         new Thread(new PeriodicHeartBeat(serverStatus, localPort)).start();
-
-        //periodically catchup
-        //new Thread(new PeriodicCatchup(serverStatus, localPort)).start();
 
         Context context = new Context();
 
         localNode = new blockchain.core.Node(context, wallet, serverStatus, localPort);
         localNode.start();
 
-
-        ServerSocket serverSocket = null;
+        ServerSocket serverSocket;
         boolean addTransaction = true;
         try {
             serverSocket = new ServerSocket(localPort);
@@ -89,14 +85,6 @@ public class Node1FCFS
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (serverSocket != null)
-                    serverSocket.close();
-            } catch (IOException e) {
-            }
         }
     }
 
@@ -140,9 +128,12 @@ public class Node1FCFS
         }
 
         Schedule schedule = new FCFSSchedule(tasks, machines);
-        counter++;
-        sumTime = sumTime + schedule.getMakespan();
-        return schedule;
+        if (schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
+            counter++;
+            sumTime = sumTime + schedule.getMakespan();
+            return schedule;
+        }
+        return null;
     }
 }
 

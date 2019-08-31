@@ -196,49 +196,44 @@ public class Transaction implements Serializable
         Schedule ownSchedule;
         boolean betterSchedule = false;
 
-        Player leader = new Player(Node.getSchedulingFactorForPublicKey(sender), schedule.getMakespan());
+        Player leader = new Player(Node.getSchedulingFactorForPublicKey(sender), schedule);
 //        Player leader = new Player(1500, 15);
         Player follower = null;
         if (nodeName.contains("RoundRobin")) {
             ownSchedule = new RoundRobinSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node1RoundRobin.wallet.getPublicKey()),
-                    ownSchedule.getMakespan()
+                    ownSchedule
             );
         }
         if (nodeName.contains("HSGA")) {
             ownSchedule = new HSGASchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node1HSGA.wallet.getPublicKey()),
-                    ownSchedule.getMakespan()
+                    ownSchedule
             );
         }
         if (nodeName.contains("SJF")) {
             ownSchedule = new SJFSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node1SJF.wallet.getPublicKey()),
-                    ownSchedule.getMakespan()
+                    ownSchedule
             );
         }
         if (nodeName.contains("FCFS")) {
             ownSchedule = new FCFSSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node1FCFS.wallet.getPublicKey()),
-                    ownSchedule.getMakespan()
+                    ownSchedule
             );
         }
 //        Player follower2 = new Player(8000, 6);
 //        StackelbergGame stackelbergGame = new StackelbergGame(follower2, leader);
         StackelbergGame stackelbergGame = new StackelbergGame(follower, leader);
         long startTime = System.nanoTime();
-        boolean followerHasBetterSchedule = stackelbergGame.isFollowerHasBetterSchedule();
+        boolean leaderHasBetterSchedule = stackelbergGame.isLeaderHasBetterSchedule();
         final long duration = System.nanoTime() - startTime;
         System.out.println("Time of schedule verification: "+ duration +" [NS].");
-        if (followerHasBetterSchedule) {
-            return false;
-        } else {
-            return true;
-        }
-//        return true;
+        return leaderHasBetterSchedule;
     }
 }

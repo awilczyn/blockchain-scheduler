@@ -1,5 +1,7 @@
 package blockchain.game;
 
+import blockchain.scheduler.Schedule;
+
 /**
  * Created by andrzejwilczynski on 12/03/2019.
  */
@@ -9,12 +11,12 @@ public class Player
 
     private float scaleSchedulingFactor;
 
-    private double timeOfSchedule;
+    private Schedule schedule;
 
-    public Player(float schedulingFactor, double timeOfSchedule)
+    public Player(float schedulingFactor, Schedule schedule)
     {
         this.schedulingFactor = schedulingFactor;
-        this.timeOfSchedule = timeOfSchedule;
+        this.schedule = schedule;
         if (this.schedulingFactor == 0) {
             this.randomSchedulingFactor();
         }
@@ -30,8 +32,12 @@ public class Player
         return schedulingFactor;
     }
 
-    public double getTimeOfSchedule() {
-        return timeOfSchedule;
+    public Schedule getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
     }
 
     public float getScaleSchedulingFactor() {

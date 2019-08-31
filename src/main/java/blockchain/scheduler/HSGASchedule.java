@@ -31,5 +31,6 @@ public class HSGASchedule extends Schedule
         }
         System.out.println("HSGA makespan: "+ maxFinishTime);
         this.makespan = maxFinishTime;
+        this.securityLevel = this.getSecurityLevel();
     }
 }

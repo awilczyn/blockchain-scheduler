@@ -33,5 +33,6 @@ public class RoundRobinSchedule extends Schedule
         }
         System.out.println("Round Robin makespan: "+ maxFinishTime);
         this.makespan = maxFinishTime;
+        this.securityLevel = this.getSecurityLevel();
     }
 }

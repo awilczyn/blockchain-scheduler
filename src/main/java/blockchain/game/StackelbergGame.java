@@ -1,5 +1,8 @@
 package blockchain.game;
 
+import blockchain.scheduler.Schedule;
+import blockchain.scheduler.utils.Constants;
+import com.sun.tools.classfile.ConstantPool;
 import org.apache.commons.math3.optim.MaxIter;
 import org.apache.commons.math3.optim.PointValuePair;
 import org.apache.commons.math3.optim.linear.*;
@@ -45,15 +48,24 @@ public class StackelbergGame
         }
     }
 
-    public boolean isFollowerHasBetterSchedule()
+    public boolean isLeaderHasBetterSchedule()
     {
-        double s1Coefficient = leader.getTimeOfSchedule()*leader.getScaleSchedulingFactor();
-        double s2Coefficient = follower.getTimeOfSchedule()*follower.getScaleSchedulingFactor();
+        if (getSecurityLevelOfSchedule(leader.getSchedule()) < Constants.SECURITY_LEVEL) {
+            return false;
+        }
 
-        LinearObjectiveFunction f = new LinearObjectiveFunction(new double[] { s1Coefficient, s2Coefficient }, 0);
-        Collection<LinearConstraint> constraints = new
-                ArrayList<LinearConstraint>();
-        constraints.add(new LinearConstraint(new double[] { 1, 1 }, Relationship.EQ,  1));
+        double s1Coefficient = leader.getSchedule().getMakespan()*
+                leader.getScaleSchedulingFactor();
+        double s2Coefficient = follower.getSchedule().getMakespan()*
+                follower.getScaleSchedulingFactor();
+
+        LinearObjectiveFunction f = new LinearObjectiveFunction(
+                new double[] { s1Coefficient, s2Coefficient }, 0
+        );
+        Collection<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
+        constraints.add(new LinearConstraint(
+                new double[] { 1, 1 }, Relationship.EQ,  1)
+        );
         SimplexSolver solver = new SimplexSolver();
         PointValuePair solution = solver.optimize(
                 new MaxIter(100),
@@ -63,12 +75,16 @@ public class StackelbergGame
                 new NonNegativeConstraint(true)
         );
 
-        double x = solution.getPoint()[0];
         double y = solution.getPoint()[1];
         if (y == 1) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
+    }
+
+    private double getSecurityLevelOfSchedule(Schedule schedule)
+    {
+        return schedule.calculateSecurityLevel();
     }
 }

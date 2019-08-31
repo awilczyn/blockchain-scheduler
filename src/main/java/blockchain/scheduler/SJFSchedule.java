@@ -33,5 +33,6 @@ public class SJFSchedule extends Schedule
         }
         System.out.println("SJF makespan: "+ maxFinishTime);
         this.makespan = maxFinishTime;
+        this.securityLevel = this.getSecurityLevel();
     }
 }

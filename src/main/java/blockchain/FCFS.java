@@ -31,10 +31,17 @@ public class FCFS
 
         FCFSSchedule scheduler;
         double sumTime = 0;
-        for(int i=0; i< Constants.NO_OF_ATTEMPTS; i++) {
+        double securityLevel = 0;
+        double counter = 0;
+        for(int i = 0; i< Constants.NO_OF_ATTEMPTS; i++) {
             scheduler = new FCFSSchedule(tasks, machines);
-            sumTime = sumTime + scheduler.getMakespan();
+            if (scheduler.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
+                counter++;
+                sumTime = sumTime + scheduler.getMakespan();
+                securityLevel = securityLevel + scheduler.getSecurityLevel();
+            }
         }
-        System.out.println("Average makespan: "+sumTime/Constants.NO_OF_ATTEMPTS);
+        System.out.println("Average makespan: "+sumTime/counter);
+        System.out.println("Average security level: "+securityLevel/counter);
     }
 }
