@@ -20,10 +20,7 @@ public class RoundRobinSchedule extends Schedule
 
     public void prepareSchedule()
     {
-        RoundRobinScheduler scheduler = new RoundRobinScheduler(
-                GenerateSimulationData.getTasks(),
-                GenerateSimulationData.getMachines()
-        );
+        RoundRobinScheduler scheduler = new RoundRobinScheduler();
         List<Cloudlet> list = scheduler.schedule();
         Cloudlet cloudlet;
         Machine machine;
@@ -35,6 +32,6 @@ public class RoundRobinSchedule extends Schedule
             maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
         }
         System.out.println("Round Robin makespan: "+ maxFinishTime);
-        this.time = maxFinishTime;
+        this.makespan = maxFinishTime;
     }
 }

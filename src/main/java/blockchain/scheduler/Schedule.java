@@ -11,7 +11,8 @@ public class Schedule implements Serializable
 {
     public ArrayList<Task> tasks = new ArrayList<>();
     public ArrayList<Machine> machines = new ArrayList<>();
-    public double time;
+    public double makespan;
+    public double securityLevel;
 
     public Schedule() {}
 
@@ -21,8 +22,8 @@ public class Schedule implements Serializable
         this.machines = machines;
     }
 
-    public double getTime() {
-        return time;
+    public double getMakespan() {
+        return makespan;
     }
 
     public void prepareSchedule()
@@ -33,7 +34,7 @@ public class Schedule implements Serializable
                 Machine machine = getRandomMachine(this.machines);
                 machine.addTaskToExecute(tasks.get(i).id);
             }
-            this.time = getRandomTime();
+            this.makespan = getRandomTime();
         }
     }
 
@@ -51,8 +52,13 @@ public class Schedule implements Serializable
         float numberOfInstruction = 0;
         for(int i=0; i<this.tasks.size();i++)
         {
-            numberOfInstruction += tasks.get(i).getNumberOfOperations();
+            numberOfInstruction += tasks.get(i).getWorkload();
         }
         return numberOfInstruction;
+    }
+
+    public double getSecurityLevel()
+    {
+        return securityLevel;
     }
 }

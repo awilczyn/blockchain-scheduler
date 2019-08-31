@@ -20,10 +20,7 @@ public class FCFSSchedule extends Schedule
 
     public void prepareSchedule()
     {
-        FCFSScheduler scheduler = new FCFSScheduler(
-                GenerateSimulationData.getTasks(),
-                GenerateSimulationData.getMachines()
-        );
+        FCFSScheduler scheduler = new FCFSScheduler();
         List<Cloudlet> list = scheduler.schedule();
         Cloudlet cloudlet;
         Machine machine;
@@ -35,6 +32,6 @@ public class FCFSSchedule extends Schedule
             maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
         }
         System.out.println("FCFS makespan: "+ maxFinishTime);
-        this.time = maxFinishTime;
+        this.makespan = maxFinishTime;
     }
 }

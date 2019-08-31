@@ -148,7 +148,7 @@ public class GenesisBlock
 
     public Schedule getRRSchedule()
     {
-        double[] tasksData, machinesData;
+        double[][] tasksData, machinesData;
         new GenerateSimulationData();
         tasksData = GenerateSimulationData.getTasks();
         machinesData = GenerateSimulationData.getMachines();
@@ -156,13 +156,13 @@ public class GenesisBlock
         ArrayList<Task> tasks = new ArrayList<>();
         for(int i=0; i<tasksData.length;i++)
         {
-            tasks.add(new Task(i+1,tasksData[i]));
+            tasks.add(new Task(i+1,tasksData[i][0], tasksData[i][1]));
         }
 
         ArrayList<Machine> machines = new ArrayList<>();
         for(int i=0; i<machinesData.length;i++)
         {
-            machines.add(new Machine(i+1,machinesData[i]));
+            machines.add(new Machine(i+1,machinesData[i][0], machinesData[i][1]));
         }
 
         return new RoundRobinSchedule(tasks, machines);
@@ -170,7 +170,7 @@ public class GenesisBlock
 
     public Schedule getSJFSchedule()
     {
-        double[] tasksData, machinesData;
+        double[][] tasksData, machinesData;
         new GenerateSimulationData();
         tasksData = GenerateSimulationData.getTasks();
         machinesData = GenerateSimulationData.getMachines();
@@ -178,13 +178,13 @@ public class GenesisBlock
         ArrayList<Task> tasks = new ArrayList<>();
         for(int i=0; i<tasksData.length;i++)
         {
-            tasks.add(new Task(i+1,tasksData[i]));
+            tasks.add(new Task(i+1,tasksData[i][0], tasksData[i][1]));
         }
 
         ArrayList<Machine> machines = new ArrayList<>();
         for(int i=0; i<machinesData.length;i++)
         {
-            machines.add(new Machine(i+1,machinesData[i]));
+            machines.add(new Machine(i+1,machinesData[i][0], machinesData[i][1]));
         }
 
         return new SJFSchedule(tasks, machines);
@@ -192,7 +192,7 @@ public class GenesisBlock
 
     public Schedule getFCFSSchedule()
     {
-        double[] tasksData, machinesData;
+        double[][] tasksData, machinesData;
         new GenerateSimulationData();
         tasksData = GenerateSimulationData.getTasks();
         machinesData = GenerateSimulationData.getMachines();
@@ -200,13 +200,13 @@ public class GenesisBlock
         ArrayList<Task> tasks = new ArrayList<>();
         for(int i=0; i<tasksData.length;i++)
         {
-            tasks.add(new Task(i+1,tasksData[i]));
+            tasks.add(new Task(i+1,tasksData[i][0], tasksData[i][1]));
         }
 
         ArrayList<Machine> machines = new ArrayList<>();
         for(int i=0; i<machinesData.length;i++)
         {
-            machines.add(new Machine(i+1,machinesData[i]));
+            machines.add(new Machine(i+1,machinesData[i][0], machinesData[i][1]));
         }
 
         return new FCFSSchedule(tasks, machines);
@@ -214,7 +214,7 @@ public class GenesisBlock
 
     public Schedule getPSOSchedule()
     {
-        double[] tasksData, machinesData;
+        double[][] tasksData, machinesData;
         new GenerateSimulationData();
         tasksData = GenerateSimulationData.getTasks();
         machinesData = GenerateSimulationData.getMachines();
@@ -222,13 +222,13 @@ public class GenesisBlock
         ArrayList<Task> tasks = new ArrayList<>();
         for(int i=0; i<tasksData.length;i++)
         {
-            tasks.add(new Task(i+1,tasksData[i]));
+            tasks.add(new Task(i+1,tasksData[i][0], tasksData[i][1]));
         }
 
         ArrayList<Machine> machines = new ArrayList<>();
         for(int i=0; i<machinesData.length;i++)
         {
-            machines.add(new Machine(i+1,machinesData[i]));
+            machines.add(new Machine(i+1,machinesData[i][0], machinesData[i][1]));
         }
 
         return new PSOSchedule(tasks, machines);

@@ -2,6 +2,7 @@ package blockchain.scheduler.PSO;
 
 import blockchain.scheduler.utils.Constants;
 import blockchain.scheduler.utils.DatacenterCreator;
+import blockchain.scheduler.utils.GenerateSimulationData;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 
@@ -16,12 +17,12 @@ public class PSOScheduler
     private static Datacenter[] datacenter;
     private static PSO PSOSchedularInstance;
     private static double mapping[];
-    private double[] tasks, machines;
+    private double[][] tasks, machines;
 
-    public PSOScheduler (double[] tasks, double[] machines)
+    public PSOScheduler ()
     {
-        this.tasks = tasks;
-        this.machines = machines;
+        this.tasks = GenerateSimulationData.getTasks();
+        this.machines = GenerateSimulationData.getMachines();
     }
 
     private List<Vm> createVM(int userId, int vms) {
@@ -39,7 +40,7 @@ public class PSOScheduler
         Vm[] vm = new Vm[vms];
 
         for (int i = 0; i < vms; i++) {
-            double mips =  machines[i];
+            double mips =  machines[i][0];
             vm[i] = new Vm(i, userId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared());
             list.add(vm[i]);
         }
@@ -59,7 +60,7 @@ public class PSOScheduler
         Cloudlet[] cloudlet = new Cloudlet[cloudlets];
 
         for (int i = 0; i < cloudlets; i++) {
-            long length = (long) tasks[i];
+            long length = (long) tasks[i][0];
             cloudlet[i] = new Cloudlet(idShift + i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
             cloudlet[i].setUserId(userId);
             list.add(cloudlet[i]);

@@ -2,6 +2,7 @@ package blockchain.scheduler.SJF;
 
 import blockchain.scheduler.utils.Constants;
 import blockchain.scheduler.utils.DatacenterCreator;
+import blockchain.scheduler.utils.GenerateSimulationData;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 
@@ -16,12 +17,12 @@ public class SJFScheduler
     private static List<Cloudlet> cloudletList;
     private static List<Vm> vmList;
     private static Datacenter[] datacenter;
-    private double[] tasks, machines;
+    private double[][] tasks, machines;
 
-    public SJFScheduler(double[] tasks, double[] machines)
+    public SJFScheduler()
     {
-        this.tasks = tasks;
-        this.machines = machines;
+        this.tasks = GenerateSimulationData.getTasks();
+        this.machines = GenerateSimulationData.getMachines();
     }
 
     private List<Vm> createVM(int userId, int vms) {
@@ -39,7 +40,7 @@ public class SJFScheduler
         Vm[] vm = new Vm[vms];
 
         for (int i = 0; i < vms; i++) {
-            double mips =  machines[i];
+            double mips =  machines[i][0];
             vm[i] = new Vm(i, userId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared());
             list.add(vm[i]);
         }
@@ -61,7 +62,7 @@ public class SJFScheduler
 
         for (int i = 0; i < cloudlets; i++) {
             int dcId = (int) (Math.random() * Constants.NO_OF_VMS);
-            long length = (long) tasks[i];
+            long length = (long) tasks[i][0];
             cloudlet[i] = new Cloudlet(idShift + i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
             // setting the owner of these Cloudlets
             cloudlet[i].setUserId(userId);
@@ -172,7 +173,7 @@ public class SJFScheduler
         for (int i = 0; i < Constants.NO_OF_TASKS; i++) {
             int vmId = list.get(i).getVmId() % Constants.NO_OF_VMS;
             if (dcWorkingTime[vmId] != 0) --dcWorkingTime[vmId];
-            dcWorkingTime[vmId] += tasks[i];
+            dcWorkingTime[vmId] += tasks[i][0];
             makespan = Math.max(makespan, dcWorkingTime[vmId]);
         }
         return makespan;

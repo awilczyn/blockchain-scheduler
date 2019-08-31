@@ -20,10 +20,7 @@ public class SJFSchedule extends Schedule
 
     public void prepareSchedule()
     {
-        SJFScheduler scheduler = new SJFScheduler(
-                GenerateSimulationData.getTasks(),
-                GenerateSimulationData.getMachines()
-        );
+        SJFScheduler scheduler = new SJFScheduler();
         List<Cloudlet> list = scheduler.schedule();
         Cloudlet cloudlet;
         Machine machine;
@@ -35,6 +32,6 @@ public class SJFSchedule extends Schedule
             maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
         }
         System.out.println("SJF makespan: "+ maxFinishTime);
-        this.time = maxFinishTime;
+        this.makespan = maxFinishTime;
     }
 }

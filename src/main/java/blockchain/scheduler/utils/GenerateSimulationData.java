@@ -5,13 +5,13 @@ import java.util.Random;
 
 public class GenerateSimulationData
 {
-    private static double[] tasks, machines;
+    private static double[][] tasks, machines;
     private File taskFile = new File("Tasks.txt");
     private File machineFile = new File("Machines.txt");
 
     public GenerateSimulationData() {
-        tasks = new double[Constants.NO_OF_TASKS];
-        machines = new double[Constants.NO_OF_VMS];
+        tasks = new double[Constants.NO_OF_TASKS][2];
+        machines = new double[Constants.NO_OF_VMS][2];
         try {
             if (taskFile.exists()) {
                 readWorkload();
@@ -33,8 +33,10 @@ public class GenerateSimulationData
         BufferedWriter taskBufferedWriter = new BufferedWriter(new FileWriter(taskFile));
 
         for (int i = 0; i < Constants.NO_OF_TASKS; i++) {
-            tasks[i] = new Random().nextInt((700000 - 100000) + 1) + 100000;
-            taskBufferedWriter.write(String.valueOf(tasks[i]) + ' ');
+            tasks[i][0] = new Random().nextInt((700000 - 100000) + 1) + 100000;
+            tasks[i][1] = Math.random()*1;
+            taskBufferedWriter.write(String.valueOf(tasks[i][0]) + ' ');
+            taskBufferedWriter.write(String.valueOf(tasks[i][1]) + ' ');
             taskBufferedWriter.write('\n');
         }
         taskBufferedWriter.close();
@@ -45,8 +47,10 @@ public class GenerateSimulationData
         BufferedWriter machineBufferedWriter = new BufferedWriter(new FileWriter(machineFile));
 
         for (int i = 0; i < Constants.NO_OF_VMS; i++) {
-            machines[i] = (Math.random() * (4000 - 2000)) + 2000;
-            machineBufferedWriter.write(String.valueOf(machines[i]) + ' ');
+            machines[i][0] = (Math.random() * (4000 - 2000)) + 2000;
+            machines[i][1] = Math.random()*1;
+            machineBufferedWriter.write(String.valueOf(machines[i][0]) + ' ');
+            machineBufferedWriter.write(String.valueOf(machines[i][1]) + ' ');
             machineBufferedWriter.write('\n');
         }
 
@@ -58,10 +62,13 @@ public class GenerateSimulationData
         BufferedReader execBufferedReader = new BufferedReader(new FileReader(taskFile));
 
         int i = 0;
+        int j = 0;
         do {
             String line = execBufferedReader.readLine();
+            j = 0;
             for (String num : line.split(" ")) {
-                tasks[i] = new Double(num);
+                tasks[i][j] = new Double(num);
+                ++j;
             }
             ++i;
         } while (execBufferedReader.ready());
@@ -72,20 +79,23 @@ public class GenerateSimulationData
         BufferedReader capacityBufferedReader = new BufferedReader(new FileReader(machineFile));
 
         int i = 0;
+        int j = 0;
         do {
             String line = capacityBufferedReader.readLine();
+            j = 0;
             for (String num : line.split(" ")) {
-                machines[i] = new Double(num);
+                machines[i][j] = new Double(num);
+                ++j;
             }
             ++i;
         } while (capacityBufferedReader.ready());
     }
 
-    public static double[] getTasks() {
+    public static double[][] getTasks() {
         return tasks;
     }
 
-    public static double[] getMachines() {
+    public static double[][] getMachines() {
         return machines;
     }
 }

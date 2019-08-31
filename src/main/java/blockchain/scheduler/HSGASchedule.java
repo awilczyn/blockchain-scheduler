@@ -18,10 +18,7 @@ public class HSGASchedule extends Schedule
 
     public void prepareSchedule()
     {
-        HSGAScheduler scheduler = new HSGAScheduler(
-                GenerateSimulationData.getTasks(),
-                GenerateSimulationData.getMachines()
-        );
+        HSGAScheduler scheduler = new HSGAScheduler();
         List<Cloudlet> list = scheduler.schedule();
         Cloudlet cloudlet;
         Machine machine;
@@ -33,6 +30,6 @@ public class HSGASchedule extends Schedule
             maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
         }
         System.out.println("HSGA makespan: "+ maxFinishTime);
-        this.time = maxFinishTime;
+        this.makespan = maxFinishTime;
     }
 }

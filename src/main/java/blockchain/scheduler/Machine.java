@@ -9,13 +9,15 @@ import java.util.ArrayList;
 public class Machine implements Serializable
 {
     public int id;
-    public double numberOfOperationsPerSecond;
+    public double computingCapacity;
+    public double trustLevel;
     public ArrayList<Integer> tasksToExecute;
 
-    public Machine(int id, double numberOfOperationsPerSecond)
+    public Machine(int id, double numberOfOperationsPerSecond, double trustLevel)
     {
         this.id = id;
-        this.numberOfOperationsPerSecond = numberOfOperationsPerSecond;
+        this.computingCapacity = numberOfOperationsPerSecond;
+        this.trustLevel = trustLevel;
         this.tasksToExecute = new ArrayList<>();
     }
 
@@ -24,12 +26,17 @@ public class Machine implements Serializable
         tasksToExecute.add(taskId);
     }
 
-    public double getNumberOfOperationsPerSecond() {
-        return numberOfOperationsPerSecond;
+    public double getComputingCapacity() {
+        return computingCapacity;
     }
 
     public int getId()
     {
         return id;
+    }
+
+    public double getTrustLevel()
+    {
+        return trustLevel;
     }
 }

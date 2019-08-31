@@ -153,7 +153,7 @@ public class Node implements Runnable
                 context.putBlock(block1);
                 for(int t=0; t <block1.transactions.size(); t++) {
                     Transaction currentTransaction = block1.transactions.get(t);
-                    sumTime = sumTime + currentTransaction.schedule.time;
+                    sumTime = sumTime + currentTransaction.schedule.makespan;
                 }
                 totalNumberOfTransaction = totalNumberOfTransaction + block1.transactions.size();
 //                String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block1);

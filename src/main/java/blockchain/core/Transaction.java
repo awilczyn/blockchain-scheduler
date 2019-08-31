@@ -121,7 +121,7 @@ public class Transaction implements Serializable
     {
         float total = 0;
         for (int i=0; i<this.schedule.tasks.size(); i++) {
-            total += this.schedule.tasks.get(i).getNumberOfOperations();
+            total += this.schedule.tasks.get(i).getWorkload();
         }
         return total;
     }
@@ -190,41 +190,41 @@ public class Transaction implements Serializable
         tasks.addAll(this.schedule.tasks);
         ArrayList<Machine> machines = new ArrayList<>();
         for (int i=0; i<this.schedule.machines.size(); i++) {
-            machines.add(new Machine(this.schedule.machines.get(i).getId(), this.schedule.machines.get(i).getNumberOfOperationsPerSecond()));
+            machines.add(new Machine(this.schedule.machines.get(i).getId(), this.schedule.machines.get(i).getComputingCapacity(), this.schedule.machines.get(i).getTrustLevel()));
         }
         String nodeName = System.getProperty("sun.java.command");
         Schedule ownSchedule;
         boolean betterSchedule = false;
 
-        Player leader = new Player(Node.getSchedulingFactorForPublicKey(sender), schedule.getTime());
+        Player leader = new Player(Node.getSchedulingFactorForPublicKey(sender), schedule.getMakespan());
 //        Player leader = new Player(1500, 15);
         Player follower = null;
         if (nodeName.contains("RoundRobin")) {
             ownSchedule = new RoundRobinSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node1RoundRobin.wallet.getPublicKey()),
-                    ownSchedule.getTime()
+                    ownSchedule.getMakespan()
             );
         }
         if (nodeName.contains("HSGA")) {
             ownSchedule = new HSGASchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node1HSGA.wallet.getPublicKey()),
-                    ownSchedule.getTime()
+                    ownSchedule.getMakespan()
             );
         }
         if (nodeName.contains("SJF")) {
             ownSchedule = new SJFSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node1SJF.wallet.getPublicKey()),
-                    ownSchedule.getTime()
+                    ownSchedule.getMakespan()
             );
         }
         if (nodeName.contains("FCFS")) {
             ownSchedule = new FCFSSchedule(tasks, machines);
             follower = new Player(
                     Node.getSchedulingFactorForPublicKey(Node1FCFS.wallet.getPublicKey()),
-                    ownSchedule.getTime()
+                    ownSchedule.getMakespan()
             );
         }
 //        Player follower2 = new Player(8000, 6);

@@ -5,7 +5,7 @@ import blockchain.scheduler.utils.GenerateSimulationData;
 import net.sourceforge.jswarm_pso.FitnessFunction;
 
 public class SchedulerFitnessFunction extends FitnessFunction {
-    private static double[] tasks;
+    private static double[][] tasks;
 
     SchedulerFitnessFunction() {
         super(false);
@@ -23,7 +23,7 @@ public class SchedulerFitnessFunction extends FitnessFunction {
         double totalCost = 0;
         for (int i = 0; i < Constants.NO_OF_TASKS; i++) {
             int dcId = (int) position[i];
-            totalCost += tasks[i];
+            totalCost += tasks[i][0];
         }
         return totalCost;
     }
@@ -35,7 +35,7 @@ public class SchedulerFitnessFunction extends FitnessFunction {
         for (int i = 0; i < Constants.NO_OF_TASKS; i++) {
             int dcId = (int) position[i];
             if(dcWorkingTime[dcId] != 0) --dcWorkingTime[dcId];
-            dcWorkingTime[dcId] += tasks[i];
+            dcWorkingTime[dcId] += tasks[i][0];
             makespan = Math.max(makespan, dcWorkingTime[dcId]);
         }
         return makespan;

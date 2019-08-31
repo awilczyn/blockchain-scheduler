@@ -7,6 +7,7 @@ import java.util.List;
 
 import blockchain.scheduler.utils.Constants;
 import blockchain.scheduler.utils.DatacenterCreator;
+import blockchain.scheduler.utils.GenerateSimulationData;
 import org.cloudbus.cloudsim.*;
 import org.cloudbus.cloudsim.core.CloudSim;
 
@@ -15,12 +16,12 @@ public class RoundRobinScheduler
     private static List<Cloudlet> cloudletList;
     private static List<Vm> vmList;
     private static Datacenter[] datacenter;
-    private double[] tasks, machines;
+    private double[][] tasks, machines;
 
-    public RoundRobinScheduler(double[] tasks, double[] machines)
+    public RoundRobinScheduler()
     {
-        this.tasks = tasks;
-        this.machines = machines;
+        this.tasks = GenerateSimulationData.getTasks();
+        this.machines = GenerateSimulationData.getMachines();
     }
 
     private List<Vm> createVM(int userId, int vms) {
@@ -38,7 +39,7 @@ public class RoundRobinScheduler
         Vm[] vm = new Vm[vms];
 
         for (int i = 0; i < vms; i++) {
-            double mips =  machines[i];
+            double mips =  machines[i][0];
             vm[i] = new Vm(i, userId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared());
             list.add(vm[i]);
         }
@@ -60,7 +61,7 @@ public class RoundRobinScheduler
 
         for (int i = 0; i < cloudlets; i++) {
             int dcId = (int) (Math.random() * Constants.NO_OF_VMS);
-            long length = (long) tasks[i];
+            long length = (long) tasks[i][0];
             cloudlet[i] = new Cloudlet(idShift + i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
             // setting the owner of these Cloudlets
             cloudlet[i].setUserId(userId);
@@ -173,7 +174,7 @@ public class RoundRobinScheduler
         for (int i = 0; i < Constants.NO_OF_TASKS; i++) {
             int dcId = list.get(i).getVmId() % Constants.NO_OF_VMS;
             if (dcWorkingTime[dcId] != 0) --dcWorkingTime[dcId];
-            dcWorkingTime[dcId] += tasks[i];
+            dcWorkingTime[dcId] += tasks[i][0];
             makespan = Math.max(makespan, dcWorkingTime[dcId]);
         }
         return makespan;

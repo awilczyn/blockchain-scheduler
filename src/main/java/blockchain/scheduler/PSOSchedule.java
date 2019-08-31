@@ -17,10 +17,7 @@ public class PSOSchedule extends Schedule
 
     public void prepareSchedule()
     {
-        PSOScheduler scheduler = new PSOScheduler(
-                GenerateSimulationData.getTasks(),
-                GenerateSimulationData.getMachines()
-        );
+        PSOScheduler scheduler = new PSOScheduler();
         List<Cloudlet> list = scheduler.schedule();
         Cloudlet cloudlet;
         Machine machine;
@@ -32,6 +29,6 @@ public class PSOSchedule extends Schedule
             maxFinishTime = Math.max(maxFinishTime, cloudlet.getFinishTime());
         }
         System.out.println("PSO makespan: "+ maxFinishTime);
-        this.time = maxFinishTime;
+        this.makespan = maxFinishTime;
     }
 }

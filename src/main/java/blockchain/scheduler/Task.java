@@ -8,15 +8,22 @@ import java.io.Serializable;
 public class Task implements Serializable
 {
     public int id;
-    public double numberOfOperations;
+    public double workload;
+    public double securityDemand;
 
-    public Task(int id, double numberOfOperations)
+    public Task(int id, double workload, double securityDemand)
     {
         this.id = id;
-        this.numberOfOperations = numberOfOperations;
+        this.workload = workload;
+        this.securityDemand = securityDemand;
     }
 
-    public double getNumberOfOperations() {
-        return numberOfOperations;
+    public double getWorkload() {
+        return workload;
+    }
+
+    public double getSecurityDemand()
+    {
+        return securityDemand;
     }
 }
