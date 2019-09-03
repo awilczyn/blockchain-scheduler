@@ -56,35 +56,32 @@ public class Node1FCFS
 
         ServerSocket serverSocket;
         boolean addTransaction = true;
-        try {
-            serverSocket = new ServerSocket(localPort);
-            while (true) {
-                Socket clientSocket = serverSocket.accept();
-                if (addTransaction) {
-                    localNode.addTransactionToPool(5, getDataToSchedule());
-                    localNode.addTransactionToPool(10, getDataToSchedule());
-                    localNode.addTransactionToPool(15, getDataToSchedule());
-                    localNode.addTransactionToPool(20, getDataToSchedule());
-                    localNode.addTransactionToPool(30, getDataToSchedule());
-                    localNode.addTransactionToPool(35, getDataToSchedule());
-                    localNode.addTransactionToPool(40, getDataToSchedule());
-                    localNode.addTransactionToPool(50, getDataToSchedule());
-                    localNode.addTransactionToPool(60, getDataToSchedule());
-                    localNode.addTransactionToPool(70, getDataToSchedule());
-                    localNode.addTransactionToPool(80, getDataToSchedule());
-                    localNode.addTransactionToPool(90, getDataToSchedule());
-                    localNode.addTransactionToPool(100, getDataToSchedule());
-                    localNode.addTransactionToPool(110, getDataToSchedule());
-                    localNode.addTransactionToPool(120, getDataToSchedule());
-                    localNode.addTransactionToPool(130, getDataToSchedule());
-                    System.out.println("Average makespan blockchain: "+sumTime/counter);
-                }
-                addTransaction = false;
-                new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
 
+        serverSocket = new ServerSocket(localPort);
+        while (true) {
+            Socket clientSocket = serverSocket.accept();
+            if (addTransaction) {
+                localNode.addTransactionToPool(5, getDataToSchedule());
+                localNode.addTransactionToPool(10, getDataToSchedule());
+                localNode.addTransactionToPool(15, getDataToSchedule());
+                localNode.addTransactionToPool(20, getDataToSchedule());
+                localNode.addTransactionToPool(30, getDataToSchedule());
+                localNode.addTransactionToPool(35, getDataToSchedule());
+                localNode.addTransactionToPool(40, getDataToSchedule());
+                localNode.addTransactionToPool(50, getDataToSchedule());
+                localNode.addTransactionToPool(60, getDataToSchedule());
+                localNode.addTransactionToPool(70, getDataToSchedule());
+                localNode.addTransactionToPool(80, getDataToSchedule());
+                localNode.addTransactionToPool(90, getDataToSchedule());
+                localNode.addTransactionToPool(100, getDataToSchedule());
+                localNode.addTransactionToPool(110, getDataToSchedule());
+                localNode.addTransactionToPool(120, getDataToSchedule());
+                localNode.addTransactionToPool(130, getDataToSchedule());
+                System.out.println("Average makespan blockchain: "+sumTime/counter);
             }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            addTransaction = false;
+            new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
+
         }
     }
 

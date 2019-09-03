@@ -33,7 +33,7 @@ public class GenerateSimulationData
         BufferedWriter taskBufferedWriter = new BufferedWriter(new FileWriter(taskFile));
 
         for (int i = 0; i < Constants.NO_OF_TASKS; i++) {
-            tasks[i][0] = new Random().nextInt((700000 - 100000) + 1) + 100000;
+            tasks[i][0] = new Random().nextInt((10000000 - 1000000) + 1) + 1000000;
             tasks[i][1] = Math.random()*1;
             taskBufferedWriter.write(String.valueOf(tasks[i][0]) + ' ');
             taskBufferedWriter.write(String.valueOf(tasks[i][1]) + ' ');

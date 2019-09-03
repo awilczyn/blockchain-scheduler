@@ -30,10 +30,10 @@ public class StackelbergGame
 
     private void scaleSchedulingFactors()
     {
-        float followerSchedulingFactor = this.follower.getSchedulingFactor();
-        float leaderSchedulingFactor = this.leader.getSchedulingFactor();
+        double followerSchedulingFactor = this.follower.getSchedulingFactor();
+        double leaderSchedulingFactor = this.leader.getSchedulingFactor();
 
-        float[] nums ={followerSchedulingFactor, leaderSchedulingFactor};
+        double[] nums ={followerSchedulingFactor, leaderSchedulingFactor};
         Arrays.sort(nums);
         if (nums[nums.length-1] == followerSchedulingFactor)
         {
@@ -50,9 +50,13 @@ public class StackelbergGame
 
     public boolean isLeaderHasBetterSchedule()
     {
-        if (getSecurityLevelOfSchedule(leader.getSchedule()) < Constants.SECURITY_LEVEL) {
+        if (getSecurityLevelOfSchedule(leader.getSchedule()) < Constants.SECURITY_LEVEL ||
+                getSecurityLevelOfSchedule(follower.getSchedule()) < Constants.SECURITY_LEVEL) {
             return false;
         }
+
+        System.out.println("Leader scheduling factor: "+this.leader.getSchedulingFactor()+", scaled scheduling factor: "+this.leader.getScaleSchedulingFactor());
+        System.out.println("Follower scheduling factor: "+this.follower.getSchedulingFactor()+", scaled scheduling factor: "+this.follower.getScaleSchedulingFactor());
 
         double s1Coefficient = leader.getSchedule().getMakespan()*
                 leader.getScaleSchedulingFactor();
@@ -75,7 +79,13 @@ public class StackelbergGame
                 new NonNegativeConstraint(true)
         );
 
+
         double y = solution.getPoint()[1];
+//        double x = solution.getPoint()[0];
+//        double max = solution.getValue();
+//
+//        System.out.println("s1: "+ x +", s2: "+ y +", max: "+max);
+
         if (y == 1) {
             return false;
         } else {

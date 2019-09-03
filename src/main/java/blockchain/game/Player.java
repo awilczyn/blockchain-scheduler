@@ -7,13 +7,13 @@ import blockchain.scheduler.Schedule;
  */
 public class Player
 {
-    private float schedulingFactor;
+    private double schedulingFactor;
 
-    private float scaleSchedulingFactor;
+    private double scaleSchedulingFactor;
 
     private Schedule schedule;
 
-    public Player(float schedulingFactor, Schedule schedule)
+    public Player(double schedulingFactor, Schedule schedule)
     {
         this.schedulingFactor = schedulingFactor;
         this.schedule = schedule;
@@ -28,7 +28,7 @@ public class Player
         this.schedulingFactor = (float) Math.random() * 9999 + 1;
     }
 
-    public float getSchedulingFactor() {
+    public double getSchedulingFactor() {
         return schedulingFactor;
     }
 
@@ -40,11 +40,11 @@ public class Player
         this.schedule = schedule;
     }
 
-    public float getScaleSchedulingFactor() {
+    public double getScaleSchedulingFactor() {
         return scaleSchedulingFactor;
     }
 
-    public void setScaleSchedulingFactor(float scaleSchedulingFactor) {
+    public void setScaleSchedulingFactor(double scaleSchedulingFactor) {
         this.scaleSchedulingFactor = scaleSchedulingFactor;
     }
 }
