@@ -21,7 +21,7 @@ public class DatacenterCreator
         //    create a list to store these PEs before creating a Machine.
         List<Pe> peList = new ArrayList<Pe>();
 
-        int mips = 100000000;
+        long mips = (long) (1e6 * 1000);
 
         // 3. Create PEs and add these into the list.
         peList.add(new Pe(0, new PeProvisionerSimple(mips)));

@@ -40,7 +40,7 @@ public class SJFScheduler
         Vm[] vm = new Vm[vms];
 
         for (int i = 0; i < vms; i++) {
-            double mips =  machines[i][0];
+            double mips =  1e6 * machines[i][0];
             vm[i] = new Vm(i, userId, mips, pesNumber, ram, bw, size, vmm, new CloudletSchedulerSpaceShared());
             list.add(vm[i]);
         }
@@ -62,7 +62,7 @@ public class SJFScheduler
 
         for (int i = 0; i < cloudlets; i++) {
             int dcId = (int) (Math.random() * Constants.NO_OF_VMS);
-            long length = (long) tasks[i][0];
+            long length = (long) (1e6 * tasks[i][0]);
             cloudlet[i] = new Cloudlet(idShift + i, length, pesNumber, fileSize, outputSize, utilizationModel, utilizationModel, utilizationModel);
             // setting the owner of these Cloudlets
             cloudlet[i].setUserId(userId);
