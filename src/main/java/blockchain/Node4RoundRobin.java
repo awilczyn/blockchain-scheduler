@@ -86,6 +86,7 @@ public class Node4RoundRobin
 
         serverStatus.put(new ServerInfo("127.0.0.1", 7101), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7102), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7103), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7104), new Date());
 
         serverStatus.put(new ServerInfo("127.0.0.1", 7201), new Date());

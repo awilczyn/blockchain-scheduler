@@ -75,12 +75,14 @@ public class Node3SJF
 
     public static void prepareNodeList()
     {
+        serverStatus.put(new ServerInfo("127.0.0.1", 7001), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7002), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7003), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7004), new Date());
 
         serverStatus.put(new ServerInfo("127.0.0.1", 7101), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7102), new Date());
+        serverStatus.put(new ServerInfo("127.0.0.1", 7103), new Date());
         serverStatus.put(new ServerInfo("127.0.0.1", 7104), new Date());
 
         serverStatus.put(new ServerInfo("127.0.0.1", 7201), new Date());
