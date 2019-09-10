@@ -30,6 +30,6 @@ public class PSOSchedule extends Schedule
         }
         System.out.println("PSO makespan: "+ maxFinishTime);
         this.makespan = maxFinishTime;
-        this.securityLevel = this.getSecurityLevel();
+        this.securityLevel = this.calculateSecurityLevel();
     }
 }
