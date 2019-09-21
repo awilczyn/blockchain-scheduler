@@ -1,7 +1,6 @@
 package blockchain.scheduler;
 
 import blockchain.scheduler.SJF.SJFScheduler;
-import blockchain.scheduler.utils.GenerateSimulationData;
 import org.cloudbus.cloudsim.Cloudlet;
 
 import java.util.ArrayList;

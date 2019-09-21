@@ -1,5 +1,7 @@
 package blockchain.scheduler.utils;
 
+import org.apache.commons.math3.distribution.NormalDistribution;
+
 import java.io.*;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -38,9 +40,15 @@ public class GenerateSimulationData
         df.setRoundingMode(RoundingMode.CEILING);
         DecimalFormat df2 = new DecimalFormat("#.##");
         df2.setRoundingMode(RoundingMode.CEILING);
+        double standardDeviation = 200;
+        double mean = 600;
+        NormalDistribution dist = new NormalDistribution(mean, standardDeviation);
+        double standardDeviationSD = 0.15;
+        double meanSD = 0.8;
+        NormalDistribution distSD = new NormalDistribution(meanSD, standardDeviationSD);
         for (int i = 0; i < Constants.NO_OF_TASKS; i++) {
-            tasks[i][0] = new Random().nextInt((1000 - 100) + 1) + 100;
-            tasks[i][1] = Math.random()*1;
+            tasks[i][0] = this.getValueInRange(dist, 100, 1000);
+            tasks[i][1] = this.getValueInRange(distSD, 0.6, 0.9);
             taskBufferedWriter.write(String.valueOf(df.format(tasks[i][0])) + ' ');
             taskBufferedWriter.write(String.valueOf(df2.format(tasks[i][1])) + ' ');
             taskBufferedWriter.write('\n');
@@ -56,9 +64,15 @@ public class GenerateSimulationData
         df.setRoundingMode(RoundingMode.CEILING);
         DecimalFormat df2 = new DecimalFormat("#.##");
         df2.setRoundingMode(RoundingMode.CEILING);
+        double standardDeviation = 3;
+        double mean = 7;
+        NormalDistribution dist = new NormalDistribution(mean, standardDeviation);
+        double standardDeviationTL = 0.2;
+        double meanTL = 0.6;
+        NormalDistribution distTl = new NormalDistribution(meanTL, standardDeviationTL);
         for (int i = 0; i < Constants.NO_OF_VMS; i++) {
-            machines[i][0] = (Math.random() * (10 - 1)) + 1;
-            machines[i][1] = Math.random()*1;
+            machines[i][0] = this.getValueInRange(dist, 0, 12);
+            machines[i][1] = this.getValueInRange(distTl, 0.3, 1);
             machineBufferedWriter.write(String.valueOf(df.format(machines[i][0])) + ' ');
             machineBufferedWriter.write(String.valueOf(df2.format(machines[i][1])) + ' ');
             machineBufferedWriter.write('\n');
@@ -107,5 +121,15 @@ public class GenerateSimulationData
 
     public static double[][] getMachines() {
         return machines;
+    }
+
+    private double getValueInRange(NormalDistribution dist, double min, double max)
+    {
+        double value = dist.sample();
+        if (value >= min && value <= max) {
+            return value;
+        } else {
+            return getValueInRange(dist, min, max);
+        }
     }
 }

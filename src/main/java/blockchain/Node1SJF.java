@@ -7,6 +7,7 @@ import blockchain.networking.HeartBeatReceiver;
 import blockchain.networking.PeriodicHeartBeat;
 import blockchain.networking.ServerInfo;
 import blockchain.scheduler.*;
+import blockchain.scheduler.utils.Constants;
 import blockchain.scheduler.utils.GenerateSimulationData;
 import blockchain.util.ecdsa.ECKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -140,9 +141,12 @@ public class Node1SJF
         }
 
         Schedule schedule = new SJFSchedule(tasks, machines);
-        counter++;
-        sumTime = sumTime + schedule.getMakespan();
-        return schedule;
+        if (schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
+            counter++;
+            sumTime = sumTime + schedule.getMakespan();
+            return schedule;
+        }
+        return null;
     }
 }
 

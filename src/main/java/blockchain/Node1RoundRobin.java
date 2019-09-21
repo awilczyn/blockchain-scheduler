@@ -5,6 +5,7 @@ import blockchain.db.Context;
 import blockchain.networking.*;
 import blockchain.scheduler.*;
 import blockchain.scheduler.RoundRobinSchedule;
+import blockchain.scheduler.utils.Constants;
 import blockchain.scheduler.utils.GenerateSimulationData;
 import blockchain.util.ecdsa.ECKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -137,9 +138,12 @@ public class Node1RoundRobin
         }
 
         Schedule schedule = new RoundRobinSchedule(tasks, machines);
-        counter++;
-        sumTime = sumTime + schedule.getMakespan();
-        return schedule;
+        if (schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
+            counter++;
+            sumTime = sumTime + schedule.getMakespan();
+            return schedule;
+        }
+        return null;
     }
 }
 

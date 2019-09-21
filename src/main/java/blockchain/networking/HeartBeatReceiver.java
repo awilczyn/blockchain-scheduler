@@ -82,12 +82,10 @@ public class HeartBeatReceiver implements Runnable{
 			  System.out.println("Checking transaction "+transaction);
 			  if (transaction.verifyTransaction()) {
 				  String transactionVerified = "txv|"+inputLine;
-				  System.out.println("Task execution time (makespan): "+transaction.schedule.getMakespan()+" seconds");
 				  System.out.println("Schedule correct, transaction verified.");
 				  //broadcast("txv|" + inputLine);
 				  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
 			  } else {
-				  System.out.println("Task execution time (makespan): "+transaction.schedule.getMakespan()+" seconds");
 				  System.out.println("Schedule incorrect, transaction rejected.");
 				  String transactionVerified = "tx|"+inputLine;
 				  //broadcast("tx|" + inputLine);

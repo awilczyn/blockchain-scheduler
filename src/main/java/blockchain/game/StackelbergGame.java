@@ -55,7 +55,9 @@ public class StackelbergGame
             return false;
         }
 
+        System.out.println("Leader makespan: "+this.leader.getSchedule().getMakespan());
         System.out.println("Leader scheduling factor: "+this.leader.getSchedulingFactor()+", scaled scheduling factor: "+this.leader.getScaleSchedulingFactor());
+        System.out.println("Follower makespan: "+this.follower.getSchedule().getMakespan());
         System.out.println("Follower scheduling factor: "+this.follower.getSchedulingFactor()+", scaled scheduling factor: "+this.follower.getScaleSchedulingFactor());
 
         double s1Coefficient = leader.getSchedule().getMakespan()*
