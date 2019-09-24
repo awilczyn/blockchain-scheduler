@@ -40,7 +40,7 @@ public class GenerateSimulationData
         df.setRoundingMode(RoundingMode.CEILING);
         DecimalFormat df2 = new DecimalFormat("#.##");
         df2.setRoundingMode(RoundingMode.CEILING);
-        double standardDeviation = 200;
+        double standardDeviation = 300;
         double mean = 600;
         NormalDistribution dist = new NormalDistribution(mean, standardDeviation);
         double standardDeviationSD = 0.15;
@@ -64,15 +64,15 @@ public class GenerateSimulationData
         df.setRoundingMode(RoundingMode.CEILING);
         DecimalFormat df2 = new DecimalFormat("#.##");
         df2.setRoundingMode(RoundingMode.CEILING);
-        double standardDeviation = 3;
+        double standardDeviation = 2;
         double mean = 7;
         NormalDistribution dist = new NormalDistribution(mean, standardDeviation);
         double standardDeviationTL = 0.2;
-        double meanTL = 0.6;
+        double meanTL = 0.5;
         NormalDistribution distTl = new NormalDistribution(meanTL, standardDeviationTL);
         for (int i = 0; i < Constants.NO_OF_VMS; i++) {
-            machines[i][0] = this.getValueInRange(dist, 0, 12);
-            machines[i][1] = this.getValueInRange(distTl, 0.3, 1);
+            machines[i][0] = this.getValueInRange(dist, 1, 12);
+            machines[i][1] = this.getValueInRange(distTl, 0.2, 1);
             machineBufferedWriter.write(String.valueOf(df.format(machines[i][0])) + ' ');
             machineBufferedWriter.write(String.valueOf(df2.format(machines[i][1])) + ' ');
             machineBufferedWriter.write('\n');
