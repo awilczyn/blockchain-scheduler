@@ -38,6 +38,10 @@ public class Node1HSGA
 
     public static double sumTime = 0;
     public static double counter = 0;
+    public static double sumFlowtime = 0;
+    public static double sumEconomicCost = 0;
+    public static double sumResourceUtilization = 0;
+    public static double securityLevel = 0;
 
     public static void main(String[] args) throws IOException {
         new GenerateSimulationData();
@@ -82,6 +86,10 @@ public class Node1HSGA
                     localNode.addTransactionToPool(120, getDataToSchedule());
                     localNode.addTransactionToPool(130, getDataToSchedule());
                     System.out.println("Average makespan blockchain: "+sumTime/counter);
+                    System.out.println("Average flowtime: "+sumFlowtime/counter);
+                    System.out.println("Average economic cost: "+sumEconomicCost/counter);
+                    System.out.println("Average resource utilization: "+sumResourceUtilization/counter);
+                    System.out.println("Average security level: "+securityLevel/counter);
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
@@ -143,6 +151,10 @@ public class Node1HSGA
         if (schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
             counter++;
             sumTime = sumTime + schedule.getMakespan();
+            sumFlowtime = sumFlowtime + schedule.getFlowtime();
+            sumEconomicCost = sumEconomicCost + schedule.getEconomicCost();
+            sumResourceUtilization = sumResourceUtilization + schedule.getResourceUtilization();
+            securityLevel = securityLevel + schedule.getSecurityLevel();
             return schedule;
         }
         return null;

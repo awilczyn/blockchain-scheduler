@@ -31,6 +31,9 @@ public class HSGA {
 
         HSGASchedule scheduler;
         double sumTime = 0;
+        double sumFlowtime = 0;
+        double sumEconomicCost = 0;
+        double sumResourceUtilization = 0;
         double securityLevel = 0;
         double counter = 0;
         for(int i = 0; i< Constants.NO_OF_ATTEMPTS; i++) {
@@ -38,10 +41,16 @@ public class HSGA {
             if (scheduler.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
                 counter++;
                 sumTime = sumTime + scheduler.getMakespan();
+                sumFlowtime = sumFlowtime + scheduler.getFlowtime();
+                sumEconomicCost = sumEconomicCost + scheduler.getEconomicCost();
+                sumResourceUtilization = sumResourceUtilization + scheduler.getResourceUtilization();
                 securityLevel = securityLevel + scheduler.getSecurityLevel();
             }
         }
         System.out.println("Average makespan: "+sumTime/counter);
+        System.out.println("Average flowtime: "+sumFlowtime/counter);
+        System.out.println("Average economic cost: "+sumEconomicCost/counter);
+        System.out.println("Average resource utilization: "+sumResourceUtilization/counter);
         System.out.println("Average security level: "+securityLevel/counter);
     }
 }
