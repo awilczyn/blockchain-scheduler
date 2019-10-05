@@ -67,27 +67,27 @@ public class Node1RoundRobin
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
-//                    localNode.addTransactionToPool(5, getDataToSchedule());
-//                    localNode.addTransactionToPool(10, getDataToSchedule());
-//                    localNode.addTransactionToPool(15, getDataToSchedule());
-//                    localNode.addTransactionToPool(20, getDataToSchedule());
-//                    localNode.addTransactionToPool(30, getDataToSchedule());
-//                    localNode.addTransactionToPool(35, getDataToSchedule());
-//                    localNode.addTransactionToPool(40, getDataToSchedule());
-//                    localNode.addTransactionToPool(50, getDataToSchedule());
-//                    localNode.addTransactionToPool(60, getDataToSchedule());
-//                    localNode.addTransactionToPool(70, getDataToSchedule());
-//                    localNode.addTransactionToPool(80, getDataToSchedule());
-//                    localNode.addTransactionToPool(90, getDataToSchedule());
-//                    localNode.addTransactionToPool(100, getDataToSchedule());
-//                    localNode.addTransactionToPool(110, getDataToSchedule());
-//                    localNode.addTransactionToPool(120, getDataToSchedule());
-//                    localNode.addTransactionToPool(130, getDataToSchedule());
-//                    System.out.println("Average makespan blockchain: "+sumTime/counter);
-//                    System.out.println("Average flowtime: "+sumFlowtime/counter);
-//                    System.out.println("Average economic cost: "+sumEconomicCost/counter);
-//                    System.out.println("Average resource utilization: "+sumResourceUtilization/counter);
-//                    System.out.println("Average security level: "+securityLevel/counter);
+                    localNode.addTransactionToPool(5, getDataToSchedule());
+                    localNode.addTransactionToPool(10, getDataToSchedule());
+                    localNode.addTransactionToPool(15, getDataToSchedule());
+                    localNode.addTransactionToPool(20, getDataToSchedule());
+                    localNode.addTransactionToPool(30, getDataToSchedule());
+                    localNode.addTransactionToPool(35, getDataToSchedule());
+                    localNode.addTransactionToPool(40, getDataToSchedule());
+                    localNode.addTransactionToPool(50, getDataToSchedule());
+                    localNode.addTransactionToPool(60, getDataToSchedule());
+                    localNode.addTransactionToPool(70, getDataToSchedule());
+                    localNode.addTransactionToPool(80, getDataToSchedule());
+                    localNode.addTransactionToPool(90, getDataToSchedule());
+                    localNode.addTransactionToPool(100, getDataToSchedule());
+                    localNode.addTransactionToPool(110, getDataToSchedule());
+                    localNode.addTransactionToPool(120, getDataToSchedule());
+                    localNode.addTransactionToPool(130, getDataToSchedule());
+                    System.out.println("Average makespan blockchain: "+sumTime/counter);
+                    System.out.println("Average flowtime: "+sumFlowtime/counter);
+                    System.out.println("Average economic cost: "+sumEconomicCost/counter);
+                    System.out.println("Average resource utilization: "+sumResourceUtilization/counter);
+                    System.out.println("Average security level: "+securityLevel/counter);
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
