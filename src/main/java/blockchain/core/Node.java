@@ -47,6 +47,10 @@ public class Node implements Runnable
 
     public static double sumTime = 0;
     public static double totalNumberOfTransaction = 0;
+    public static double sumFlowtime = 0;
+    public static double sumEconomicCost = 0;
+    public static double sumResourceUtilization = 0;
+    public static double securityLevel = 0;
 
     /** peer to peer data */
 
@@ -154,6 +158,12 @@ public class Node implements Runnable
                 for(int t=0; t <block1.transactions.size(); t++) {
                     Transaction currentTransaction = block1.transactions.get(t);
                     sumTime = sumTime + currentTransaction.schedule.makespan;
+                    sumFlowtime = sumFlowtime + currentTransaction.schedule.flowtime;
+                    sumEconomicCost = sumEconomicCost + currentTransaction.schedule.economicCost;
+                    sumResourceUtilization = sumResourceUtilization + currentTransaction.schedule.resourceUtilization;
+                    securityLevel = securityLevel + currentTransaction.schedule.securityLevel;
+
+
                 }
                 totalNumberOfTransaction = totalNumberOfTransaction + block1.transactions.size();
 //                String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block1);
@@ -161,6 +171,10 @@ public class Node implements Runnable
 //                System.out.println(blockJson);
                 System.out.println("Number of transactions in block: "+block1.transactions.size());
                 System.out.println("Average makespan: "+sumTime/totalNumberOfTransaction);
+                System.out.println("Average flowtime: "+sumFlowtime/totalNumberOfTransaction);
+                System.out.println("Average economic cost: "+sumEconomicCost/totalNumberOfTransaction);
+                System.out.println("Average resource utilization: "+sumResourceUtilization/totalNumberOfTransaction);
+                System.out.println("Average security level: "+securityLevel/totalNumberOfTransaction);
             }
         }
     }
