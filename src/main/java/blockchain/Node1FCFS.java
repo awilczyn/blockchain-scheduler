@@ -10,6 +10,8 @@ import blockchain.scheduler.*;
 import blockchain.scheduler.utils.Constants;
 import blockchain.scheduler.utils.GenerateSimulationData;
 import blockchain.util.ecdsa.ECKey;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.descriptive.rank.Median;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 
@@ -17,6 +19,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.Security;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -36,12 +40,11 @@ public class Node1FCFS
 
     public static Wallet wallet = new Wallet(keyPair.getPrivKeyBytes());
 
-    public static double sumTime = 0;
-    public static double counter = 0;
-    public static double sumFlowtime = 0;
-    public static double sumEconomicCost = 0;
-    public static double sumResourceUtilization = 0;
-    public static double securityLevel = 0;
+    public static ArrayList<Double> makespan = new ArrayList<Double>();
+    public static ArrayList<Double> flowtime = new ArrayList<Double>();
+    public static ArrayList<Double> economicCost = new ArrayList<Double>();
+    public static ArrayList<Double> resourceUtilization = new ArrayList<Double>();
+    public static ArrayList<Double> securityLevel = new ArrayList<Double>();
 
     public static void main(String[] args) throws IOException {
         new GenerateSimulationData();
@@ -81,11 +84,71 @@ public class Node1FCFS
 //                localNode.addTransactionToPool(110, getDataToSchedule());
 //                localNode.addTransactionToPool(120, getDataToSchedule());
 //                localNode.addTransactionToPool(130, getDataToSchedule());
-//                System.out.println("Average makespan blockchain: "+sumTime/counter);
-//                System.out.println("Average flowtime: "+sumFlowtime/counter);
-//                System.out.println("Average economic cost: "+sumEconomicCost/counter);
-//                System.out.println("Average resource utilization: "+sumResourceUtilization/counter);
-//                System.out.println("Average security level: "+securityLevel/counter);
+//                double[] makespanArray = new double[makespan.size()];
+//                for (int i = 0; i < makespan.size(); i++) {
+//                    makespanArray[i] = makespan.get(i).doubleValue();
+//                }
+//                double[] flowtimeArray = new double[flowtime.size()];
+//                for (int i = 0; i < flowtime.size(); i++) {
+//                    flowtimeArray[i] = flowtime.get(i).doubleValue();
+//                }
+//                double[] economicCostArray = new double[economicCost.size()];
+//                for (int i = 0; i < economicCost.size(); i++) {
+//                    economicCostArray[i] = economicCost.get(i).doubleValue();
+//                }
+//                double[] resourceUtilizationArray = new double[resourceUtilization.size()];
+//                for (int i = 0; i < resourceUtilization.size(); i++) {
+//                    resourceUtilizationArray[i] = resourceUtilization.get(i).doubleValue();
+//                }
+//                double[] securityLevelArray = new double[securityLevel.size()];
+//                for (int i = 0; i < securityLevel.size(); i++) {
+//                    securityLevelArray[i] = securityLevel.get(i).doubleValue();
+//                }
+//                DescriptiveStatistics daMakespan = new DescriptiveStatistics(makespanArray);
+//                Median medianMakespan = new Median();
+//                DescriptiveStatistics daFlowtime = new DescriptiveStatistics(flowtimeArray);
+//                Median medianFlowtime = new Median();
+//                DescriptiveStatistics daEconomicCost = new DescriptiveStatistics(economicCostArray);
+//                Median medianEconomicCost = new Median();
+//                DescriptiveStatistics daResourceUtilization = new DescriptiveStatistics(resourceUtilizationArray);
+//                Median medianResourceUtilization = new Median();
+//                DescriptiveStatistics daSecurityLevel = new DescriptiveStatistics(securityLevelArray);
+//                Median medianSecurityLevel = new Median();
+//                DecimalFormat df = new DecimalFormat("#####0.000");
+//                DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+//                dfs.setDecimalSeparator(',');
+//                df.setDecimalFormatSymbols(dfs);
+//                System.out.println("Criterion Min, Q1, Median, Quartile 3, Max");
+//                System.out.println("makespan: "+
+//                        df.format(daMakespan.getMin()) + ";" +
+//                        df.format(daMakespan.getPercentile(25))+";"+
+//                        df.format(medianMakespan.evaluate(makespanArray)) + ";" +
+//                        df.format(daMakespan.getPercentile(75)) + ";" +
+//                        df.format(daMakespan.getMax()));
+//                System.out.println("flowtime: "+
+//                        df.format(daFlowtime.getMin()) + ";" +
+//                        df.format(daFlowtime.getPercentile(25))+";"+
+//                        df.format(medianFlowtime.evaluate(flowtimeArray)) + ";" +
+//                        df.format(daFlowtime.getPercentile(75)) + ";" +
+//                        df.format(daFlowtime.getMax()));
+//                System.out.println("economic cost: "+
+//                        df.format(daEconomicCost.getMin()) + ";" +
+//                        df.format(daEconomicCost.getPercentile(25))+";"+
+//                        df.format(medianEconomicCost.evaluate(economicCostArray)) + ";" +
+//                        df.format(daEconomicCost.getPercentile(75)) + ";" +
+//                        df.format(daEconomicCost.getMax()));
+//                System.out.println("resource utilization: "+
+//                        df.format(daResourceUtilization.getMin()) + ";" +
+//                        df.format(daResourceUtilization.getPercentile(25))+";"+
+//                        df.format(medianResourceUtilization.evaluate(resourceUtilizationArray)) + ";" +
+//                        df.format(daResourceUtilization.getPercentile(75)) + ";" +
+//                        df.format(daResourceUtilization.getMax()));
+//                System.out.println("security level: "+
+//                        df.format(daSecurityLevel.getMin()) + ";" +
+//                        df.format(daSecurityLevel.getPercentile(25))+";"+
+//                        df.format(medianSecurityLevel.evaluate(securityLevelArray)) + ";" +
+//                        df.format(daSecurityLevel.getPercentile(75)) + ";" +
+//                        df.format(daSecurityLevel.getMax()));
             }
             addTransaction = false;
             new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
@@ -135,12 +198,11 @@ public class Node1FCFS
 
         Schedule schedule = new FCFSSchedule(tasks, machines);
         if (schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
-            counter++;
-            sumTime = sumTime + schedule.getMakespan();
-            sumFlowtime = sumFlowtime + schedule.getFlowtime();
-            sumEconomicCost = sumEconomicCost + schedule.getEconomicCost();
-            sumResourceUtilization = sumResourceUtilization + schedule.getResourceUtilization();
-            securityLevel = securityLevel + schedule.getSecurityLevel();
+            makespan.add(schedule.getMakespan());
+            flowtime.add(schedule.getFlowtime());
+            economicCost.add(schedule.getEconomicCost());
+            resourceUtilization.add(schedule.getResourceUtilization());
+            securityLevel.add(schedule.getSecurityLevel());
             return schedule;
         }
         return null;

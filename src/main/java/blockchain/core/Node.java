@@ -14,11 +14,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.descriptive.rank.Median;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.PublicKey;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,12 +49,12 @@ public class Node implements Runnable
     public static int difficulty = 5;
     public static float minimumTransaction = 0.1f;
 
-    public static double sumTime = 0;
     public static double totalNumberOfTransaction = 0;
-    public static double sumFlowtime = 0;
-    public static double sumEconomicCost = 0;
-    public static double sumResourceUtilization = 0;
-    public static double securityLevel = 0;
+    public static ArrayList<Double> makespan = new ArrayList<Double>();
+    public static ArrayList<Double> flowtime = new ArrayList<Double>();
+    public static ArrayList<Double> economicCost = new ArrayList<Double>();
+    public static ArrayList<Double> resourceUtilization = new ArrayList<Double>();
+    public static ArrayList<Double> securityLevel = new ArrayList<Double>();
 
     /** peer to peer data */
 
@@ -157,24 +161,81 @@ public class Node implements Runnable
                 context.putBlock(block1);
                 for(int t=0; t <block1.transactions.size(); t++) {
                     Transaction currentTransaction = block1.transactions.get(t);
-                    sumTime = sumTime + currentTransaction.schedule.makespan;
-                    sumFlowtime = sumFlowtime + currentTransaction.schedule.flowtime;
-                    sumEconomicCost = sumEconomicCost + currentTransaction.schedule.economicCost;
-                    sumResourceUtilization = sumResourceUtilization + currentTransaction.schedule.resourceUtilization;
-                    securityLevel = securityLevel + currentTransaction.schedule.securityLevel;
-
-
+                    makespan.add(currentTransaction.schedule.makespan);
+                    flowtime.add(currentTransaction.schedule.flowtime);
+                    economicCost.add(currentTransaction.schedule.economicCost);
+                    resourceUtilization.add(currentTransaction.schedule.resourceUtilization);
+                    securityLevel.add(currentTransaction.schedule.securityLevel);
                 }
-                totalNumberOfTransaction = totalNumberOfTransaction + block1.transactions.size();
 //                String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block1);
 //                System.out.println("\nThe block: ");
 //                System.out.println(blockJson);
                 System.out.println("Number of transactions in block: "+block1.transactions.size());
-                System.out.println("Average makespan: "+sumTime/totalNumberOfTransaction);
-                System.out.println("Average flowtime: "+sumFlowtime/totalNumberOfTransaction);
-                System.out.println("Average economic cost: "+sumEconomicCost/totalNumberOfTransaction);
-                System.out.println("Average resource utilization: "+sumResourceUtilization/totalNumberOfTransaction);
-                System.out.println("Average security level: "+securityLevel/totalNumberOfTransaction);
+                double[] makespanArray = new double[makespan.size()];
+                for (int i = 0; i < makespan.size(); i++) {
+                    makespanArray[i] = makespan.get(i).doubleValue();
+                }
+                double[] flowtimeArray = new double[flowtime.size()];
+                for (int i = 0; i < flowtime.size(); i++) {
+                    flowtimeArray[i] = flowtime.get(i).doubleValue();
+                }
+                double[] economicCostArray = new double[economicCost.size()];
+                for (int i = 0; i < economicCost.size(); i++) {
+                    economicCostArray[i] = economicCost.get(i).doubleValue();
+                }
+                double[] resourceUtilizationArray = new double[resourceUtilization.size()];
+                for (int i = 0; i < resourceUtilization.size(); i++) {
+                    resourceUtilizationArray[i] = resourceUtilization.get(i).doubleValue();
+                }
+                double[] securityLevelArray = new double[securityLevel.size()];
+                for (int i = 0; i < securityLevel.size(); i++) {
+                    securityLevelArray[i] = securityLevel.get(i).doubleValue();
+                }
+                DescriptiveStatistics daMakespan = new DescriptiveStatistics(makespanArray);
+                Median medianMakespan = new Median();
+                DescriptiveStatistics daFlowtime = new DescriptiveStatistics(flowtimeArray);
+                Median medianFlowtime = new Median();
+                DescriptiveStatistics daEconomicCost = new DescriptiveStatistics(economicCostArray);
+                Median medianEconomicCost = new Median();
+                DescriptiveStatistics daResourceUtilization = new DescriptiveStatistics(resourceUtilizationArray);
+                Median medianResourceUtilization = new Median();
+                DescriptiveStatistics daSecurityLevel = new DescriptiveStatistics(securityLevelArray);
+                Median medianSecurityLevel = new Median();
+                DecimalFormat df = new DecimalFormat("#####0.000");
+                DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+                dfs.setDecimalSeparator(',');
+                df.setDecimalFormatSymbols(dfs);
+                System.out.println("Criterion Min, Q1, Median, Quartile 3, Max");
+                System.out.println("makespan: "+
+                        df.format(daMakespan.getMin()) + ";" +
+                        df.format(daMakespan.getPercentile(25))+";"+
+                        df.format(medianMakespan.evaluate(makespanArray)) + ";" +
+                        df.format(daMakespan.getPercentile(75)) + ";" +
+                        df.format(daMakespan.getMax()));
+                System.out.println("flowtime: "+
+                        df.format(daFlowtime.getMin()) + ";" +
+                        df.format(daFlowtime.getPercentile(25))+";"+
+                        df.format(medianFlowtime.evaluate(flowtimeArray)) + ";" +
+                        df.format(daFlowtime.getPercentile(75)) + ";" +
+                        df.format(daFlowtime.getMax()));
+                System.out.println("economic cost: "+
+                        df.format(daEconomicCost.getMin()) + ";" +
+                        df.format(daEconomicCost.getPercentile(25))+";"+
+                        df.format(medianEconomicCost.evaluate(economicCostArray)) + ";" +
+                        df.format(daEconomicCost.getPercentile(75)) + ";" +
+                        df.format(daEconomicCost.getMax()));
+                System.out.println("resource utilization: "+
+                        df.format(daResourceUtilization.getMin()) + ";" +
+                        df.format(daResourceUtilization.getPercentile(25))+";"+
+                        df.format(medianResourceUtilization.evaluate(resourceUtilizationArray)) + ";" +
+                        df.format(daResourceUtilization.getPercentile(75)) + ";" +
+                        df.format(daResourceUtilization.getMax()));
+                System.out.println("security level: "+
+                        df.format(daSecurityLevel.getMin()) + ";" +
+                        df.format(daSecurityLevel.getPercentile(25))+";"+
+                        df.format(medianSecurityLevel.evaluate(securityLevelArray)) + ";" +
+                        df.format(daSecurityLevel.getPercentile(75)) + ";" +
+                        df.format(daSecurityLevel.getMax()));
             }
         }
     }

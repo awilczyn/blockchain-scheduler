@@ -71,16 +71,18 @@ public class Schedule implements Serializable
     {
         double Pfailure = 0;
         double localPfailure = 0;
+        double counter = 0;
         for (Machine machine : machines) {
             for (Integer taskId : machine.tasksToExecute) {
                 Task task = this.tasks.get(taskId-1);
                 if (task.securityDemand > machine.trustLevel) {
+                    counter++;
                     localPfailure = 1 - Math.pow(Math.E, -Constants.FAILURE_COEFFICIENT*(task.securityDemand - machine.trustLevel));
                     Pfailure = Pfailure + localPfailure;
                 }
             }
         }
-        return  1-(Pfailure/tasks.size());
+        return  1-(Pfailure/counter);
     }
 
     public double getFlowtime() {
