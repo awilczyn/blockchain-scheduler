@@ -55,14 +55,14 @@ public class StackelbergGame
             return false;
         }
 
-        System.out.println("Leader makespan: "+this.leader.getSchedule().getMakespan());
+        System.out.println("Leader criterion: "+this.leader.getSchedule().getCriterion());
         System.out.println("Leader scheduling factor: "+this.leader.getSchedulingFactor()+", scaled scheduling factor: "+this.leader.getScaleSchedulingFactor());
-        System.out.println("Follower makespan: "+this.follower.getSchedule().getMakespan());
+        System.out.println("Follower criterion: "+this.follower.getSchedule().getCriterion());
         System.out.println("Follower scheduling factor: "+this.follower.getSchedulingFactor()+", scaled scheduling factor: "+this.follower.getScaleSchedulingFactor());
 
-        double s1Coefficient = leader.getSchedule().getMakespan()*
+        double s1Coefficient = leader.getSchedule().getCriterion()*
                 leader.getScaleSchedulingFactor();
-        double s2Coefficient = follower.getSchedule().getMakespan()*
+        double s2Coefficient = follower.getSchedule().getCriterion()*
                 follower.getScaleSchedulingFactor();
 
         LinearObjectiveFunction f = new LinearObjectiveFunction(

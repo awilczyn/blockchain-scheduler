@@ -27,6 +27,11 @@ public class Schedule implements Serializable
         this.machines = machines;
     }
 
+    public double getCriterion()
+    {
+        return makespan;
+    }
+
     public double getMakespan() {
         return makespan;
     }
