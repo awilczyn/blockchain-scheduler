@@ -35,6 +35,8 @@ public class Transaction implements Serializable
 
     public int numberOfVerification = 0;
 
+    public int numberOfConfirmation = 0;
+
     public Transaction(byte[] privateKey, byte[] sender, byte[] recipient, float value, Schedule schedule, ArrayList<TransactionInput> inputs)
     {
         this.sender = sender;

@@ -18,6 +18,9 @@ public class Schedule implements Serializable
     public double flowtime;
     public double economicCost;
     public double resourceUtilization;
+    private double Pfailure;
+    private double Pfake;
+    private double Phacking;
 
     public Schedule() {}
 
@@ -72,7 +75,7 @@ public class Schedule implements Serializable
         return securityLevel;
     }
 
-    public double calculateSecurityLevel()
+    public void calculatePfailure()
     {
         double Pfailure = 0;
         double localPfailure = 0;
@@ -87,7 +90,12 @@ public class Schedule implements Serializable
                 }
             }
         }
-        return  1-(Pfailure/counter);
+        this.Pfailure = Pfailure/counter;
+    }
+
+    public void calculateSecurityLevel()
+    {
+        this.securityLevel = 3-this.Pfailure-this.Pfake-this.Phacking;
     }
 
     public double getFlowtime() {
@@ -125,5 +133,25 @@ public class Schedule implements Serializable
         }
         this.resourceUtilization = resourceUtilizationTime/(this.makespan*counter);
         this.economicCost = economicCost;
+    }
+
+    public double getPfake() {
+        return Pfake;
+    }
+
+    public void setPfake(double pfake) {
+        Pfake = pfake;
+    }
+
+    public double getPhacking() {
+        return Phacking;
+    }
+
+    public void setPhacking(double phacking) {
+        Phacking = phacking;
+    }
+
+    public double getPfailure() {
+        return Pfailure;
     }
 }

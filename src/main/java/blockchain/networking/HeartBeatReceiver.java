@@ -61,7 +61,10 @@ public class HeartBeatReceiver implements Runnable{
 						this.serverHandler(serverInQuestion, tokens[1]);
 						break;
 					case "txv":
-						this.transactionVerifiedHandler(tokens[1]);
+						this.transactionVerifiedHandlerAccept(tokens[1]);
+						break;
+					case "txy":
+						this.transactionVerifiedHandlerReject(tokens[1]);
 						break;
                 	default:
             	}
@@ -87,7 +90,7 @@ public class HeartBeatReceiver implements Runnable{
 				  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
 			  } else {
 				  System.out.println("Schedule incorrect, transaction rejected.");
-				  String transactionVerified = "tx|"+inputLine;
+				  String transactionVerified = "txy|"+inputLine;
 				  //broadcast("tx|" + inputLine);
 				  new Thread(new MessageSender(serverInQuestion, transactionVerified)).start();
 			  }
@@ -99,15 +102,17 @@ public class HeartBeatReceiver implements Runnable{
 		}
 	}
 
-	public void transactionVerifiedHandler(String inputLine)
+	public void transactionVerifiedHandlerAccept(String inputLine)
 	{
 		Gson gson = new GsonBuilder().create();
 		Transaction transaction = gson.fromJson(inputLine, Transaction.class);
 		BigInteger key = ByteUtil.bytesToBigInteger(transaction.transactionId);
 		if(Node.pool.containsKey(key)) {
 			Transaction trans = Node.pool.get(key);
+			trans.numberOfConfirmation++;
 			trans.numberOfVerification++;
-			if (trans.numberOfVerification >= Node.getMinimumNumberOfConfirmation()) {
+			if (trans.numberOfConfirmation >= Node.getMinimumNumberOfConfirmation()) {
+				trans.schedule.setPfake(trans.numberOfConfirmation/trans.numberOfVerification);
 				Node.validators.update(trans);
 				Node.transactionVerifiedPool.put(key, trans);
 				Node.pool.remove(key);
@@ -115,6 +120,18 @@ public class HeartBeatReceiver implements Runnable{
 			}
 		}
     	System.out.println("Transaction was verified.");
+	}
+
+	public void transactionVerifiedHandlerReject(String inputLine)
+	{
+		Gson gson = new GsonBuilder().create();
+		Transaction transaction = gson.fromJson(inputLine, Transaction.class);
+		BigInteger key = ByteUtil.bytesToBigInteger(transaction.transactionId);
+		if(Node.pool.containsKey(key)) {
+			Transaction trans = Node.pool.get(key);
+			trans.numberOfVerification++;
+		}
+		System.out.println("Transaction was rejected.");
 	}
 
 	public void broadcast(String message) {

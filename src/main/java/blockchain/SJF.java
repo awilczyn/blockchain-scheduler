@@ -44,6 +44,9 @@ public class SJF
         ArrayList<Double> securityLevel = new ArrayList<Double>();
         for(int i = 0; i< Constants.NO_OF_ATTEMPTS; i++) {
             scheduler = new SJFSchedule(tasks, machines);
+            scheduler.setPfake(0.5);
+            scheduler.setPhacking(0.5);
+            scheduler.calculateSecurityLevel();
             if (scheduler.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
                 makespan.add(scheduler.getMakespan());
                 flowtime.add(scheduler.getFlowtime());

@@ -36,6 +36,6 @@ public class SJFSchedule extends Schedule
         this.makespan = maxFinishTime;
         this.flowtime = flowtime;
         this.calculateRestMetrics(list);
-        this.securityLevel = this.calculateSecurityLevel();
+        this.calculatePfailure();
     }
 }

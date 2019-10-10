@@ -97,6 +97,20 @@ public class StackelbergGame
 
     private double getSecurityLevelOfSchedule(Schedule schedule)
     {
-        return schedule.calculateSecurityLevel();
+        schedule.calculatePfailure();
+        schedule.setPfake(this.getPfake());
+        schedule.setPhacking(this.getPhacking());
+        schedule.calculateSecurityLevel();
+        return schedule.getSecurityLevel();
+    }
+
+    private  double getPfake()
+    {
+        return 0.5;
+    }
+
+    private double getPhacking()
+    {
+        return 0.5;
     }
 }

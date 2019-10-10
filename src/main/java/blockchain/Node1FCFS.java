@@ -197,15 +197,11 @@ public class Node1FCFS
         }
 
         Schedule schedule = new FCFSSchedule(tasks, machines);
-        if (schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
-            makespan.add(schedule.getMakespan());
-            flowtime.add(schedule.getFlowtime());
-            economicCost.add(schedule.getEconomicCost());
-            resourceUtilization.add(schedule.getResourceUtilization());
-            securityLevel.add(schedule.getSecurityLevel());
-            return schedule;
-        }
-        return null;
+        makespan.add(schedule.getMakespan());
+        flowtime.add(schedule.getFlowtime());
+        economicCost.add(schedule.getEconomicCost());
+        resourceUtilization.add(schedule.getResourceUtilization());
+        return schedule;
     }
 }
 

@@ -211,14 +211,10 @@ public class Node1HSGA
         }
 
         Schedule schedule = new HSGASchedule(tasks, machines);
-        if (schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
-            makespan.add(schedule.getMakespan());
-            flowtime.add(schedule.getFlowtime());
-            economicCost.add(schedule.getEconomicCost());
-            resourceUtilization.add(schedule.getResourceUtilization());
-            securityLevel.add(schedule.getSecurityLevel());
-            return schedule;
-        }
+        makespan.add(schedule.getMakespan());
+        flowtime.add(schedule.getFlowtime());
+        economicCost.add(schedule.getEconomicCost());
+        resourceUtilization.add(schedule.getResourceUtilization());
         return null;
     }
 }
