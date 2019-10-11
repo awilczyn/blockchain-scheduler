@@ -50,7 +50,7 @@ public class RoundRobin
                 flowtime.add(scheduler.getFlowtime());
                 economicCost.add(scheduler.getEconomicCost());
                 resourceUtilization.add(scheduler.getResourceUtilization());
-                securityLevel.add(scheduler.getPfailure());
+                securityLevel.add(scheduler.getSecurityLevel());
             }
         }
         double[] makespanArray = new double[makespan.size()];
