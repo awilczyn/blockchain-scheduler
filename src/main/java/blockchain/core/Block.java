@@ -25,7 +25,7 @@ public class Block implements Serializable
 
     public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
-    public static int minimumNumberOfInstruction = 2000000;
+    public static int minimumNumberOfInstruction = 1500000;
 
     public static int numberOfDayLimit = 30;
 

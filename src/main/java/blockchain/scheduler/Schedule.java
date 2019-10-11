@@ -140,7 +140,7 @@ public class Schedule implements Serializable
     }
 
     public void setPfake(double pfake) {
-        Pfake = pfake;
+        this.Pfake = pfake;
     }
 
     public double getPhacking() {
@@ -148,7 +148,7 @@ public class Schedule implements Serializable
     }
 
     public void setPhacking(double phacking) {
-        Phacking = phacking;
+        this.Phacking = phacking;
     }
 
     public double getPfailure() {

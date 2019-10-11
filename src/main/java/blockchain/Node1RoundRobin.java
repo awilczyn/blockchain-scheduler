@@ -42,7 +42,6 @@ public class Node1RoundRobin
     public static ArrayList<Double> flowtime = new ArrayList<Double>();
     public static ArrayList<Double> economicCost = new ArrayList<Double>();
     public static ArrayList<Double> resourceUtilization = new ArrayList<Double>();
-    public static ArrayList<Double> securityLevel = new ArrayList<Double>();
 
     public static void main(String[] args) throws IOException {
         new GenerateSimulationData();
@@ -102,10 +101,6 @@ public class Node1RoundRobin
                     for (int i = 0; i < resourceUtilization.size(); i++) {
                         resourceUtilizationArray[i] = resourceUtilization.get(i).doubleValue();
                     }
-                    double[] securityLevelArray = new double[securityLevel.size()];
-                    for (int i = 0; i < securityLevel.size(); i++) {
-                        securityLevelArray[i] = securityLevel.get(i).doubleValue();
-                    }
                     DescriptiveStatistics daMakespan = new DescriptiveStatistics(makespanArray);
                     Median medianMakespan = new Median();
                     DescriptiveStatistics daFlowtime = new DescriptiveStatistics(flowtimeArray);
@@ -114,8 +109,6 @@ public class Node1RoundRobin
                     Median medianEconomicCost = new Median();
                     DescriptiveStatistics daResourceUtilization = new DescriptiveStatistics(resourceUtilizationArray);
                     Median medianResourceUtilization = new Median();
-                    DescriptiveStatistics daSecurityLevel = new DescriptiveStatistics(securityLevelArray);
-                    Median medianSecurityLevel = new Median();
                     DecimalFormat df = new DecimalFormat("#####0.000");
                     DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
                     dfs.setDecimalSeparator(',');
@@ -145,12 +138,6 @@ public class Node1RoundRobin
                             df.format(medianResourceUtilization.evaluate(resourceUtilizationArray)) + ";" +
                             df.format(daResourceUtilization.getPercentile(75)) + ";" +
                             df.format(daResourceUtilization.getMax()));
-                    System.out.println("security level: "+
-                            df.format(daSecurityLevel.getMin()) + ";" +
-                            df.format(daSecurityLevel.getPercentile(25))+";"+
-                            df.format(medianSecurityLevel.evaluate(securityLevelArray)) + ";" +
-                            df.format(daSecurityLevel.getPercentile(75)) + ";" +
-                            df.format(daSecurityLevel.getMax()));
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
@@ -209,15 +196,11 @@ public class Node1RoundRobin
         }
 
         Schedule schedule = new RoundRobinSchedule(tasks, machines);
-        if (schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
-            makespan.add(schedule.getMakespan());
-            flowtime.add(schedule.getFlowtime());
-            economicCost.add(schedule.getEconomicCost());
-            resourceUtilization.add(schedule.getResourceUtilization());
-            securityLevel.add(schedule.getSecurityLevel());
-            return schedule;
-        }
-        return null;
+        makespan.add(schedule.getMakespan());
+        flowtime.add(schedule.getFlowtime());
+        economicCost.add(schedule.getEconomicCost());
+        resourceUtilization.add(schedule.getResourceUtilization());
+        return schedule;
     }
 }
 

@@ -3,6 +3,7 @@ package blockchain.networking;
 
 import blockchain.core.Node;
 import blockchain.core.Transaction;
+import blockchain.scheduler.utils.Constants;
 import blockchain.util.ByteUtil;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -61,10 +62,10 @@ public class HeartBeatReceiver implements Runnable{
 						this.serverHandler(serverInQuestion, tokens[1]);
 						break;
 					case "txv":
-						this.transactionVerifiedHandlerAccept(tokens[1]);
+						this.transactionVerifiedHandler(tokens[1], true);
 						break;
 					case "txy":
-						this.transactionVerifiedHandlerReject(tokens[1]);
+						this.transactionVerifiedHandler(tokens[1], false);
 						break;
                 	default:
             	}
@@ -102,36 +103,33 @@ public class HeartBeatReceiver implements Runnable{
 		}
 	}
 
-	public void transactionVerifiedHandlerAccept(String inputLine)
+	public void transactionVerifiedHandler(String inputLine, boolean isAccept)
 	{
 		Gson gson = new GsonBuilder().create();
 		Transaction transaction = gson.fromJson(inputLine, Transaction.class);
 		BigInteger key = ByteUtil.bytesToBigInteger(transaction.transactionId);
 		if(Node.pool.containsKey(key)) {
 			Transaction trans = Node.pool.get(key);
-			trans.numberOfConfirmation++;
 			trans.numberOfVerification++;
-			if (trans.numberOfConfirmation >= Node.getMinimumNumberOfConfirmation()) {
-				trans.schedule.setPfake(trans.numberOfConfirmation/trans.numberOfVerification);
-				Node.validators.update(trans);
-				Node.transactionVerifiedPool.put(key, trans);
-				Node.pool.remove(key);
-				System.out.println("Transaction added to verified pool: "+ transaction.value);
+			if (isAccept) {
+				trans.numberOfConfirmation++;
+				if (trans.numberOfConfirmation >= Node.getMinimumNumberOfConfirmation()) {
+					trans.schedule.setPfake(trans.numberOfConfirmation/trans.numberOfVerification);
+					trans.schedule.setPhacking(0.5);
+					trans.schedule.calculateSecurityLevel();
+					if (trans.schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
+						Node.validators.update(trans);
+						Node.transactionVerifiedPool.put(key, trans);
+						Node.pool.remove(key);
+						System.out.println("Transaction added to verified pool: "+ transaction.value);
+					}
+				}
+			} else {
+				System.out.println("Transaction was rejected.");
 			}
+
 		}
     	System.out.println("Transaction was verified.");
-	}
-
-	public void transactionVerifiedHandlerReject(String inputLine)
-	{
-		Gson gson = new GsonBuilder().create();
-		Transaction transaction = gson.fromJson(inputLine, Transaction.class);
-		BigInteger key = ByteUtil.bytesToBigInteger(transaction.transactionId);
-		if(Node.pool.containsKey(key)) {
-			Transaction trans = Node.pool.get(key);
-			trans.numberOfVerification++;
-		}
-		System.out.println("Transaction was rejected.");
 	}
 
 	public void broadcast(String message) {

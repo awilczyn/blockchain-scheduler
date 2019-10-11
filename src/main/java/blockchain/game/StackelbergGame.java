@@ -1,8 +1,5 @@
 package blockchain.game;
 
-import blockchain.scheduler.Schedule;
-import blockchain.scheduler.utils.Constants;
-import com.sun.tools.classfile.ConstantPool;
 import org.apache.commons.math3.optim.MaxIter;
 import org.apache.commons.math3.optim.PointValuePair;
 import org.apache.commons.math3.optim.linear.*;
@@ -50,11 +47,6 @@ public class StackelbergGame
 
     public boolean isLeaderHasBetterSchedule()
     {
-        if (getSecurityLevelOfSchedule(leader.getSchedule()) < Constants.SECURITY_LEVEL ||
-                getSecurityLevelOfSchedule(follower.getSchedule()) < Constants.SECURITY_LEVEL) {
-            return false;
-        }
-
         System.out.println("Leader criterion: "+this.leader.getSchedule().getCriterion());
         System.out.println("Leader scheduling factor: "+this.leader.getSchedulingFactor()+", scaled scheduling factor: "+this.leader.getScaleSchedulingFactor());
         System.out.println("Follower criterion: "+this.follower.getSchedule().getCriterion());
@@ -93,24 +85,5 @@ public class StackelbergGame
         } else {
             return true;
         }
-    }
-
-    private double getSecurityLevelOfSchedule(Schedule schedule)
-    {
-        schedule.calculatePfailure();
-        schedule.setPfake(this.getPfake());
-        schedule.setPhacking(this.getPhacking());
-        schedule.calculateSecurityLevel();
-        return schedule.getSecurityLevel();
-    }
-
-    private  double getPfake()
-    {
-        return 0.5;
-    }
-
-    private double getPhacking()
-    {
-        return 0.5;
     }
 }
