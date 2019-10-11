@@ -114,7 +114,7 @@ public class HeartBeatReceiver implements Runnable{
 			if (isAccept) {
 				trans.numberOfConfirmation++;
 				if (trans.numberOfConfirmation >= Node.getMinimumNumberOfConfirmation()) {
-					trans.schedule.setPfake(trans.numberOfConfirmation/trans.numberOfVerification);
+					trans.schedule.setPfake(1-trans.numberOfConfirmation/trans.numberOfVerification);
 					trans.schedule.setPhacking(0.5);
 					trans.schedule.calculateSecurityLevel();
 					if (trans.schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
