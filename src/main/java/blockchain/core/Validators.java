@@ -25,8 +25,10 @@ public class Validators
     {
         byte[] maxTrustFactorNode = null;
         float maxTrustFactor = 0;
+//        float BCt = 1/2 * Node.getBlockchainTrustFactor(numberOfDayLimit);
         for (byte[] validator : list) {
             float TF = Node.getTrustFactor(validator, numberOfDayLimit, true);
+//            if (TF > maxTrustFactor && TF <= BCt) {
             if (TF > maxTrustFactor) {
                 maxTrustFactor = TF;
                 maxTrustFactorNode = validator;

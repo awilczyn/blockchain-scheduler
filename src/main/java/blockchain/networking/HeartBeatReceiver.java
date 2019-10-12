@@ -3,6 +3,7 @@ package blockchain.networking;
 
 import blockchain.core.Node;
 import blockchain.core.Transaction;
+import blockchain.core.Validators;
 import blockchain.scheduler.utils.Constants;
 import blockchain.util.ByteUtil;
 import com.google.gson.Gson;
@@ -115,14 +116,10 @@ public class HeartBeatReceiver implements Runnable{
 				trans.numberOfConfirmation++;
 				if (trans.numberOfConfirmation >= Node.getMinimumNumberOfConfirmation()) {
 					trans.schedule.setPfake(1-trans.numberOfConfirmation/trans.numberOfVerification);
-					trans.schedule.setPhacking(0.5);
-					trans.schedule.calculateSecurityLevel();
-					if (trans.schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
-						Node.validators.update(trans);
-						Node.transactionVerifiedPool.put(key, trans);
-						Node.pool.remove(key);
-						System.out.println("Transaction added to verified pool: "+ transaction.value);
-					}
+					Node.validators.update(trans);
+					Node.transactionVerifiedPool.put(key, trans);
+					Node.pool.remove(key);
+					System.out.println("Transaction added to verified pool: "+ transaction.value);
 				}
 			} else {
 				System.out.println("Transaction was rejected.");

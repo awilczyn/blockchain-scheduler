@@ -105,6 +105,16 @@ public class Node implements Runnable
         mine();
     }
 
+    private float getNumberOfCurrentInstructionsInBlock(Block block)
+    {
+        float numberOfTransactions = 0;
+        for(int t=0; t <block.transactions.size(); t++) {
+            Transaction trans = block.transactions.get(t);
+            numberOfTransactions += trans.getSumOfInstructionsInBlockchain();
+        }
+        return numberOfTransactions;
+    }
+
 
     private float getNumberOfCurrentInstructions()
     {
@@ -147,10 +157,22 @@ public class Node implements Runnable
                 {
                     BigInteger key = entry.getKey();
                     Transaction trans = entry.getValue();
-                    block1.addTransaction(trans);
+                    double TF = Node.getTrustFactor(minerWallet.getPublicKey(), Validators.numberOfDayLimit, true);
+                    double BC = Node.getTrustFactor(minerWallet.getPublicKey(), Validators.numberOfDayLimit, false);
+                    if (TF >= (BC*1/2)) {
+                        trans.schedule.setPhacking(0.5);
+                    } else {
+                        trans.schedule.setPhacking(TF/BC);
+                    }
+                    trans.schedule.calculateSecurityLevel();
+                    if (trans.schedule.getSecurityLevel() >= Constants.SECURITY_LEVEL) {
+                        block1.addTransaction(trans);
+                    }
                     transactionVerifiedPool.remove(key);
                 }
-                blockIsReady = true;
+                if (getNumberOfCurrentInstructionsInBlock(block1) >= Block.minimumNumberOfInstruction) {
+                    blockIsReady = true;
+                }
             }
             long startTime = System.nanoTime();
             if (Arrays.equals(validators.getLeader(), minerWallet.getPublicKey()) && blockIsReady) {
@@ -297,6 +319,7 @@ public class Node implements Runnable
             if(transactionTimestamp.after(timestamp)){
                 if(UTXO.isMine(publicKey)) {
                     totalMe += UTXO.schedulingFactor ;
+                    total += UTXO.schedulingFactor ;
                 } else {
                     total += UTXO.schedulingFactor ;
                 }
