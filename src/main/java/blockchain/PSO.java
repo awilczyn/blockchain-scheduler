@@ -39,6 +39,7 @@ public class PSO
         ArrayList<Double> flowtime = new ArrayList<Double>();
         ArrayList<Double> economicCost = new ArrayList<Double>();
         ArrayList<Double> resourceUtilization = new ArrayList<Double>();
+        ArrayList<Double> Pfailure = new ArrayList<Double>();
         ArrayList<Double> securityLevel = new ArrayList<Double>();
         for(int i = 0; i< Constants.NO_OF_ATTEMPTS; i++) {
             scheduler = new PSOSchedule(tasks, machines);
@@ -50,6 +51,7 @@ public class PSO
                 flowtime.add(scheduler.getFlowtime());
                 economicCost.add(scheduler.getEconomicCost());
                 resourceUtilization.add(scheduler.getResourceUtilization());
+                Pfailure.add(scheduler.getPfailure());
                 securityLevel.add(scheduler.getSecurityLevel());
             }
         }
@@ -69,6 +71,10 @@ public class PSO
         for (int i = 0; i < resourceUtilization.size(); i++) {
             resourceUtilizationArray[i] = resourceUtilization.get(i).doubleValue();
         }
+        double[] PfailureArray = new double[Pfailure.size()];
+        for (int i = 0; i < Pfailure.size(); i++) {
+            PfailureArray[i] = Pfailure.get(i).doubleValue();
+        }
         double[] securityLevelArray = new double[securityLevel.size()];
         for (int i = 0; i < securityLevel.size(); i++) {
             securityLevelArray[i] = securityLevel.get(i).doubleValue();
@@ -83,6 +89,8 @@ public class PSO
         Median medianResourceUtilization = new Median();
         DescriptiveStatistics daSecurityLevel = new DescriptiveStatistics(securityLevelArray);
         Median medianSecurityLevel = new Median();
+        DescriptiveStatistics PfailureLevel = new DescriptiveStatistics(PfailureArray);
+        Median medianPfailureLevel = new Median();
         DecimalFormat df = new DecimalFormat("#####0.000");
         DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
         dfs.setDecimalSeparator(',');
@@ -112,6 +120,12 @@ public class PSO
                 df.format(medianResourceUtilization.evaluate(resourceUtilizationArray)) + ";" +
                 df.format(daResourceUtilization.getPercentile(75)) + ";" +
                 df.format(daResourceUtilization.getMax()));
+        System.out.println("P failure: "+
+                df.format(PfailureLevel.getMin()) + ";" +
+                df.format(PfailureLevel.getPercentile(25))+";"+
+                df.format(medianPfailureLevel.evaluate(PfailureArray)) + ";" +
+                df.format(PfailureLevel.getPercentile(75)) + ";" +
+                df.format(PfailureLevel.getMax()));
         System.out.println("security level: "+
                 df.format(daSecurityLevel.getMin()) + ";" +
                 df.format(daSecurityLevel.getPercentile(25))+";"+

@@ -8,7 +8,7 @@ public class Constants
     public static final int NO_OF_VMS = 32;
     public static final int NO_OF_ATTEMPTS = 16;
     public static final double FAILURE_COEFFICIENT = 2.5;
-    public static final double SECURITY_LEVEL = 1;
+    public static final double SECURITY_LEVEL = 1.5;
     public static final double COST_OF_UTILIZATION = 0.0000142;
 }
 

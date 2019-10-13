@@ -27,7 +27,7 @@ public class GenesisBlock
 
     public static Transaction sjfTransaction;
     public static Transaction rrTransaction;
-    public static Transaction psoTransaction;
+    public static Transaction hsgaTransaction;
     public static Transaction fcfsTransaction;
 
     private Wallet localWallet;
@@ -67,15 +67,15 @@ public class GenesisBlock
 
             ECKey node2 = ECKey.fromPrivate(Hex.decode(Node2HSGA.privateKeyString));
             Wallet psoWallet = new Wallet(node2.getPrivKeyBytes());
-            Schedule psoSchedule = getRRSchedule();
-            psoTransaction = new Transaction(psoWallet.getPrivateKey(), psoWallet.getPublicKey(), localWallet.getPublicKey(), 100f, psoSchedule, null);
-            psoTransaction.transactionId = ByteUtil.stringToBytes("2");
-            psoTransaction.outputs.add(
+            Schedule hsgaSchedule = getHSGASchedule();
+            hsgaTransaction = new Transaction(psoWallet.getPrivateKey(), psoWallet.getPublicKey(), localWallet.getPublicKey(), 100f, hsgaSchedule, null);
+            hsgaTransaction.transactionId = ByteUtil.stringToBytes("2");
+            hsgaTransaction.outputs.add(
                     new TransactionOutput(
-                            psoTransaction.getSender(),
-                            psoTransaction.value,
-                            psoTransaction.transactionId,
-                            psoSchedule.getSumOfInstruction(),
+                            hsgaTransaction.getSender(),
+                            hsgaTransaction.value,
+                            hsgaTransaction.transactionId,
+                            hsgaSchedule.getSumOfInstruction(),
                             block.getTimeStamp()
 
                     )
@@ -113,11 +113,23 @@ public class GenesisBlock
                     )
             );
 
+
+
             System.out.println("Creating and Mining Genesis block... ");
             block.addTransaction(rrTransaction);
-            block.addTransaction(psoTransaction);
+            block.addTransaction(hsgaTransaction);
             block.addTransaction(sjfTransaction);
             block.addTransaction(fcfsTransaction);
+
+//            block.addTransaction(this.getRandomTransaction());
+//            block.addTransaction(this.getRandomTransaction());
+//            block.addTransaction(this.getRandomTransaction());
+//            block.addTransaction(this.getRandomTransaction());
+//            block.addTransaction(this.getRandomTransaction());
+//            block.addTransaction(this.getRandomTransaction());
+//            block.addTransaction(this.getRandomTransaction());
+//            block.addTransaction(this.getRandomTransaction());
+
             block.mineBlock();
             block.genesisBlock(getGenesisHash());
             String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block);
@@ -212,7 +224,7 @@ public class GenesisBlock
         return new FCFSSchedule(tasks, machines);
     }
 
-    public Schedule getPSOSchedule()
+    public Schedule getHSGASchedule()
     {
         double[][] tasksData, machinesData;
         new GenerateSimulationData();
@@ -231,6 +243,25 @@ public class GenesisBlock
             machines.add(new Machine(i+1,machinesData[i][0], machinesData[i][1]));
         }
 
-        return new PSOSchedule(tasks, machines);
+        return new HSGASchedule(tasks, machines);
+    }
+
+    private Transaction getRandomTransaction()
+    {
+        Wallet fcfsWallet = new Wallet();
+        Schedule fcfsSchedule = getFCFSSchedule();
+        fcfsTransaction = new Transaction(fcfsWallet.getPrivateKey(), fcfsWallet.getPublicKey(), localWallet.getPublicKey(), 100f, fcfsSchedule, null);
+        fcfsTransaction.transactionId = ByteUtil.stringToBytes("4");
+        fcfsTransaction.outputs.add(
+                new TransactionOutput(
+                        fcfsTransaction.getSender(),
+                        fcfsTransaction.value,
+                        fcfsTransaction.transactionId,
+                        fcfsSchedule.getSumOfInstruction(),
+                        block.getTimeStamp()
+
+                )
+        );
+        return fcfsTransaction;
     }
 }

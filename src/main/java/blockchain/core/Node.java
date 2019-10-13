@@ -54,6 +54,9 @@ public class Node implements Runnable
     public static ArrayList<Double> flowtime = new ArrayList<Double>();
     public static ArrayList<Double> economicCost = new ArrayList<Double>();
     public static ArrayList<Double> resourceUtilization = new ArrayList<Double>();
+    public static ArrayList<Double> pFailure = new ArrayList<Double>();
+    public static ArrayList<Double> pFake = new ArrayList<Double>();
+    public static ArrayList<Double> pHacking = new ArrayList<Double>();
     public static ArrayList<Double> securityLevel = new ArrayList<Double>();
 
     /** peer to peer data */
@@ -159,6 +162,7 @@ public class Node implements Runnable
                     Transaction trans = entry.getValue();
                     double TF = Node.getTrustFactor(minerWallet.getPublicKey(), Validators.numberOfDayLimit, true);
                     double BC = Node.getTrustFactor(minerWallet.getPublicKey(), Validators.numberOfDayLimit, false);
+                    System.out.println("Number of workload in BC: "+BC);
                     if (TF >= (BC*1/2)) {
                         trans.schedule.setPhacking(0.5);
                     } else {
@@ -187,6 +191,9 @@ public class Node implements Runnable
                     flowtime.add(currentTransaction.schedule.flowtime);
                     economicCost.add(currentTransaction.schedule.economicCost);
                     resourceUtilization.add(currentTransaction.schedule.resourceUtilization);
+                    pFailure.add(currentTransaction.schedule.getPfailure());
+                    pFake.add(currentTransaction.schedule.getPfake());
+                    pHacking.add(currentTransaction.schedule.getPhacking());
                     securityLevel.add(currentTransaction.schedule.securityLevel);
                 }
 //                String blockJson = new GsonBuilder().setPrettyPrinting().create().toJson(block1);
@@ -209,6 +216,18 @@ public class Node implements Runnable
                 for (int i = 0; i < resourceUtilization.size(); i++) {
                     resourceUtilizationArray[i] = resourceUtilization.get(i).doubleValue();
                 }
+                double[] pFailureArray = new double[pFailure.size()];
+                for (int i = 0; i < pFailure.size(); i++) {
+                    pFailureArray[i] = pFailure.get(i).doubleValue();
+                }
+                double[] pFakeArray = new double[pFake.size()];
+                for (int i = 0; i < pFake.size(); i++) {
+                    pFakeArray[i] = pFake.get(i).doubleValue();
+                }
+                double[] pHackingArray = new double[pHacking.size()];
+                for (int i = 0; i < pHacking.size(); i++) {
+                    pHackingArray[i] = pHacking.get(i).doubleValue();
+                }
                 double[] securityLevelArray = new double[securityLevel.size()];
                 for (int i = 0; i < securityLevel.size(); i++) {
                     securityLevelArray[i] = securityLevel.get(i).doubleValue();
@@ -223,6 +242,12 @@ public class Node implements Runnable
                 Median medianResourceUtilization = new Median();
                 DescriptiveStatistics daSecurityLevel = new DescriptiveStatistics(securityLevelArray);
                 Median medianSecurityLevel = new Median();
+                DescriptiveStatistics daPfailure = new DescriptiveStatistics(pFailureArray);
+                Median medianPfailure = new Median();
+                DescriptiveStatistics daPfake = new DescriptiveStatistics(pFakeArray);
+                Median medianPfake = new Median();
+                DescriptiveStatistics daPhacking = new DescriptiveStatistics(pHackingArray);
+                Median medianPHacking = new Median();
                 DecimalFormat df = new DecimalFormat("#####0.000");
                 DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
                 dfs.setDecimalSeparator(',');
@@ -252,6 +277,24 @@ public class Node implements Runnable
                         df.format(medianResourceUtilization.evaluate(resourceUtilizationArray)) + ";" +
                         df.format(daResourceUtilization.getPercentile(75)) + ";" +
                         df.format(daResourceUtilization.getMax()));
+                System.out.println("P failure: "+
+                        df.format(daPfailure.getMin()) + ";" +
+                        df.format(daPfailure.getPercentile(25))+";"+
+                        df.format(medianPfailure.evaluate(pFailureArray)) + ";" +
+                        df.format(daPfailure.getPercentile(75)) + ";" +
+                        df.format(daPfailure.getMax()));
+                System.out.println("P fake: "+
+                        df.format(daPfake.getMin()) + ";" +
+                        df.format(daPfake.getPercentile(25))+";"+
+                        df.format(medianPfake.evaluate(pFakeArray)) + ";" +
+                        df.format(daPfake.getPercentile(75)) + ";" +
+                        df.format(daPfake.getMax()));
+                System.out.println("P hacking: "+
+                        df.format(daPhacking.getMin()) + ";" +
+                        df.format(daPhacking.getPercentile(25))+";"+
+                        df.format(medianPHacking.evaluate(pHackingArray)) + ";" +
+                        df.format(daPhacking.getPercentile(75)) + ";" +
+                        df.format(daPhacking.getMax()));
                 System.out.println("security level: "+
                         df.format(daSecurityLevel.getMin()) + ";" +
                         df.format(daSecurityLevel.getPercentile(25))+";"+

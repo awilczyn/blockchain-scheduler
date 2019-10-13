@@ -69,75 +69,75 @@ public class Node1RoundRobin
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
-                    localNode.addTransactionToPool(5, getDataToSchedule());
-                    localNode.addTransactionToPool(10, getDataToSchedule());
-                    localNode.addTransactionToPool(15, getDataToSchedule());
-                    localNode.addTransactionToPool(20, getDataToSchedule());
-                    localNode.addTransactionToPool(30, getDataToSchedule());
-                    localNode.addTransactionToPool(35, getDataToSchedule());
-                    localNode.addTransactionToPool(40, getDataToSchedule());
-                    localNode.addTransactionToPool(50, getDataToSchedule());
-                    localNode.addTransactionToPool(60, getDataToSchedule());
-                    localNode.addTransactionToPool(70, getDataToSchedule());
-                    localNode.addTransactionToPool(80, getDataToSchedule());
-                    localNode.addTransactionToPool(90, getDataToSchedule());
-                    localNode.addTransactionToPool(100, getDataToSchedule());
-                    localNode.addTransactionToPool(110, getDataToSchedule());
-                    localNode.addTransactionToPool(120, getDataToSchedule());
-                    localNode.addTransactionToPool(130, getDataToSchedule());
-                    double[] makespanArray = new double[makespan.size()];
-                    for (int i = 0; i < makespan.size(); i++) {
-                        makespanArray[i] = makespan.get(i).doubleValue();
-                    }
-                    double[] flowtimeArray = new double[flowtime.size()];
-                    for (int i = 0; i < flowtime.size(); i++) {
-                        flowtimeArray[i] = flowtime.get(i).doubleValue();
-                    }
-                    double[] economicCostArray = new double[economicCost.size()];
-                    for (int i = 0; i < economicCost.size(); i++) {
-                        economicCostArray[i] = economicCost.get(i).doubleValue();
-                    }
-                    double[] resourceUtilizationArray = new double[resourceUtilization.size()];
-                    for (int i = 0; i < resourceUtilization.size(); i++) {
-                        resourceUtilizationArray[i] = resourceUtilization.get(i).doubleValue();
-                    }
-                    DescriptiveStatistics daMakespan = new DescriptiveStatistics(makespanArray);
-                    Median medianMakespan = new Median();
-                    DescriptiveStatistics daFlowtime = new DescriptiveStatistics(flowtimeArray);
-                    Median medianFlowtime = new Median();
-                    DescriptiveStatistics daEconomicCost = new DescriptiveStatistics(economicCostArray);
-                    Median medianEconomicCost = new Median();
-                    DescriptiveStatistics daResourceUtilization = new DescriptiveStatistics(resourceUtilizationArray);
-                    Median medianResourceUtilization = new Median();
-                    DecimalFormat df = new DecimalFormat("#####0.000");
-                    DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
-                    dfs.setDecimalSeparator(',');
-                    df.setDecimalFormatSymbols(dfs);
-                    System.out.println("Criterion Min, Q1, Median, Quartile 3, Max");
-                    System.out.println("makespan: "+
-                            df.format(daMakespan.getMin()) + ";" +
-                            df.format(daMakespan.getPercentile(25))+";"+
-                            df.format(medianMakespan.evaluate(makespanArray)) + ";" +
-                            df.format(daMakespan.getPercentile(75)) + ";" +
-                            df.format(daMakespan.getMax()));
-                    System.out.println("flowtime: "+
-                            df.format(daFlowtime.getMin()) + ";" +
-                            df.format(daFlowtime.getPercentile(25))+";"+
-                            df.format(medianFlowtime.evaluate(flowtimeArray)) + ";" +
-                            df.format(daFlowtime.getPercentile(75)) + ";" +
-                            df.format(daFlowtime.getMax()));
-                    System.out.println("economic cost: "+
-                            df.format(daEconomicCost.getMin()) + ";" +
-                            df.format(daEconomicCost.getPercentile(25))+";"+
-                            df.format(medianEconomicCost.evaluate(economicCostArray)) + ";" +
-                            df.format(daEconomicCost.getPercentile(75)) + ";" +
-                            df.format(daEconomicCost.getMax()));
-                    System.out.println("resource utilization: "+
-                            df.format(daResourceUtilization.getMin()) + ";" +
-                            df.format(daResourceUtilization.getPercentile(25))+";"+
-                            df.format(medianResourceUtilization.evaluate(resourceUtilizationArray)) + ";" +
-                            df.format(daResourceUtilization.getPercentile(75)) + ";" +
-                            df.format(daResourceUtilization.getMax()));
+//                    localNode.addTransactionToPool(5, getDataToSchedule());
+//                    localNode.addTransactionToPool(10, getDataToSchedule());
+//                    localNode.addTransactionToPool(15, getDataToSchedule());
+//                    localNode.addTransactionToPool(20, getDataToSchedule());
+//                    localNode.addTransactionToPool(30, getDataToSchedule());
+//                    localNode.addTransactionToPool(35, getDataToSchedule());
+//                    localNode.addTransactionToPool(40, getDataToSchedule());
+//                    localNode.addTransactionToPool(50, getDataToSchedule());
+//                    localNode.addTransactionToPool(60, getDataToSchedule());
+//                    localNode.addTransactionToPool(70, getDataToSchedule());
+//                    localNode.addTransactionToPool(80, getDataToSchedule());
+//                    localNode.addTransactionToPool(90, getDataToSchedule());
+//                    localNode.addTransactionToPool(100, getDataToSchedule());
+//                    localNode.addTransactionToPool(110, getDataToSchedule());
+//                    localNode.addTransactionToPool(120, getDataToSchedule());
+//                    localNode.addTransactionToPool(130, getDataToSchedule());
+//                    double[] makespanArray = new double[makespan.size()];
+//                    for (int i = 0; i < makespan.size(); i++) {
+//                        makespanArray[i] = makespan.get(i).doubleValue();
+//                    }
+//                    double[] flowtimeArray = new double[flowtime.size()];
+//                    for (int i = 0; i < flowtime.size(); i++) {
+//                        flowtimeArray[i] = flowtime.get(i).doubleValue();
+//                    }
+//                    double[] economicCostArray = new double[economicCost.size()];
+//                    for (int i = 0; i < economicCost.size(); i++) {
+//                        economicCostArray[i] = economicCost.get(i).doubleValue();
+//                    }
+//                    double[] resourceUtilizationArray = new double[resourceUtilization.size()];
+//                    for (int i = 0; i < resourceUtilization.size(); i++) {
+//                        resourceUtilizationArray[i] = resourceUtilization.get(i).doubleValue();
+//                    }
+//                    DescriptiveStatistics daMakespan = new DescriptiveStatistics(makespanArray);
+//                    Median medianMakespan = new Median();
+//                    DescriptiveStatistics daFlowtime = new DescriptiveStatistics(flowtimeArray);
+//                    Median medianFlowtime = new Median();
+//                    DescriptiveStatistics daEconomicCost = new DescriptiveStatistics(economicCostArray);
+//                    Median medianEconomicCost = new Median();
+//                    DescriptiveStatistics daResourceUtilization = new DescriptiveStatistics(resourceUtilizationArray);
+//                    Median medianResourceUtilization = new Median();
+//                    DecimalFormat df = new DecimalFormat("#####0.000");
+//                    DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+//                    dfs.setDecimalSeparator(',');
+//                    df.setDecimalFormatSymbols(dfs);
+//                    System.out.println("Criterion Min, Q1, Median, Quartile 3, Max");
+//                    System.out.println("makespan: "+
+//                            df.format(daMakespan.getMin()) + ";" +
+//                            df.format(daMakespan.getPercentile(25))+";"+
+//                            df.format(medianMakespan.evaluate(makespanArray)) + ";" +
+//                            df.format(daMakespan.getPercentile(75)) + ";" +
+//                            df.format(daMakespan.getMax()));
+//                    System.out.println("flowtime: "+
+//                            df.format(daFlowtime.getMin()) + ";" +
+//                            df.format(daFlowtime.getPercentile(25))+";"+
+//                            df.format(medianFlowtime.evaluate(flowtimeArray)) + ";" +
+//                            df.format(daFlowtime.getPercentile(75)) + ";" +
+//                            df.format(daFlowtime.getMax()));
+//                    System.out.println("economic cost: "+
+//                            df.format(daEconomicCost.getMin()) + ";" +
+//                            df.format(daEconomicCost.getPercentile(25))+";"+
+//                            df.format(medianEconomicCost.evaluate(economicCostArray)) + ";" +
+//                            df.format(daEconomicCost.getPercentile(75)) + ";" +
+//                            df.format(daEconomicCost.getMax()));
+//                    System.out.println("resource utilization: "+
+//                            df.format(daResourceUtilization.getMin()) + ";" +
+//                            df.format(daResourceUtilization.getPercentile(25))+";"+
+//                            df.format(medianResourceUtilization.evaluate(resourceUtilizationArray)) + ";" +
+//                            df.format(daResourceUtilization.getPercentile(75)) + ";" +
+//                            df.format(daResourceUtilization.getMax()));
                 }
                 addTransaction = false;
                 new Thread(new HeartBeatReceiver(clientSocket, serverStatus, localPort)).start();
