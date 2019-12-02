@@ -10,6 +10,7 @@ import blockchain.serialization.PublicKeyDeserizlizer;
 import blockchain.util.ByteUtil;
 import blockchain.util.Log;
 import blockchain.util.SortByTimestamp;
+import blockchain.util.Wilcoxon;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -204,6 +205,7 @@ public class Node implements Runnable
                 for (int i = 0; i < makespan.size(); i++) {
                     makespanArray[i] = makespan.get(i).doubleValue();
                 }
+                Wilcoxon.dataForWilcoxon(makespanArray);
                 double[] flowtimeArray = new double[flowtime.size()];
                 for (int i = 0; i < flowtime.size(); i++) {
                     flowtimeArray[i] = flowtime.get(i).doubleValue();

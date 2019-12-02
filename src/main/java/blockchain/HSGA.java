@@ -3,6 +3,7 @@ package blockchain;
 import blockchain.scheduler.*;
 import blockchain.scheduler.utils.Constants;
 import blockchain.scheduler.utils.GenerateSimulationData;
+import blockchain.util.Wilcoxon;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.descriptive.rank.Median;
 
@@ -55,6 +56,7 @@ public class HSGA {
         for (int i = 0; i < makespan.size(); i++) {
             makespanArray[i] = makespan.get(i).doubleValue();
         }
+        Wilcoxon.dataForWilcoxon(makespanArray);
         double[] flowtimeArray = new double[flowtime.size()];
         for (int i = 0; i < flowtime.size(); i++) {
             flowtimeArray[i] = flowtime.get(i).doubleValue();

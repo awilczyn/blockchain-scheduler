@@ -9,6 +9,7 @@ import blockchain.networking.ServerInfo;
 import blockchain.scheduler.*;
 import blockchain.scheduler.utils.Constants;
 import blockchain.scheduler.utils.GenerateSimulationData;
+import blockchain.util.Wilcoxon;
 import blockchain.util.ecdsa.ECKey;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.apache.commons.math3.stat.descriptive.rank.Median;
@@ -71,26 +72,16 @@ public class Node1HSGA
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
-//                    localNode.addTransactionToPool(5, getDataToSchedule());
-//                    localNode.addTransactionToPool(10, getDataToSchedule());
-//                    localNode.addTransactionToPool(15, getDataToSchedule());
-//                    localNode.addTransactionToPool(20, getDataToSchedule());
-//                    localNode.addTransactionToPool(30, getDataToSchedule());
-//                    localNode.addTransactionToPool(35, getDataToSchedule());
-//                    localNode.addTransactionToPool(40, getDataToSchedule());
-//                    localNode.addTransactionToPool(50, getDataToSchedule());
-//                    localNode.addTransactionToPool(60, getDataToSchedule());
-//                    localNode.addTransactionToPool(70, getDataToSchedule());
-//                    localNode.addTransactionToPool(80, getDataToSchedule());
-//                    localNode.addTransactionToPool(90, getDataToSchedule());
-//                    localNode.addTransactionToPool(100, getDataToSchedule());
-//                    localNode.addTransactionToPool(110, getDataToSchedule());
-//                    localNode.addTransactionToPool(120, getDataToSchedule());
-//                    localNode.addTransactionToPool(130, getDataToSchedule());
+//                    int value = 0;
+//                    for(int i=0; i<Constants.NO_OF_ATTEMPTS;i++) {
+//                        value = value + 5;
+//                        localNode.addTransactionToPool(value, getDataToSchedule());
+//                    }
 //                    double[] makespanArray = new double[makespan.size()];
 //                    for (int i = 0; i < makespan.size(); i++) {
 //                        makespanArray[i] = makespan.get(i).doubleValue();
 //                    }
+//                    Wilcoxon.dataForWilcoxon(makespanArray);
 //                    double[] flowtimeArray = new double[flowtime.size()];
 //                    for (int i = 0; i < flowtime.size(); i++) {
 //                        flowtimeArray[i] = flowtime.get(i).doubleValue();
