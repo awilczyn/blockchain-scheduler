@@ -73,7 +73,7 @@ public class Node1SJF
                 Socket clientSocket = serverSocket.accept();
                 if (addTransaction) {
 //                    int value = 0;
-//                    for(int i=0; i<Constants.NO_OF_ATTEMPTS;i++) {
+//                    for(int i=0; i<Constants.NO_OF_ATTEMPTS*2;i++) {
 //                        value = value + 5;
 //                        localNode.addTransactionToPool(value, getDataToSchedule());
 //                    }
