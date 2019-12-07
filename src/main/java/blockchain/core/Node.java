@@ -201,12 +201,14 @@ public class Node implements Runnable
 //                System.out.println("\nThe block: ");
 //                System.out.println(blockJson);
                 System.out.println("Number of transactions in block: " + block1.transactions.size());
+                System.out.println("Number of criteria: "+makespan.size());
             }
             if (makespan.size() >= Constants.NO_OF_ATTEMPTS) {
                 double[] makespanArray = new double[makespan.size()];
                 for (int i = 0; i < makespan.size(); i++) {
                     makespanArray[i] = makespan.get(i).doubleValue();
                 }
+                System.out.println("Makespan wilcoxon:");
                 Wilcoxon.dataForWilcoxon(makespanArray);
                 double[] flowtimeArray = new double[flowtime.size()];
                 for (int i = 0; i < flowtime.size(); i++) {
@@ -236,6 +238,8 @@ public class Node implements Runnable
                 for (int i = 0; i < securityLevel.size(); i++) {
                     securityLevelArray[i] = securityLevel.get(i).doubleValue();
                 }
+                System.out.println("Security level wilcoxon:");
+                Wilcoxon.dataForWilcoxonDecimal(securityLevelArray);
                 DescriptiveStatistics daMakespan = new DescriptiveStatistics(makespanArray);
                 Median medianMakespan = new Median();
                 DescriptiveStatistics daFlowtime = new DescriptiveStatistics(flowtimeArray);
@@ -335,7 +339,7 @@ public class Node implements Runnable
 
     public static double getMinimumNumberOfConfirmation()
     {
-        return NUMBEROFNODES*0.50;
+        return NUMBEROFNODES*0.5;
     }
 
     public static float getSchedulingFactorForPublicKey(byte[]  publicKey)

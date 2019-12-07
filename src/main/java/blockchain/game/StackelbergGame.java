@@ -79,7 +79,6 @@ public class StackelbergGame
 //        double max = solution.getValue();
 //
 //        System.out.println("s1: "+ x +", s2: "+ y +", max: "+max);
-
         if (y == 1) {
             return false;
         } else {

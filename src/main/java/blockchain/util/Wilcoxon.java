@@ -1,11 +1,27 @@
 package blockchain.util;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 public class Wilcoxon {
 
     public static void dataForWilcoxon(double[] criterionArray) {
         System.out.println("Values of criterion:");
         for (int i = 0; i < criterionArray.length; i++) {
             System.out.println(Math.round(criterionArray[i]));
+        }
+        standardDeviation(criterionArray);
+    }
+
+    public static void dataForWilcoxonDecimal(double[] criterionArray) {
+        System.out.println("Values of criterion:");
+        DecimalFormat df = new DecimalFormat("#.###");
+        DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+        dfs.setDecimalSeparator(',');
+        df.setDecimalFormatSymbols(dfs);
+        for (int i = 0; i < criterionArray.length; i++) {
+            System.out.println(df.format(criterionArray[i]));
         }
         standardDeviation(criterionArray);
     }

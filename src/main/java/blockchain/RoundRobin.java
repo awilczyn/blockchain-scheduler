@@ -81,6 +81,8 @@ public class RoundRobin
         for (int i = 0; i < securityLevel.size(); i++) {
             securityLevelArray[i] = securityLevel.get(i).doubleValue();
         }
+        System.out.println("Security level wilcoxon:");
+        Wilcoxon.dataForWilcoxonDecimal(securityLevelArray);
         DescriptiveStatistics daMakespan = new DescriptiveStatistics(makespanArray);
         Median medianMakespan = new Median();
         DescriptiveStatistics daFlowtime = new DescriptiveStatistics(flowtimeArray);

@@ -60,6 +60,7 @@ public class FCFS
         for (int i = 0; i < makespan.size(); i++) {
             makespanArray[i] = makespan.get(i).doubleValue();
         }
+        System.out.println("Makespan wilcxon:");
         Wilcoxon.dataForWilcoxon(makespanArray);
         double[] flowtimeArray = new double[flowtime.size()];
         for (int i = 0; i < flowtime.size(); i++) {
@@ -81,6 +82,8 @@ public class FCFS
         for (int i = 0; i < securityLevel.size(); i++) {
             securityLevelArray[i] = securityLevel.get(i).doubleValue();
         }
+        System.out.println("Security level wilcoxon:");
+        Wilcoxon.dataForWilcoxonDecimal(securityLevelArray);
         DescriptiveStatistics daMakespan = new DescriptiveStatistics(makespanArray);
         Median medianMakespan = new Median();
         DescriptiveStatistics daFlowtime = new DescriptiveStatistics(flowtimeArray);
