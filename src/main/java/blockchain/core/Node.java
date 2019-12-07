@@ -201,110 +201,110 @@ public class Node implements Runnable
 //                System.out.println("\nThe block: ");
 //                System.out.println(blockJson);
                 System.out.println("Number of transactions in block: " + block1.transactions.size());
-                if (makespan.size() >= Constants.NO_OF_ATTEMPTS) {
-                    double[] makespanArray = new double[makespan.size()];
-                    for (int i = 0; i < makespan.size(); i++) {
-                        makespanArray[i] = makespan.get(i).doubleValue();
-                    }
-                    Wilcoxon.dataForWilcoxon(makespanArray);
-                    double[] flowtimeArray = new double[flowtime.size()];
-                    for (int i = 0; i < flowtime.size(); i++) {
-                        flowtimeArray[i] = flowtime.get(i).doubleValue();
-                    }
-                    double[] economicCostArray = new double[economicCost.size()];
-                    for (int i = 0; i < economicCost.size(); i++) {
-                        economicCostArray[i] = economicCost.get(i).doubleValue();
-                    }
-                    double[] resourceUtilizationArray = new double[resourceUtilization.size()];
-                    for (int i = 0; i < resourceUtilization.size(); i++) {
-                        resourceUtilizationArray[i] = resourceUtilization.get(i).doubleValue();
-                    }
-                    double[] pFailureArray = new double[pFailure.size()];
-                    for (int i = 0; i < pFailure.size(); i++) {
-                        pFailureArray[i] = pFailure.get(i).doubleValue();
-                    }
-                    double[] pFakeArray = new double[pFake.size()];
-                    for (int i = 0; i < pFake.size(); i++) {
-                        pFakeArray[i] = pFake.get(i).doubleValue();
-                    }
-                    double[] pHackingArray = new double[pHacking.size()];
-                    for (int i = 0; i < pHacking.size(); i++) {
-                        pHackingArray[i] = pHacking.get(i).doubleValue();
-                    }
-                    double[] securityLevelArray = new double[securityLevel.size()];
-                    for (int i = 0; i < securityLevel.size(); i++) {
-                        securityLevelArray[i] = securityLevel.get(i).doubleValue();
-                    }
-                    DescriptiveStatistics daMakespan = new DescriptiveStatistics(makespanArray);
-                    Median medianMakespan = new Median();
-                    DescriptiveStatistics daFlowtime = new DescriptiveStatistics(flowtimeArray);
-                    Median medianFlowtime = new Median();
-                    DescriptiveStatistics daEconomicCost = new DescriptiveStatistics(economicCostArray);
-                    Median medianEconomicCost = new Median();
-                    DescriptiveStatistics daResourceUtilization = new DescriptiveStatistics(resourceUtilizationArray);
-                    Median medianResourceUtilization = new Median();
-                    DescriptiveStatistics daSecurityLevel = new DescriptiveStatistics(securityLevelArray);
-                    Median medianSecurityLevel = new Median();
-                    DescriptiveStatistics daPfailure = new DescriptiveStatistics(pFailureArray);
-                    Median medianPfailure = new Median();
-                    DescriptiveStatistics daPfake = new DescriptiveStatistics(pFakeArray);
-                    Median medianPfake = new Median();
-                    DescriptiveStatistics daPhacking = new DescriptiveStatistics(pHackingArray);
-                    Median medianPHacking = new Median();
-                    DecimalFormat df = new DecimalFormat("#####0.000");
-                    DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
-                    dfs.setDecimalSeparator(',');
-                    df.setDecimalFormatSymbols(dfs);
-                    System.out.println("Criterion Min, Q1, Median, Quartile 3, Max");
-                    System.out.println("makespan: " +
-                            df.format(daMakespan.getMin()) + ";" +
-                            df.format(daMakespan.getPercentile(25)) + ";" +
-                            df.format(medianMakespan.evaluate(makespanArray)) + ";" +
-                            df.format(daMakespan.getPercentile(75)) + ";" +
-                            df.format(daMakespan.getMax()));
-                    System.out.println("flowtime: " +
-                            df.format(daFlowtime.getMin()) + ";" +
-                            df.format(daFlowtime.getPercentile(25)) + ";" +
-                            df.format(medianFlowtime.evaluate(flowtimeArray)) + ";" +
-                            df.format(daFlowtime.getPercentile(75)) + ";" +
-                            df.format(daFlowtime.getMax()));
-                    System.out.println("economic cost: " +
-                            df.format(daEconomicCost.getMin()) + ";" +
-                            df.format(daEconomicCost.getPercentile(25)) + ";" +
-                            df.format(medianEconomicCost.evaluate(economicCostArray)) + ";" +
-                            df.format(daEconomicCost.getPercentile(75)) + ";" +
-                            df.format(daEconomicCost.getMax()));
-                    System.out.println("resource utilization: " +
-                            df.format(daResourceUtilization.getMin()) + ";" +
-                            df.format(daResourceUtilization.getPercentile(25)) + ";" +
-                            df.format(medianResourceUtilization.evaluate(resourceUtilizationArray)) + ";" +
-                            df.format(daResourceUtilization.getPercentile(75)) + ";" +
-                            df.format(daResourceUtilization.getMax()));
-                    System.out.println("P failure: " +
-                            df.format(daPfailure.getMin()) + ";" +
-                            df.format(daPfailure.getPercentile(25)) + ";" +
-                            df.format(medianPfailure.evaluate(pFailureArray)) + ";" +
-                            df.format(daPfailure.getPercentile(75)) + ";" +
-                            df.format(daPfailure.getMax()));
-                    System.out.println("P fake: " +
-                            df.format(daPfake.getMin()) + ";" +
-                            df.format(daPfake.getPercentile(25)) + ";" +
-                            df.format(medianPfake.evaluate(pFakeArray)) + ";" +
-                            df.format(daPfake.getPercentile(75)) + ";" +
-                            df.format(daPfake.getMax()));
-                    System.out.println("P hacking: " +
-                            df.format(daPhacking.getMin()) + ";" +
-                            df.format(daPhacking.getPercentile(25)) + ";" +
-                            df.format(medianPHacking.evaluate(pHackingArray)) + ";" +
-                            df.format(daPhacking.getPercentile(75)) + ";" +
-                            df.format(daPhacking.getMax()));
-                    System.out.println("security level: " +
-                            df.format(daSecurityLevel.getMin()) + ";" +
-                            df.format(daSecurityLevel.getPercentile(25)) + ";" +
-                            df.format(medianSecurityLevel.evaluate(securityLevelArray)) + ";" +
-                            df.format(daSecurityLevel.getPercentile(75)) + ";" +
-                            df.format(daSecurityLevel.getMax()));
+            }
+            if (makespan.size() >= Constants.NO_OF_ATTEMPTS) {
+                double[] makespanArray = new double[makespan.size()];
+                for (int i = 0; i < makespan.size(); i++) {
+                    makespanArray[i] = makespan.get(i).doubleValue();
                 }
+                Wilcoxon.dataForWilcoxon(makespanArray);
+                double[] flowtimeArray = new double[flowtime.size()];
+                for (int i = 0; i < flowtime.size(); i++) {
+                    flowtimeArray[i] = flowtime.get(i).doubleValue();
+                }
+                double[] economicCostArray = new double[economicCost.size()];
+                for (int i = 0; i < economicCost.size(); i++) {
+                    economicCostArray[i] = economicCost.get(i).doubleValue();
+                }
+                double[] resourceUtilizationArray = new double[resourceUtilization.size()];
+                for (int i = 0; i < resourceUtilization.size(); i++) {
+                    resourceUtilizationArray[i] = resourceUtilization.get(i).doubleValue();
+                }
+                double[] pFailureArray = new double[pFailure.size()];
+                for (int i = 0; i < pFailure.size(); i++) {
+                    pFailureArray[i] = pFailure.get(i).doubleValue();
+                }
+                double[] pFakeArray = new double[pFake.size()];
+                for (int i = 0; i < pFake.size(); i++) {
+                    pFakeArray[i] = pFake.get(i).doubleValue();
+                }
+                double[] pHackingArray = new double[pHacking.size()];
+                for (int i = 0; i < pHacking.size(); i++) {
+                    pHackingArray[i] = pHacking.get(i).doubleValue();
+                }
+                double[] securityLevelArray = new double[securityLevel.size()];
+                for (int i = 0; i < securityLevel.size(); i++) {
+                    securityLevelArray[i] = securityLevel.get(i).doubleValue();
+                }
+                DescriptiveStatistics daMakespan = new DescriptiveStatistics(makespanArray);
+                Median medianMakespan = new Median();
+                DescriptiveStatistics daFlowtime = new DescriptiveStatistics(flowtimeArray);
+                Median medianFlowtime = new Median();
+                DescriptiveStatistics daEconomicCost = new DescriptiveStatistics(economicCostArray);
+                Median medianEconomicCost = new Median();
+                DescriptiveStatistics daResourceUtilization = new DescriptiveStatistics(resourceUtilizationArray);
+                Median medianResourceUtilization = new Median();
+                DescriptiveStatistics daSecurityLevel = new DescriptiveStatistics(securityLevelArray);
+                Median medianSecurityLevel = new Median();
+                DescriptiveStatistics daPfailure = new DescriptiveStatistics(pFailureArray);
+                Median medianPfailure = new Median();
+                DescriptiveStatistics daPfake = new DescriptiveStatistics(pFakeArray);
+                Median medianPfake = new Median();
+                DescriptiveStatistics daPhacking = new DescriptiveStatistics(pHackingArray);
+                Median medianPHacking = new Median();
+                DecimalFormat df = new DecimalFormat("#####0.000");
+                DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+                dfs.setDecimalSeparator(',');
+                df.setDecimalFormatSymbols(dfs);
+                System.out.println("Criterion Min, Q1, Median, Quartile 3, Max");
+                System.out.println("makespan: " +
+                        df.format(daMakespan.getMin()) + ";" +
+                        df.format(daMakespan.getPercentile(25)) + ";" +
+                        df.format(medianMakespan.evaluate(makespanArray)) + ";" +
+                        df.format(daMakespan.getPercentile(75)) + ";" +
+                        df.format(daMakespan.getMax()));
+                System.out.println("flowtime: " +
+                        df.format(daFlowtime.getMin()) + ";" +
+                        df.format(daFlowtime.getPercentile(25)) + ";" +
+                        df.format(medianFlowtime.evaluate(flowtimeArray)) + ";" +
+                        df.format(daFlowtime.getPercentile(75)) + ";" +
+                        df.format(daFlowtime.getMax()));
+                System.out.println("economic cost: " +
+                        df.format(daEconomicCost.getMin()) + ";" +
+                        df.format(daEconomicCost.getPercentile(25)) + ";" +
+                        df.format(medianEconomicCost.evaluate(economicCostArray)) + ";" +
+                        df.format(daEconomicCost.getPercentile(75)) + ";" +
+                        df.format(daEconomicCost.getMax()));
+                System.out.println("resource utilization: " +
+                        df.format(daResourceUtilization.getMin()) + ";" +
+                        df.format(daResourceUtilization.getPercentile(25)) + ";" +
+                        df.format(medianResourceUtilization.evaluate(resourceUtilizationArray)) + ";" +
+                        df.format(daResourceUtilization.getPercentile(75)) + ";" +
+                        df.format(daResourceUtilization.getMax()));
+                System.out.println("P failure: " +
+                        df.format(daPfailure.getMin()) + ";" +
+                        df.format(daPfailure.getPercentile(25)) + ";" +
+                        df.format(medianPfailure.evaluate(pFailureArray)) + ";" +
+                        df.format(daPfailure.getPercentile(75)) + ";" +
+                        df.format(daPfailure.getMax()));
+                System.out.println("P fake: " +
+                        df.format(daPfake.getMin()) + ";" +
+                        df.format(daPfake.getPercentile(25)) + ";" +
+                        df.format(medianPfake.evaluate(pFakeArray)) + ";" +
+                        df.format(daPfake.getPercentile(75)) + ";" +
+                        df.format(daPfake.getMax()));
+                System.out.println("P hacking: " +
+                        df.format(daPhacking.getMin()) + ";" +
+                        df.format(daPhacking.getPercentile(25)) + ";" +
+                        df.format(medianPHacking.evaluate(pHackingArray)) + ";" +
+                        df.format(daPhacking.getPercentile(75)) + ";" +
+                        df.format(daPhacking.getMax()));
+                System.out.println("security level: " +
+                        df.format(daSecurityLevel.getMin()) + ";" +
+                        df.format(daSecurityLevel.getPercentile(25)) + ";" +
+                        df.format(medianSecurityLevel.evaluate(securityLevelArray)) + ";" +
+                        df.format(daSecurityLevel.getPercentile(75)) + ";" +
+                        df.format(daSecurityLevel.getMax()));
             }
         }
     }
